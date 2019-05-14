@@ -12,9 +12,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+//EJC20190514: I Touch the class.
+
 public class BaseDatos extends SQLiteOpenHelper {
-	
-	  public SQLiteDatabase vDatabase;	
+
+	  public SQLiteDatabase vDatabase;
 	  public Context vcontext;
 	  public int Created;
 	  public Insert Ins;
@@ -24,61 +26,60 @@ public class BaseDatos extends SQLiteOpenHelper {
 	  private static final String DATABASE_NAME =
 			               Environment.getExternalStorageDirectory().getPath() + "/base_datos.db";
 	  private static final int DATABASE_VERSION = 1;
-	  	
+
 	  public BaseDatos(Context context) {
-		 		  	  
+
 	    super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	    		       
+
 	    Ins=new Insert();
 	    Upd=new Update();
-	    
+
 	    DBScript=new BaseDatosScript(context);
-	    
+
 	    Created=0;
 	    vcontext=context;
 	  }
 
 	  @Override
 	  public void onCreate(SQLiteDatabase database) {
-		 		 	   
+
 		Created=1;
-					
+
 		if (scriptDatabase(database)==0) {
 			Created=-1;return;
 		}
-	    
+
 		if (scriptData(database)==0) {
 			Created=-1;return;
 		}
-		
+
 		dbCreated();
-		
 	  }
 
 	  private int scriptDatabase(SQLiteDatabase database) {
 		 int Rslt;
-		  
+
 		 Rslt=DBScript.scriptDatabase(database);
 		 return Rslt;
 	  }
-	 
+
 	  private int scriptData(SQLiteDatabase database) {
 		 int Rslt;
-			  
+
 		 Rslt=DBScript.scriptData(database);
 		 return Rslt;
-	  } 
+	  }
 
 	  @Override
 	  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		  Toast.makeText(vcontext,"UPDATE DB", Toast.LENGTH_SHORT).show();
 	  }
-	  
+
 	  public Cursor OpenDT(String pSQL) {
 		  Cursor cursor = vDatabase.rawQuery(pSQL, null);
 		  return cursor;
 	  }
-	  
+
 	  // Public class Insert
 	  
 	  public class Insert {
