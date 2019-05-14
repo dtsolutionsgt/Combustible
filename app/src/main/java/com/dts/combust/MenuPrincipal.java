@@ -9,6 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.dts.base.PBase;
+import com.dts.base.clsClasses;
+import com.dts.listadapt.LA_Menu;
+
 import java.util.ArrayList;
 
 public class MenuPrincipal extends PBase {

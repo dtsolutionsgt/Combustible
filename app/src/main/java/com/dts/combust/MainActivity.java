@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dts.base.PBase;
+import com.dts.classes.clsUsuarioObj;
+
 public class MainActivity extends PBase {
 
     private EditText txtUser,txtPass;
@@ -48,7 +51,6 @@ public class MainActivity extends PBase {
             txtPass = (EditText) findViewById(R.id.editText3);
             lblTitle = (TextView) findViewById(R.id.textView2);
 
-            lblTitle.setText("Nombre de aplicación");
             txtUser.setText("1");txtPass.setText("1");
 
             setHandlers();

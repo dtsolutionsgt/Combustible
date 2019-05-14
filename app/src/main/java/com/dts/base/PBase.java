@@ -1,4 +1,4 @@
-package com.dts.combust;
+package com.dts.base;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import com.dts.combust.R;
 
 public class PBase extends Activity {
 
@@ -17,11 +19,11 @@ public class PBase extends Activity {
     protected BaseDatos.Update upd;
     protected String sql;
 
-    protected appGlobals gl;
-    protected MiscUtils mu;
-    protected DateUtils du;
-    protected AppMethods app;
-    protected clsClasses clsCls = new clsClasses();
+    public appGlobals gl;
+    public MiscUtils mu;
+    public DateUtils du;
+    public AppMethods app;
+    public clsClasses clsCls = new clsClasses();
 
     protected InputMethodManager keyboard;
 

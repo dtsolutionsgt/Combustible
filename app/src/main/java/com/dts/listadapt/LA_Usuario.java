@@ -1,4 +1,4 @@
-package com.dts.combust;
+package com.dts.listadapt;
 
 import android.content.Context;
 
@@ -11,9 +11,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.dts.base.AppMethods;
+import com.dts.base.DateUtils;
+import com.dts.base.clsClasses;
+import com.dts.base.MiscUtils;
+import com.dts.base.PBase;
+import com.dts.combust.R;
+
 public class LA_Usuario extends BaseAdapter {
 
-    private MiscUtils mu;
+    private com.dts.base.MiscUtils mu;
     private DateUtils du;
     private AppMethods app;
 

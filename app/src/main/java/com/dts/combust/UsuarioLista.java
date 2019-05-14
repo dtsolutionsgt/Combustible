@@ -9,6 +9,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.dts.base.PBase;
+import com.dts.base.clsClasses;
+import com.dts.classes.clsUsuarioObj;
+import com.dts.listadapt.LA_Usuario;
+
 public class UsuarioLista extends PBase {
 
     private ListView listView;

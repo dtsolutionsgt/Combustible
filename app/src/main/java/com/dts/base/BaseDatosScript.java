@@ -1,10 +1,12 @@
-package com.dts.combust;
+package com.dts.base;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+
+import com.dts.combust.R;
 
 public class BaseDatosScript {
 	
