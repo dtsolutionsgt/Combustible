@@ -10,8 +10,6 @@ import com.dts.combust.R;
 
 public class BaseDatosScript {
 
-	//jp
-
 	private Context vcontext;
 	
 	public BaseDatosScript(Context context) {
