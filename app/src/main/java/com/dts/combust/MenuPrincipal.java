@@ -66,7 +66,7 @@ public class MenuPrincipal extends PBase {
 
     private void listItems() {
         try {
-             adapter=new LA_Menu(this,this, menuitems);
+            adapter=new LA_Menu(this,this, menuitems);
             listView.setAdapter(adapter);
         } catch (Exception e) {
             mu.msgbox(e.getMessage());
@@ -119,7 +119,7 @@ public class MenuPrincipal extends PBase {
         menuitems.clear();
 
         item=clsCls.new clsMenu();
-        item.id=1;item.nombre="Usuarios";
+        item.id=4;item.nombre="Inventario";
         menuitems.add(item);
 
         item=clsCls.new clsMenu();

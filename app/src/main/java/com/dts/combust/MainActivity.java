@@ -141,8 +141,8 @@ public class MainActivity extends PBase {
         String user,pass,su,sp;
         boolean flag;
 
-
         try {
+            /*
             user=txtUser.getText().toString();
             if (emptystr(user)) {
                 toast("Falta usuario.");txtUser.requestFocus();return;
@@ -171,11 +171,12 @@ public class MainActivity extends PBase {
 
                     flag=true;break;
                 }
-           }
+            }
 
             if (!flag) {
                 msgbox("¡El usuario no existe o contraseña incorrecta!");txtUser.requestFocus();return;
             }
+            */
 
             txtUser.setText("");txtPass.setText("");txtUser.requestFocus();
 

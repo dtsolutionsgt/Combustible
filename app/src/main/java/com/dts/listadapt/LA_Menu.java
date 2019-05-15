@@ -87,6 +87,8 @@ public class LA_Menu extends BaseAdapter {
                 holder.img1.setImageResource(R.drawable.update);break;
             case 3:
                 holder.img1.setImageResource(R.drawable.btn_exit);break;
+            case 4:
+                holder.img1.setImageResource(R.drawable.regla);break;
         }
 
 

@@ -26,7 +26,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 	  private BaseDatosScript DBScript;
 
 	  private static final String DATABASE_NAME =
-			               Environment.getExternalStorageDirectory().getPath() + "/base_datos.db";
+			               Environment.getExternalStorageDirectory().getPath() + "/combustible.db";
 	  private static final int DATABASE_VERSION = 1;
 
 	  public BaseDatos(Context context) {
