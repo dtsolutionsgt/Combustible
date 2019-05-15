@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.dts.base.PBase;
 import com.dts.base.clsClasses;
 import com.dts.listadapt.LA_Menu;
 
@@ -46,6 +45,10 @@ public class MenuPrincipal extends PBase {
 
 
     // Events
+
+    public void doTables(View view) {
+        startActivity(new Intent(this,Tablas.class));
+    }
 
     private void setHandlers() {
 

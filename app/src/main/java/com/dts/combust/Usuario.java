@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.dts.base.PBase;
 import com.dts.base.clsClasses;
 import com.dts.classes.clsRolObj;
 import com.dts.classes.clsUsuarioObj;
