@@ -7,6 +7,7 @@ public class clsClasses {
         public String nombre;
         public int activo;
     }
+    
 
     public class clsDeposito {
         public int depid;
