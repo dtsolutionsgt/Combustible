@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteException;
 import com.dts.combust.R;
 
 public class BaseDatosScript {
+
+
 	
 	private Context vcontext;
 	
