@@ -1,10 +1,7 @@
 package com.dts.combust;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-
-import com.dts.base.PBase;
 
 public class Configuracion extends PBase {
 

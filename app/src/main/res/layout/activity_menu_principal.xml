@@ -26,7 +26,9 @@
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="true"
             android:gravity="right"
+            android:onClick="doTables"
             android:paddingRight="10dp"
             android:text="DTSolutions"
             android:textColor="#FFFFFF" />

@@ -1,4 +1,4 @@
-package com.dts.base;
+package com.dts.combust;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -8,6 +8,12 @@ import android.view.Gravity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.dts.base.AppMethods;
+import com.dts.base.BaseDatos;
+import com.dts.base.DateUtils;
+import com.dts.base.MiscUtils;
+import com.dts.base.appGlobals;
+import com.dts.base.clsClasses;
 import com.dts.combust.R;
 
 public class PBase extends Activity {

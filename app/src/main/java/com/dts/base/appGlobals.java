@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 public class appGlobals extends Application {
 
-	protected Context context;
+	public Context context;
 
 	// Variables publicas
 

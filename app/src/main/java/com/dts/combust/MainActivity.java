@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dts.base.PBase;
 import com.dts.classes.clsUsuarioObj;
 
 public class MainActivity extends PBase {
