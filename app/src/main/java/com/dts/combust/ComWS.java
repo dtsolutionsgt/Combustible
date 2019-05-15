@@ -1,6 +1,5 @@
 package com.dts.combust;
 
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -11,6 +10,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.dts.base.BaseDatos;
 import com.dts.base.DateUtils;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class ComWS extends PBase {
 
+    private TextView lbl1;
 
     private int isbusy;
     private String sp;
@@ -39,19 +40,15 @@ public class ComWS extends PBase {
     private ArrayList<String> listItems=new ArrayList<String>();
     private ArrayList<String> results=new ArrayList<String>();
 
-    //private ArrayList<clsClasses.clsEnvio> items=new ArrayList<clsClasses.clsEnvio>();
-    //private ListAdaptEnvio adapter;
-
     private clsDataBuilder dbld;
     private DateUtils DU;
-    private String jsonWS;
 
     // Web Service -
 
     public AsyncCallRec wsRtask;
     public AsyncCallSend wsStask;
 
-    private static String sstr,fstr,ferr,fterr,idbg,dbg,ftmsg;
+    private static String sstr,fstr,ferr,fterr,idbg,dbg,ftmsg,sprog;
     private int scon,stockflag,reccnt;
     private String senv,gEmpresa,ActRuta;
     private boolean ftflag,esvacio;
@@ -67,13 +64,15 @@ public class ComWS extends PBase {
 
         super.InitBase(savedInstanceState);
 
+        lbl1 = (TextView) findViewById(R.id.textView20);lbl1.setText("");
+
         System.setProperty("line.separator","\r\n");
 
         dbld=new clsDataBuilder(this);
 
         isbusy=0;
 
-        URL="http://192.168.1.51/wsAndrBase/wsandr.asmx";
+        URL="http://192.168.1.137/Comb/wsAndr.asmx";
 
     }
 
@@ -391,7 +390,7 @@ public class ComWS extends PBase {
         ftmsg="";ftflag=false;
 
         try {
-            if (!AddTable("USUARIO")) return false;
+            if (!AddTable("Proyecto")) return false;
         } catch (Exception e) {
             return false;
         }
@@ -447,7 +446,9 @@ public class ComWS extends PBase {
 
         try {
 
-             SQL=getTableSQL(TN);
+            SQL=getTableSQL(TN);
+
+            sprog = TN;wsRtask.onProgressUpdate();
 
             if (fillTable(SQL,"DELETE FROM "+TN)==1) {
                 if (TN.equalsIgnoreCase("P_STOCK")) dbg=dbg+" ok ";
@@ -455,12 +456,12 @@ public class ComWS extends PBase {
                 return true;
             } else {
                 idbg=idbg +SQL+"#"+" PASS FAIL  ";
-                fstr="Tab:"+TN+" "+sstr;
+                fstr="Tab:"+TN+" "+sstr;errflag=true;
                 return false;
             }
 
         } catch (Exception e) {
-            fstr="Tab:"+TN+", "+ e.getMessage();idbg=idbg + e.getMessage();
+            fstr="Tab:"+TN+", "+ e.getMessage();idbg=idbg + e.getMessage();errflag=true;
             return false;
         }
     }
@@ -468,8 +469,8 @@ public class ComWS extends PBase {
     private String getTableSQL(String TN) {
         String SQL = "";
 
-        if (TN.equalsIgnoreCase("Usuario")) {
-            SQL = "SELECT * FROM Usuario";
+        if (TN.equalsIgnoreCase("Proyecto")) {
+            SQL = "SELECT ProyID,Nombre,Activo,SucID,Codigo FROM Proyecto WHERE Activo=1";
             return SQL;
         }
 
@@ -481,13 +482,13 @@ public class ComWS extends PBase {
 
     public void wsExecute(){
 
-        fstr="No connect";scon=0;
+        sprog = "Conectando ....";wsRtask.onProgressUpdate();
+        fstr="No connect";scon=0;errflag=false;
 
         try {
             if (getTest()==1) scon=1;
             idbg=idbg + sstr;
             if (scon==1) {
-                fstr="Sync OK";
                 if (!getData()) fstr="Recepcion incompleta : "+fstr;
             } else {
                 fstr="No se puede conectar al web service : "+sstr;
@@ -501,10 +502,12 @@ public class ComWS extends PBase {
 
     public void wsFinished(){
 
-        if (fstr.equalsIgnoreCase("Sync OK")) {
+        if (!errflag) {
             msgAskExit("Recepción completa.");
+            lbl1.setText("");
         } else {
-             mu.msgbox("Ocurrió error : \n"+fstr+" ("+reccnt+") " + ferr);
+            mu.msgbox("Ocurrió error : \n"+fstr+" ("+reccnt+") " + ferr);
+            lbl1.setText(fstr);
             isbusy=0;
             return;
         }
@@ -537,7 +540,11 @@ public class ComWS extends PBase {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {}
+        protected void onProgressUpdate(Void... values) {
+            try {
+                lbl1.setText(sprog);
+             } catch (Exception e) {}
+         }
 
     }
 

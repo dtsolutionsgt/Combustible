@@ -57,7 +57,7 @@ public class MenuPrincipal extends PBase {
 
                 adapter.setSelectedIndex(position);
 
-                menuOption(position);
+                menuOption(item.id);
             };
         });
     }
@@ -75,13 +75,13 @@ public class MenuPrincipal extends PBase {
 
     private void menuOption(int midx) {
         switch (midx) {
-            case 0:
+            case 1:
                 callback =1;
                 startActivity(new Intent(this,UsuarioLista.class));break;
-            case 1:
-                startActivity(new Intent(this,ComWS.class));break;
             case 2:
-                msgAskExit("Salir de aplicación");break;
+                startActivity(new Intent(this,ComWS.class));break;
+            case 3:
+                msgAskExit("Salír de aplicación");break;
         }
 
     }
@@ -92,7 +92,7 @@ public class MenuPrincipal extends PBase {
     private void msgAskExit(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
-        dialog.setTitle("Proyecto Vacío");
+        dialog.setTitle("Combustible");
         dialog.setMessage("¿" + msg + "?");
 
         dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -117,6 +117,22 @@ public class MenuPrincipal extends PBase {
         clsClasses.clsMenu item;
 
         menuitems.clear();
+
+        switch (gl.rol) {
+            case 0: // Tanque
+                break;
+            case 1: // Cisterna
+                item=clsCls.new clsMenu();
+                item.id=5;item.nombre="Despacho";
+                menuitems.add(item);
+
+                item=clsCls.new clsMenu();
+                item.id=6;item.nombre="Traslado";
+                menuitems.add(item);
+                break;
+            case 3: // Supervisor
+                break;
+        }
 
         item=clsCls.new clsMenu();
         item.id=4;item.nombre="Inventario";

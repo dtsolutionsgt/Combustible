@@ -178,6 +178,8 @@ public class MainActivity extends PBase {
             }
             */
 
+            gl.rol=1; // 0- tanque,1-cisterna,3-supervisor
+
             txtUser.setText("");txtPass.setText("");txtUser.requestFocus();
 
             callback =1;gl.exitapp=false;

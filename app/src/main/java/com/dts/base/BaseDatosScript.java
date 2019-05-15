@@ -270,8 +270,7 @@ public class BaseDatosScript {
 
 		try {
 			db.execSQL("INSERT INTO Params VALUES (0,0,'','',0,0,'',0);");
-
-
+			db.execSQL("INSERT INTO Param VALUES ('1','','',0,0,0);");
 
 			return 1;
 		} catch (SQLiteException e) {
