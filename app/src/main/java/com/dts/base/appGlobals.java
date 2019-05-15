@@ -13,6 +13,7 @@ public class appGlobals extends Application {
 	// Variables publicas
 
 	public String nombreusuario;
+	public int rol;
 	public boolean exitapp;
 
 	// Variables guardados al momento de botar la aplicacion
