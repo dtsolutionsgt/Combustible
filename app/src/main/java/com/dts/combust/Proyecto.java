@@ -1,8 +1,7 @@
 package com.dts.combust;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,15 +11,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import com.dts.base.clsClasses;
 import com.dts.classes.clsProyectoObj;
-import com.dts.classes.clsUsuarioObj;
 import com.dts.listadapt.LA_Proyecto;
-import com.dts.listadapt.LA_Usuario;
 
 public class Proyecto extends PBase {
 
@@ -51,13 +44,14 @@ public class Proyecto extends PBase {
         setHandlers();
 
         listItems();
+
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             bcode = txt1.getText().toString().trim();
-            validaCodigoBarra();
+            //validaCodigoBarra();
         }
         return super.dispatchKeyEvent(e);
     }
@@ -98,12 +92,26 @@ public class Proyecto extends PBase {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String sb = txt1.getText().toString();
-                if (!sb.isEmpty()) {
-                    bcode=sb;
-                    validaCodigoBarra();
-                };
+
              }
+        });
+
+        txt1.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
+                if (arg2.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (arg1) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            String sb = txt1.getText().toString();
+                            if (!sb.isEmpty()) {
+                                bcode=sb;
+                                validaCodigoBarra();
+                            };
+                            return true;
+                    }
+                }
+                return false;
+            }
         });
 
     }
@@ -132,7 +140,6 @@ public class Proyecto extends PBase {
                 gl.faseID = 0;gl.fase = "-";
 
                 despacho();
-                return;
             } else {
                 toast("Proyecto no existe");
                 Handler handlerTimer = new Handler();
