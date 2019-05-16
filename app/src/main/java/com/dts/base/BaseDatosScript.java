@@ -136,7 +136,7 @@ public class BaseDatosScript {
 					"TipoTransID INTEGER NOT NULL," +
 					"ClaseTransID INTEGER NOT NULL," +
 					"CombID INTEGER NOT NULL," +
-					"Cant REAL NOT NULL," +
+		   	 		"Cant REAL NOT NULL," +
 					"Total REAL NOT NULL," +
 					"TanOrigID INTEGER NOT NULL," +
 					"Recibio TEXT NOT NULL," +
@@ -172,7 +172,7 @@ public class BaseDatosScript {
 					"WS2 TEXT NOT NULL," +
 					"Pipa INTEGER NOT NULL," +
 					"Estacion INTEGER NOT NULL," +
-					"Puerto INTEGER NOT NULL," +
+					"Puerto TEXT NOT NULL," +
 					"PRIMARY KEY ([ID])" +
 					");";
 			db.execSQL(sql);
@@ -270,7 +270,7 @@ public class BaseDatosScript {
 
 		try {
 			db.execSQL("INSERT INTO Params VALUES (0,0,'','',0,0,'',0);");
-			db.execSQL("INSERT INTO Param VALUES ('1','','',0,0,0);");
+			db.execSQL("INSERT INTO Param VALUES ('1','','',0,0,'');");
 
 			return 1;
 		} catch (SQLiteException e) {

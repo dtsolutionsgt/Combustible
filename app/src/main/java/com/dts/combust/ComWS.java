@@ -71,7 +71,7 @@ public class ComWS extends PBase {
 
         isbusy=0;
 
-        URL="http://192.168.1.137/Comb/wsAndr.asmx";
+        URL="http://192.168.1.52/wsCom/wsAndr.asmx";
 
     }
 
@@ -389,7 +389,17 @@ public class ComWS extends PBase {
         ftmsg="";ftflag=false;
 
         try {
-            if (!AddTable("Proyecto")) return false;
+           /* if (!AddTable("Proyecto")) return false;
+            if (!AddTable("Combustible")) return false;
+            if (!AddTable("Disponible")) return false;
+            if (!AddTable("Empleados")) return false;
+            if (!AddTable("Equipo")) return false;
+            if (!AddTable("Estacion")) return false;
+            if (!AddTable("Operador")) return false;
+            if (!AddTable("Pipa")) return false;
+            if (!AddTable("Proyecto")) return false;*/
+            if (!AddTable("ProyectoEquipo")) return false;
+            //if (!AddTable("ProyectoFase")) return false;
         } catch (Exception e) {
             return false;
         }
@@ -410,9 +420,11 @@ public class ComWS extends PBase {
             for (int i = 0; i < rc; i++) {
                 try {
                     sql = listItems.get(i);
+                    sql=sql.replace("MOV","DISPONIBLE");
                     dbT.execSQL(sql);
                     if (i % 10==0) SystemClock.sleep(20);
                 } catch (Exception e) {
+                    String ee=e.getMessage();
                     Log.e("z", e.getMessage());
                 }
             }
@@ -473,6 +485,55 @@ public class ComWS extends PBase {
             return SQL;
         }
 
+        if (TN.equalsIgnoreCase("Combustible")) {
+            SQL = "SELECT CombID,Nombre,Activo FROM Combustible";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Disponible")) {
+            SQL = "SELECT DepID, TipoDep, SUM(Cant) AS Disponible, 0 ,0 FROM Mov WHERE (Activo = 1) GROUP BY DepID, TipoDep";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Empleados")) {
+            SQL = "SELECT EmpID,Barra,Nombre,Activo FROM Empleados WHERE Activo=1";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Equipo")) {
+            SQL = "SELECT VehID,Nombre,Tipo,CombID,CantComb,ConsProm,Kilometraje,Numero,Placa,Barra,Activo FROM Equipo WHERE Activo=1";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Estacion")) {
+            SQL = "SELECT TanID,Tipo,CombID,Codigo,Nombre,Capacidad,SucID,Activo,Barra FROM Estacion WHERE Activo=1";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Operador")) {
+            SQL = "SELECT OperID,Tipo,Nombre,Activo,Barra,SucID,Usuario,Clave FROM Operador WHERE Activo=1 AND Tipo>=0";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Pipa")) {
+            SQL = "SELECT  PipaID, Placa, Nombre, Capacidad, Activo, SucID, Barra FROM Pipa WHERE Activo=1";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("Proyecto")) {
+            SQL = "SELECT ProyID,Nombre,Activo,SucID,Codigo FROM Proyecto WHERE Activo=1";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("ProyectoEquipo")) {
+            SQL = "SELECT  ProyectoEquipo.ProyID,ProyectoEquipo.VehID FROM ProyectoEquipo INNER JOIN Proyecto ON ProyectoEquipo.ProyID=Proyecto.ProyID WHERE (Proyecto.Activo = 1)";
+            return SQL;
+        }
+
+        if (TN.equalsIgnoreCase("ProyectoFase")) {
+            SQL = "SELECT ProyectoFase.FaseID, ProyectoFase.ProyID, ProyectoFase.Nombre, ProyectoFase.Activo FROM ProyectoFase INNER JOIN Proyecto ON ProyectoFase.ProyID =Proyecto.ProyID WHERE  (Proyecto.Activo=1) AND (ProyectoFase.Activo=1)";
+            return SQL;
+        }
         return SQL;
     }
 

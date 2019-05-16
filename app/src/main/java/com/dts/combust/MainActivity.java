@@ -229,7 +229,9 @@ public class MainActivity extends PBase {
     }
 
     private void doMenuItem1() {
-        toast("Texto en centro de pagina");
+        //toast("Texto en centro de pagina");
+
+        startActivity(new Intent(this,Configuracion.class));
     }
 
     private void doMenuItem2() {
