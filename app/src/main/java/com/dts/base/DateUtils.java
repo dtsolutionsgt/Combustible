@@ -134,7 +134,6 @@ public class DateUtils {
 		return s;
 	}
 
-
 	public long fechames(long f) {
 		f=(int) f/1000000;
 		f=f*1000000;

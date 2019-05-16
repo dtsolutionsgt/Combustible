@@ -481,7 +481,7 @@ public class ComWS extends PBase {
         String SQL = "";
 
         if (TN.equalsIgnoreCase("Proyecto")) {
-            SQL = "SELECT ProyID,Nombre,Activo,SucID,Codigo FROM Proyecto WHERE Activo=1";
+            SQL = "SELECT ProyID,Nombre,Codigo,Activo,SucID FROM Proyecto WHERE Activo=1";
             return SQL;
         }
 

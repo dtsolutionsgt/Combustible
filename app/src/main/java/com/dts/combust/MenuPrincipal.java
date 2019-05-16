@@ -41,6 +41,7 @@ public class MenuPrincipal extends PBase {
         buildMenuItems();
         listItems();
 
+        gl.exitapp=false;
     }
 
 
@@ -85,6 +86,8 @@ public class MenuPrincipal extends PBase {
                 startActivity(new Intent(this,ComWS.class));break;
             case 3:
                 msgAskExit("Salír de aplicación");break;
+            case 5:
+                startActivity(new Intent(this,Proyecto.class));break;
         }
 
     }
