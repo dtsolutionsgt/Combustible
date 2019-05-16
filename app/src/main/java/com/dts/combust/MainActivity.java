@@ -311,10 +311,10 @@ public class MainActivity extends PBase {
     @Override
     protected void onResume() {
         super.onResume();
-       if (callback ==1) {
-           callback =0;
-           if (gl.exitapp) finish();
-       }
+        if (callback == 1) {
+            callback = 0;
+            if (gl.exitapp) finish();
+        }
     }
 
 }
