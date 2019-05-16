@@ -137,7 +137,7 @@ public class clsParamObj {
             item.ws2 = dt.getString(2);
             item.pipa = dt.getInt(3);
             item.estacion = dt.getInt(4);
-            item.puerto = dt.getInt(5);
+            item.puerto = dt.getString(5);
 
             items.add(item);
 

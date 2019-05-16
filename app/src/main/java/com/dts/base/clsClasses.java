@@ -125,7 +125,7 @@ public class clsClasses {
         public String ws2;
         public int pipa;
         public int estacion;
-        public int puerto;
+        public String puerto;
     }
 
     public class clsPipa {
