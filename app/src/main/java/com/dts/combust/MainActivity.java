@@ -131,9 +131,8 @@ public class MainActivity extends PBase {
         });
 
     }
-
-
-    // Main
+    
+    //region Main
 
     private void processLogIn() {
         clsOperadorObj log=new clsOperadorObj(this,Con,db);
@@ -204,8 +203,9 @@ public class MainActivity extends PBase {
 
     }
 
+    //endregion
 
-    // Menu
+    //region Menu
 
     private void showMenu() {
 
@@ -316,11 +316,14 @@ public class MainActivity extends PBase {
 
     }
 
+    //endregion
 
-    // Aux
+    //region Aux
 
 
-    // Activity Events
+    //endregion
+
+    //region Activity Events
 
     @Override
     protected void onResume() {
@@ -330,5 +333,7 @@ public class MainActivity extends PBase {
             if (gl.exitapp) finish();
         }
     }
+
+    //endregion
 
 }
