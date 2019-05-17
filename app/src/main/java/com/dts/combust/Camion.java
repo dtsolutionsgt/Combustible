@@ -14,10 +14,11 @@ import com.dts.listadapt.LA_Camion;
 
 public class Camion extends PBase {
 
-    private String itemtext;
     private ListView listView;
     private LA_Camion adapter;
     private clsPipaObj  pipa;
+
+    private String itemtext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,59 +37,39 @@ public class Camion extends PBase {
         gl.exitapp=false;
     }
 
-    //region Main
+
+    //region Events
+
+    public void doExit(View view) {
+        finish();
+    }
 
     private void setHandlers() {
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object lvObj = listView.getItemAtPosition(position);
-                clsClasses.clsPipa item = (clsClasses.clsPipa)lvObj;
+                clsClasses.clsPipa item = (clsClasses.clsPipa) lvObj;
 
                 adapter.setSelectedIndex(position);
 
-            };
-        });*/
+                gl.pipa = item.pipaid;
+                gl.pipaNom=item.nombre;
+                gl.exitapp=false;
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
-                Object lvObj = listView.getItemAtPosition(position);
-                clsClasses.clsPipa item = (clsClasses.clsPipa)lvObj;
+                finish();
 
-                adapter.setSelectedIndex(position);
-
-                itemtext=item.nombre;
-                selid=item.pipaid;selidx=position;
-
-            };
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                try {
-                    Object lvObj = listView.getItemAtPosition(position);
-                    clsClasses.clsPipa item = (clsClasses.clsPipa) lvObj;
-
-                    adapter.setSelectedIndex(position);
-
-                    itemtext=item.nombre;
-                    selid=item.pipaid;selidx=position;
-
-                } catch (Exception e) {
-                    toast(e.getMessage());
-                }
-                return true;
             }
+
+            ;
         });
+
     }
 
     //endregion
 
-    //region Events
+    //region Main
 
     private void listItems() {
         selid = 0;
@@ -101,28 +82,6 @@ public class Camion extends PBase {
         } catch (Exception e) {
             mu.msgbox(e.getMessage());
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        try {
-            pipa.reconnect(Con,db);
-        } catch (Exception e) {
-            msgbox(e.getMessage());
-        }
-
-        if (callback ==1) {
-            callback =0;
-            listItems();return;
-        }
-
-    }
-
-
-    public void doExit(View view) {
-        finish();
     }
 
     //endregion
@@ -148,6 +107,33 @@ public class Camion extends PBase {
 
         dialog.show();
 
+    }
+
+    //endregion
+
+    //region Activity Events
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            pipa.reconnect(Con,db);
+        } catch (Exception e) {
+            msgbox(e.getMessage());
+        }
+
+        if (callback ==1) {
+            callback =0;
+            listItems();return;
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        gl.exitapp=true;
+        super.onBackPressed();
     }
 
     //endregion

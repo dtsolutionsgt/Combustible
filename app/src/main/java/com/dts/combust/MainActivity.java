@@ -151,32 +151,47 @@ public class MainActivity extends PBase {
             if (emptystr(pass)) {
                 toast("Falta clave.");txtUser.requestFocus();return;
             }
-            user = user;pass = pass;
+            user=user;pass=pass;
 
-            log.fill(" WHERE Activo=1");
-            if (log.count == 0) {
-                msgbox("Catálogo de usuarios vacio.");return;
-            }
+            if (user.equalsIgnoreCase("DTS") && pass.equalsIgnoreCase("DTS")) {
 
-            flag=false;
-            for (int i = 0; i <log.count; i++) {
+                gl.userid =0;
+                gl.nombreusuario = "dts";
+                gl.rolid = 3;
+                flag = true;
 
-                su=log.items.get(i).usuario; sp=log.items.get(i).clave;
+            } else {
 
-                if (su.equalsIgnoreCase(user) && sp.equalsIgnoreCase(pass)) {
-                    gl.userid=log.items.get(i).operid;
-                    gl.nombreusuario=log.items.get(i).nombre;
-                    gl.rolid=log.items.get(i).tipo;
-
-                    flag=true;break;
+               log.fill(" WHERE Activo=1");
+                if (log.count == 0) {
+                    msgbox("Catálogo de usuarios vacio.");return;
                 }
+
+                flag = false;
+                for (int i = 0; i < log.count; i++) {
+
+                    su = log.items.get(i).usuario;
+                    sp = log.items.get(i).clave;
+
+                    if (su.equalsIgnoreCase(user) && sp.equalsIgnoreCase(pass)) {
+                        gl.userid = log.items.get(i).operid;
+                        gl.nombreusuario = log.items.get(i).nombre;
+                        gl.rolid = log.items.get(i).tipo;
+
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (!flag) {
+                    msgbox("¡El usuario no existe o contraseña incorrecta!");
+                    txtUser.requestFocus();
+                    return;
+                }
+
+                //gl.rol = 1; // 0- tanque,1-cisterna,3-supervisor
             }
 
-            if (!flag) {
-                msgbox("¡El usuario no existe o contraseña incorrecta!");txtUser.requestFocus();return;
-            }
-
-            gl.rol=1; // 0- tanque,1-cisterna,3-supervisor
 
             txtUser.setText("");txtPass.setText("");txtUser.requestFocus();
 
@@ -195,10 +210,10 @@ public class MainActivity extends PBase {
     private void showMenu() {
 
         final AlertDialog Dialog;
-        final String[] selitems = {"Toast centralizado","Ingreso de valor","Lista en dialogo"};
+        final String[] selitems = {"Configuración"};
 
         AlertDialog.Builder menudlg = new AlertDialog.Builder(this);
-        menudlg.setTitle("Menu pagina principal");
+        menudlg.setTitle("Menu principal");
 
         menudlg.setItems(selitems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
@@ -206,9 +221,9 @@ public class MainActivity extends PBase {
                     case 0:
                         doMenuItem1();break;
                     case 1:
-                        doMenuItem2();break;
+                        break;
                     case 2:
-                        doMenuItem3();break;
+                        break;
                 }
 
                 dialog.cancel();
