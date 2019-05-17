@@ -124,8 +124,16 @@ public class MenuPrincipal extends PBase {
 
         menuitems.clear();
 
-        switch (gl.rol) {
+        switch (gl.rolid) {
             case 0: // Tanque
+                asignacion();
+                item=clsCls.new clsMenu();
+                item.id=5;item.nombre="Despacho";
+                menuitems.add(item);
+
+                item=clsCls.new clsMenu();
+                item.id=6;item.nombre="Traslado";
+                menuitems.add(item);
                 break;
             case 1: // Cisterna
                 item=clsCls.new clsMenu();
@@ -152,6 +160,10 @@ public class MenuPrincipal extends PBase {
         item.id=3;item.nombre="Salir";
         menuitems.add(item);
 
+    }
+
+    public void asignacion(){
+        startActivity(new Intent(this,Camion.class));
     }
 
 

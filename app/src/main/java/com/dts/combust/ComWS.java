@@ -389,7 +389,7 @@ public class ComWS extends PBase {
         ftmsg="";ftflag=false;
 
         try {
-           /* if (!AddTable("Proyecto")) return false;
+            if (!AddTable("Proyecto")) return false;
             if (!AddTable("Combustible")) return false;
             if (!AddTable("Disponible")) return false;
             if (!AddTable("Empleados")) return false;
@@ -397,9 +397,9 @@ public class ComWS extends PBase {
             if (!AddTable("Estacion")) return false;
             if (!AddTable("Operador")) return false;
             if (!AddTable("Pipa")) return false;
-            if (!AddTable("Proyecto")) return false;*/
+            if (!AddTable("Proyecto")) return false;
             if (!AddTable("ProyectoEquipo")) return false;
-            //if (!AddTable("ProyectoFase")) return false;
+            if (!AddTable("ProyectoFase")) return false;
         } catch (Exception e) {
             return false;
         }
