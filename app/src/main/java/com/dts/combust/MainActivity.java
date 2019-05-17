@@ -15,14 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dts.classes.clsUsuarioObj;
+import com.dts.classes.clsOperadorObj;
 
 public class MainActivity extends PBase {
 
     private EditText txtUser,txtPass;
     private TextView lblTitle;
 
-    private clsUsuarioObj usr;
+    private clsOperadorObj log;
 
     private int rolid;
 
@@ -50,7 +50,7 @@ public class MainActivity extends PBase {
             txtPass = (EditText) findViewById(R.id.editText3);
             lblTitle = (TextView) findViewById(R.id.textView2);
 
-            txtUser.setText("1");txtPass.setText("1");
+            txtUser.setText("2");txtPass.setText("2");
 
             setHandlers();
 
@@ -136,12 +136,12 @@ public class MainActivity extends PBase {
     // Main
 
     private void processLogIn() {
-        clsUsuarioObj usr=new clsUsuarioObj(this,Con,db);
+        clsOperadorObj log=new clsOperadorObj(this,Con,db);
         String user,pass,su,sp;
         boolean flag;
 
         try {
-            /*
+
             user=txtUser.getText().toString();
             if (emptystr(user)) {
                 toast("Falta usuario.");txtUser.requestFocus();return;
@@ -153,20 +153,20 @@ public class MainActivity extends PBase {
             }
             user = user;pass = pass;
 
-            usr.fill(" WHERE Activo=1");
-            if (usr.count == 0) {
+            log.fill(" WHERE Activo=1");
+            if (log.count == 0) {
                 msgbox("Catálogo de usuarios vacio.");return;
             }
 
             flag=false;
-            for (int i = 0; i <usr.count; i++) {
+            for (int i = 0; i <log.count; i++) {
 
-                su=usr.items.get(i).login; sp=usr.items.get(i).clave;
+                su=log.items.get(i).usuario; sp=log.items.get(i).clave;
 
                 if (su.equalsIgnoreCase(user) && sp.equalsIgnoreCase(pass)) {
-                    gl.userid=usr.items.get(i).id;
-                    gl.nombreusuario=usr.items.get(i).nombre;
-                    gl.rolid=usr.items.get(i).rol;
+                    gl.userid=log.items.get(i).operid;
+                    gl.nombreusuario=log.items.get(i).nombre;
+                    gl.rolid=log.items.get(i).tipo;
 
                     flag=true;break;
                 }
@@ -175,7 +175,6 @@ public class MainActivity extends PBase {
             if (!flag) {
                 msgbox("¡El usuario no existe o contraseña incorrecta!");txtUser.requestFocus();return;
             }
-            */
 
             gl.rol=1; // 0- tanque,1-cisterna,3-supervisor
 
@@ -268,15 +267,15 @@ public class MainActivity extends PBase {
     private void doMenuItem3() {
         final AlertDialog Dialog;
 
-        usr=new clsUsuarioObj(this,Con,db);
-        usr.fill(" WHERE Activo=1 ORDER BY Nombre");
-        if (usr.count == 0) {
+        log=new clsOperadorObj(this,Con,db);
+        log.fill(" WHERE Activo=1 ORDER BY Nombre");
+        if (log.count == 0) {
             msgbox("Catálogo de usuarios vacio.");return;
         }
 
-        final String[] selitems = new String[usr.count];
-        for (int i = 0; i < usr.count; i++) {
-            selitems[i] = usr.items.get(i).nombre;
+        final String[] selitems = new String[log.count];
+        for (int i = 0; i < log.count; i++) {
+            selitems[i] = log.items.get(i).nombre;
         }
 
         AlertDialog.Builder mMenuDlg = new AlertDialog.Builder(this);
@@ -285,7 +284,7 @@ public class MainActivity extends PBase {
         mMenuDlg.setItems(selitems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 try {
-                    msgbox("Código : " + usr.items.get(item).id + "\nNombre : " + usr.items.get(item).nombre);
+                    msgbox("Código : " + log.items.get(item).operid + "\nNombre : " + log.items.get(item).nombre);
                 } catch (Exception e) {
                 }
             }
