@@ -21,7 +21,7 @@ public class Proyecto extends PBase {
     private ListView listView;
     private EditText txt1;
 
-    private clsProyectoObj proy;
+    private clsProyectoObj proy,proyfind;
     private LA_Proyecto adapter;
 
     private String bcode;
@@ -40,6 +40,7 @@ public class Proyecto extends PBase {
         lbl1.setText(du.dayweek(fecha)+" "+du.sfechalocal(fecha));
 
         proy =new clsProyectoObj(this,Con,db);
+        proyfind =new clsProyectoObj(this,Con,db);
 
         setHandlers();
 
@@ -47,16 +48,12 @@ public class Proyecto extends PBase {
 
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent e) {
-        if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            bcode = txt1.getText().toString().trim();
-            //validaCodigoBarra();
-        }
-        return super.dispatchKeyEvent(e);
-    }
 
     //region Events
+
+    public void doClear(View view) {
+        txt1.setText("");txt1.requestFocus();
+    }
 
     public void doExit(View view) {
         super.finish();
@@ -64,9 +61,9 @@ public class Proyecto extends PBase {
 
     private void setHandlers() {
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
                 try {
                     Object lvObj = listView.getItemAtPosition(position);
                     clsClasses.clsProyecto item = (clsClasses.clsProyecto) lvObj;
@@ -80,20 +77,7 @@ public class Proyecto extends PBase {
                 } catch (Exception e) {
                     toast(e.getMessage());
                 }
-                return true;
-            }
-        });
-
-
-        txt1.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {}
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-             }
+            };
         });
 
         txt1.setOnKeyListener(new View.OnKeyListener() {
@@ -134,14 +118,17 @@ public class Proyecto extends PBase {
 
     private void validaCodigoBarra() {
         try {
-            proy.fill("WHERE Codigo='"+bcode+"'");
-            if (proy.count>0) {
-                gl.proyID = proy.first().proyid;
+
+            proyfind.fill("WHERE Codigo='"+bcode+"'");
+
+            if (proyfind.count>0) {
+                gl.proyID = proyfind.first().proyid;
                 gl.faseID = 0;gl.fase = "-";
 
                 despacho();
             } else {
                 toast("Proyecto no existe");
+
                 Handler handlerTimer = new Handler();
                 handlerTimer.postDelayed(new Runnable() {
                     public void run() {
@@ -151,7 +138,6 @@ public class Proyecto extends PBase {
                         } catch (Exception e) {
                             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
                         }
-
                     }
                 }, 500);
             }
@@ -161,7 +147,6 @@ public class Proyecto extends PBase {
     }
 
     private void despacho() {
-        toast("FOUND");
         //startActivity(new Intent(this,Proyecto.class));
         finish();
     }
@@ -185,6 +170,7 @@ public class Proyecto extends PBase {
         super.onResume();
         try {
             proy.reconnect(Con,db);
+            proyfind.reconnect(Con,db);
         } catch (Exception e) {
             msgbox(e.getMessage());
         }

@@ -32,9 +32,20 @@ public class MenuPrincipal extends PBase {
         super.InitBase(savedInstanceState);
 
         listView = (ListView) findViewById(R.id.listView1);
-        lblTitle = (TextView) findViewById(R.id.textView3);lblTitle.setText(gl.nombreusuario);
+        lblTitle = (TextView) findViewById(R.id.textView3);
 
         rolid=gl.rolid;
+
+        switch (rolid) {
+            case 0:
+                lblTitle.setText(gl.pipaNom);break;
+            case 1:
+                lblTitle.setText("");break;
+            case 3:
+                lblTitle.setText(gl.nombreusuario);break;
+        }
+
+        callback=-1;
 
         setHandlers();
 
@@ -65,6 +76,7 @@ public class MenuPrincipal extends PBase {
             };
         });
     }
+
 
     // Main
 
@@ -126,7 +138,6 @@ public class MenuPrincipal extends PBase {
 
         switch (gl.rolid) {
             case 0: // Tanque
-                asignacion();
                 item=clsCls.new clsMenu();
                 item.id=5;item.nombre="Despacho";
                 menuitems.add(item);
@@ -134,6 +145,7 @@ public class MenuPrincipal extends PBase {
                 item=clsCls.new clsMenu();
                 item.id=6;item.nombre="Traslado";
                 menuitems.add(item);
+
                 break;
             case 1: // Cisterna
                 item=clsCls.new clsMenu();
@@ -162,7 +174,9 @@ public class MenuPrincipal extends PBase {
 
     }
 
-    public void asignacion(){
+    public void asignacionPipa(){
+        callback=2;
+        gl.exitapp=false;
         startActivity(new Intent(this,Camion.class));
     }
 
@@ -174,5 +188,22 @@ public class MenuPrincipal extends PBase {
         msgAskExit("Salir de aplicación");
     }
 
+    protected void onResume() {
+        super.onResume();
+
+        if (callback == -1) {
+            asignacionPipa();
+            return;
+        }
+
+        if (callback == 2) {
+            callback = 0;
+            lblTitle.setText(gl.pipaNom);
+            if (gl.exitapp) {
+                gl.exitapp=false;
+                finish();
+            }
+        }
+    }
 
 }

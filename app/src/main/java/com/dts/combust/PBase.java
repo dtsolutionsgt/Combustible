@@ -3,9 +3,13 @@ package com.dts.combust;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dts.base.AppMethods;
@@ -102,6 +106,11 @@ public class PBase extends Activity {
         if (mu.emptystr(msg)) return;
 
         Toast toast= Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+        view.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        TextView text = view.findViewById(android.R.id.message);
+        text.setTextColor(Color.WHITE);
+
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
@@ -111,6 +120,11 @@ public class PBase extends Activity {
         if (mu.emptystr(msg)) return;
 
         Toast toast= Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG);
+        View view = toast.getView();
+        view.getBackground().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        TextView text = view.findViewById(android.R.id.message);
+        text.setTextColor(Color.WHITE);
+
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }

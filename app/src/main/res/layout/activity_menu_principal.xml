@@ -20,30 +20,20 @@
         app:layout_constraintVertical_bias="1">
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:gravity="right"
-            android:onClick="doTables"
-            android:paddingRight="10dp"
-            android:text="DTSolutions"
-            android:textColor="#FFFFFF" />
-
-        <TextView
             android:id="@+id/textView3"
-            android:layout_width="297dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="false"
             android:layout_centerVertical="true"
-            android:gravity="left"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
             android:paddingLeft="10dp"
             android:text="nombre usuario"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <RelativeLayout

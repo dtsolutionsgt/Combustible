@@ -29,7 +29,7 @@
             android:name=".MenuPrincipal"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".UsuarioLista"
             android:screenOrientation="portrait"
