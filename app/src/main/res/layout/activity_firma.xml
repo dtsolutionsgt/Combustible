@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Firma">
+
+    <RelativeLayout
+        android:id="@+id/relBottom"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/color_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1">
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:onClick="cancelCapture"
+            android:padding="8dp"
+            android:src="@drawable/arr_prev" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:onClick="saveSignature"
+            android:padding="2dp"
+            android:src="@drawable/check_green" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="94dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="102dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="103dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toStartOf="@+id/imageView9"
+            android:layout_toEndOf="@+id/imageView8"
+            android:src="@android:drawable/ic_menu_delete" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relTop"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/color_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Busqueda"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relFirmaFrame"
+        android:layout_width="410dp"
+        android:layout_height="630dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.406">
+
+        <LinearLayout
+            android:id="@+id/linFirmaCanvas"
+            android:layout_width="match_parent"
+            android:layout_height="387dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="244dp"
+            android:layout_marginBottom="-1dp"
+            android:layout_weight="0.60"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>
