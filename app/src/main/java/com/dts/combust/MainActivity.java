@@ -5,8 +5,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -17,6 +21,8 @@ import android.widget.Toast;
 
 import com.dts.classes.clsOperadorObj;
 
+import java.io.File;
+
 public class MainActivity extends PBase {
 
     private EditText txtUser,txtPass;
@@ -25,6 +31,7 @@ public class MainActivity extends PBase {
     private clsOperadorObj log;
 
     private int rolid;
+    private int cod = 1;
 
     private Bundle instanceState;
 
@@ -37,6 +44,7 @@ public class MainActivity extends PBase {
 
         //startApplication();
         grantPermissions();
+        folder();
     }
 
     // Manejo de permisos de la aplicacion - solo en MainActivity
@@ -90,7 +98,7 @@ public class MainActivity extends PBase {
     }
 
 
-    // Events
+    //region Events
 
     public void doEnter(View view) {
         processLogIn();
@@ -131,6 +139,8 @@ public class MainActivity extends PBase {
         });
 
     }
+
+    //endregion
 
     //region Main
 
@@ -245,7 +255,7 @@ public class MainActivity extends PBase {
     private void doMenuItem1() {
         //toast("Texto en centro de pagina");
 
-        startActivity(new Intent(this,Configuracion.class));
+        startActivity(new Intent(this,Firma.class));
     }
 
     private void doMenuItem2() {
@@ -336,4 +346,33 @@ public class MainActivity extends PBase {
 
     //endregion
 
+    public void camera(View view){
+        int codResult = 1;
+        try{
+            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                msgbox("El dispositivo no soporta toma de foto");return;
+            }
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            Intent intento1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + cod + ".jpg");
+            intento1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
+            startActivityForResult(intento1,codResult);
+
+            cod++;
+        }catch (Exception e){
+            mu.msgbox("Error en camera: "+e.getMessage());
+        }
+    }
+
+    public void folder(){
+        try {
+            File directory = new File(Environment.getExternalStorageDirectory() + "/ComFotos");
+            directory.mkdirs();
+        } catch (Exception e) {
+
+        }
+    }
 }
