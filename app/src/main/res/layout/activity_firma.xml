@@ -57,6 +57,7 @@
             android:layout_marginBottom="2dp"
             android:layout_toStartOf="@+id/imageView9"
             android:layout_toEndOf="@+id/imageView8"
+            android:onClick="clearView"
             android:src="@android:drawable/ic_menu_delete" />
     </RelativeLayout>
 
@@ -77,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Busqueda"
+            android:text="Firma"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -95,20 +96,109 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.406">
 
+        <TextView
+            android:id="@+id/txtC2"
+            android:layout_width="106dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="146dp"
+            android:layout_marginTop="136dp"
+            android:layout_marginEnd="27dp"
+            android:layout_toEndOf="@+id/txtC"
+            android:text="Tomar otra foto" />
+
+        <ImageView
+            android:id="@+id/Camera3"
+            android:layout_width="70dp"
+            android:layout_height="54dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="158dp"
+            android:layout_marginTop="77dp"
+            android:layout_marginEnd="92dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toEndOf="@+id/Camera2"
+            android:onClick="camera"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relLogin" />
+
+        <ImageView
+            android:id="@+id/Camera2"
+            android:layout_width="70dp"
+            android:layout_height="54dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="77dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="camera"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relLogin" />
+
         <LinearLayout
             android:id="@+id/linFirmaCanvas"
             android:layout_width="match_parent"
-            android:layout_height="387dp"
+            android:layout_height="266dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="0dp"
-            android:layout_marginTop="244dp"
-            android:layout_marginBottom="-1dp"
+            android:layout_marginTop="254dp"
+            android:layout_marginBottom="110dp"
             android:layout_weight="0.60"
             android:orientation="horizontal">
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="131dp"
+            android:text="Foto Horometro" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtC"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="66dp"
+            android:layout_marginTop="16dp"
+            android:text="Cedula: "
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txtNombre"
+            android:layout_width="219dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/txtCedula"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="137dp"
+            android:layout_marginTop="9dp"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/txtCedula"
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtC"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="6dp"
+            android:layout_toEndOf="@+id/textView26"
+            android:ems="10"
+            android:hint="Ingrese su cedula"
+            android:inputType="phone"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
