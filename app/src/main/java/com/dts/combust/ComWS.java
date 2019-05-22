@@ -71,12 +71,12 @@ public class ComWS extends PBase {
 
         isbusy=0;
 
-        URL="http://192.168.1.52/wsCom/wsAndr.asmx";
+        URL="http://192.168.1.137/comb/wsAndr.asmx";
 
     }
 
 
-    // Events
+    //region Events
 
     public void doExit(View view) {
         finish();
@@ -128,8 +128,9 @@ public class ComWS extends PBase {
 
     }
 
+    //endregion
 
-    // Main
+    //region Main
 
     private void runRecep() {
         if (isbusy==1) return;
@@ -155,8 +156,9 @@ public class ComWS extends PBase {
         dbld.save();
     }
 
+    //endregion
 
-    // Web Service Methods
+    //region Web Service Methods
 
     public int fillTable(String value,String delcmd) {
         int rc;
@@ -374,8 +376,9 @@ public class ComWS extends PBase {
         return 0;
     }
 
+    //endregion
 
-    // WEB SERVICE - RECEPCION
+    //region WS Recepcion
 
     private boolean getData(){
         Cursor DT;
@@ -537,8 +540,9 @@ public class ComWS extends PBase {
         return SQL;
     }
 
+    //endregion
 
-    // Web Service handling Methods
+    //region WS Recepcion Handling Methods
 
     public void wsExecute(){
 
@@ -608,51 +612,87 @@ public class ComWS extends PBase {
 
     }
 
+    //endregion
 
-
-    // WEB SERVICE - ENVIO
+    //region WS Envio
 
     private boolean sendData() {
 
         errflag=false;
 
-        senv = "Envío terminado \n \n";
+        senv = "Envío terminado\n\n";
 
-        if (!envioUsuarios()) return false;
+        if (!envioMovimientos()) return false;
 
         return true;
     }
 
-    public boolean envioUsuarios() {
-        String ss;
+    public boolean envioMovimientos() {
+        Cursor dt;
+        String ss,trid;
 
         fterr = "";
         try {
-            dbld.clear();
-            dbld.insert("Usuario", "WHERE 1=1");
 
-            listItems.clear();
-            for (int i = 0; i < dbld.items.size(); i++) {
-                listItems.add(dbld.items.get(i));
-            }
+            sql = "SELECT " +
+                    "HHID,Fecha,TransHH,DepID,TipoDep, " +
+                    "Activo,Bandera,TipoTransID,ClaseTransID,CombID,Cant,Total, " +
+                    "TanOrigID,Recibio,EquID,Kilometraje,Nota,CoorX, " +
+                    "CoorY,Origen,ProyID,FaseID,Fase " +
+                    "FROM Mov WHERE Bandera=0";
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() == 0) return true;
 
-            for (int i = 0; i < listItems.size(); i++) {
+            dt.moveToFirst();
+            while (!dt.isAfterLast()) {
+                trid=dt.getString(0);
 
-                ss=listItems.get(i);
+                ins.init("mov");
+
+                ins.add("HHID", dt.getInt(0));
+                //ins.add("Fecha", "'" + DU.univfechaext(dt.getInt(1)) + "'");
+                ins.add("Fecha", dt.getString(22));
+                ins.add("TransHH", dt.getString(2));
+                ins.add("DepID", dt.getInt(3));
+                ins.add("TipoDep", dt.getInt(4));
+                ins.add("Activo", 1);
+                ins.add("Bandera", 0);
+                ins.add("TipoTransID", dt.getInt(7));
+                ins.add("ClaseTransID", dt.getInt(8));
+                ins.add("CombID", dt.getInt(9));
+                ins.add("Cant", dt.getDouble(10));
+                ins.add("Total", dt.getDouble(11));
+                ins.add("TanOrigID", dt.getInt(12));
+                ins.add("Recibio", dt.getString(13));
+                ins.add("EquID", dt.getInt(14));
+                ins.add("Kilometraje", dt.getDouble(15));
+                ins.add("Nota", dt.getString(16));
+                ins.add("CoorX", dt.getDouble(17));
+                ins.add("CoorY", dt.getDouble(18));
+                ins.add("Origen", dt.getInt(19));
+                ins.add("ProyID", dt.getInt(20));
+                ins.add("FaseID", dt.getInt(21));
+                ins.add("Fase", dt.getString(22));
+
                 dbld.clear();
-                dbld.add(ss);
+                dbld.add(ins.sql());
+
+                String sts=ins.sql();
 
                 try {
                     if (commitSQL() == 1) {
-                        //
+                        sql="UPDATE Mov SET Bandera=1 WHERE TransHH='"+trid+"'";
+                        db.execSQL(sql);
                     } else {
-                        fterr += sstr;dbg +=ss +" , ***";
+                        fterr += sstr;dbg="Movimiento : "+trid;
                     }
                 } catch (Exception e) {
                     errflag=true;fterr += "\n" + e.getMessage();dbg = e.getMessage();
                 }
 
+                dt.moveToNext();
             }
+
         } catch (Exception e) {
             errflag=true;fstr = e.getMessage();dbg = fstr;
         }
@@ -660,8 +700,9 @@ public class ComWS extends PBase {
         return true;
     }
 
+    //endregion
 
-    // Web Service handling Methods
+    //region WS Envio Handling Methods
 
     public void wsSendExecute(){
 
@@ -722,8 +763,9 @@ public class ComWS extends PBase {
 
     }
 
+    //endregion
 
-    // Aux
+    //region Aux
 
     private void msgAskExit(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -741,13 +783,14 @@ public class ComWS extends PBase {
 
     }
 
+    //endregion
 
-    // Activity Events
+    //region Activity Events
 
     @Override
     public void onBackPressed() {
         if (isbusy==0) super.onBackPressed();
      }
 
-
+    //endregion
 }

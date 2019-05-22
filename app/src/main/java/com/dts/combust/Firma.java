@@ -2,6 +2,8 @@ package com.dts.combust;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -183,6 +185,7 @@ public class Firma extends PBase {
             paint.setStrokeWidth(STROKE_WIDTH);
         }
 
+        @SuppressLint("WrongThread")
         public boolean save(View v) {
             int nx,ny;
             double ox,oy,fact;
@@ -206,7 +209,6 @@ public class Firma extends PBase {
                 v.draw(canvas);
 
                 Bitmap bms=Bitmap.createScaledBitmap(bm,nx,ny, true);
-
                 bms.compress(Bitmap.CompressFormat.JPEG, 75, mFileOutStream);
 
                 //bm.compress(Bitmap.CompressFormat.PNG, 90, mFileOutStream);

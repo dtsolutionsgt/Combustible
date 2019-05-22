@@ -8,7 +8,6 @@ public class clsClasses {
         public int activo;
     }
 
-
     public class clsDeposito {
         public int depid;
         public int tipodep;
@@ -83,7 +82,7 @@ public class clsClasses {
 
     public class clsMov {
         public String hhid;
-        public int fecha;
+        public long fecha;
         public String transhh;
         public int transid;
         public int depid;
