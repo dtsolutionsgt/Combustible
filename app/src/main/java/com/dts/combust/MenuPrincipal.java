@@ -175,10 +175,12 @@ public class MenuPrincipal extends PBase {
     }
 
     public void asignacionPipa(){
-        callback=2;
-        gl.exitapp=false;
-        startActivity(new Intent(this,Camion.class));
-    }
+        if (gl.rolid==0) {
+            callback=2;
+            gl.exitapp=false;
+            startActivity(new Intent(this,Camion.class));
+        }
+     }
 
 
     // Activity Events

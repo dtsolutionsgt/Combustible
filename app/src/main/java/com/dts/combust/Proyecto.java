@@ -1,11 +1,8 @@
 package com.dts.combust;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.dts.base.EntregaVeh;
 import com.dts.base.clsClasses;
 import com.dts.classes.clsProyectoObj;
 import com.dts.listadapt.LA_Proyecto;

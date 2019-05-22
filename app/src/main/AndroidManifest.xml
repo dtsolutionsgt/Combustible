@@ -71,7 +71,17 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.dts.base.EntregaVeh"
+            android:name=".EntregaVeh"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+        <activity
+            android:name=".TrasladoTan"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+        <activity
+            android:name=".TrasladoCist"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateAlwaysVisible" />

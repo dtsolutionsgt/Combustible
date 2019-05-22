@@ -198,7 +198,7 @@ public class MainActivity extends PBase {
                     return;
                 }
 
-                //gl.rol = 1; // 0- tanque,1-cisterna,3-supervisor
+                //gl.rol = 1; // 1- tanque, 0-cisterna,3-supervisor
             }
 
 
