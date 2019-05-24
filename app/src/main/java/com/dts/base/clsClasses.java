@@ -13,7 +13,7 @@ public class clsClasses {
         public int tipodep;
         public int stamp;
         public int turno;
-        public int fecha;
+        public String fecha;
         public double tini;
         public double tfin;
         public double rini;

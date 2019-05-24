@@ -43,7 +43,7 @@ public class BaseDatosScript {
 					"TipoDep INTEGER NOT NULL," +
 					"Stamp INTEGER NOT NULL," +
 					"Turno INTEGER NOT NULL," +
-					"Fecha INTEGER NOT NULL," +
+					"Fecha TEXT NOT NULL," +
 					"Tini REAL NOT NULL," +
 					"Tfin REAL NOT NULL," +
 					"Rini REAL NOT NULL," +

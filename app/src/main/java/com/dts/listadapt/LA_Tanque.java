@@ -1,5 +1,4 @@
 package com.dts.listadapt;
-
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -17,21 +16,20 @@ import com.dts.base.DateUtils;
 import com.dts.base.clsClasses;
 import com.dts.base.MiscUtils;
 import com.dts.combust.PBase;
-import com.dts.base.appGlobals;
 import com.dts.combust.R;
 
-public class LA_Camion extends BaseAdapter {
+public class LA_Tanque extends BaseAdapter {
 
     private MiscUtils mu;
     private DateUtils du;
     private AppMethods app;
 
-    private ArrayList<clsClasses.clsPipa> items = new ArrayList<clsClasses.clsPipa>();
+    private ArrayList<clsClasses.clsEstacion> items = new ArrayList<clsClasses.clsEstacion>();
 
     private int selectedIndex;
     private LayoutInflater l_Inflater;
 
-    public LA_Camion(Context context, PBase owner, ArrayList<clsClasses.clsPipa> results) {
+    public LA_Tanque(Context context, PBase owner, ArrayList<clsClasses.clsEstacion> results) {
         items = results;
         l_Inflater = LayoutInflater.from(context);
         selectedIndex = -1;
@@ -56,7 +54,7 @@ public class LA_Camion extends BaseAdapter {
 
     public Object getItem(int position) {
         return items.get(position);
-   }
+    }
 
     public long getItemId(int position) {
         return position;
@@ -80,7 +78,7 @@ public class LA_Camion extends BaseAdapter {
         }
 
         holder.lbl2.setText("" + items.get(position).nombre);
-        holder.lbl1.setText("" + items.get(position).pipaid);
+        holder.lbl1.setText("" + items.get(position).tanid);
         holder.img1.setImageResource(R.drawable.cisterna);
 
         if (selectedIndex != -1 && position == selectedIndex) {

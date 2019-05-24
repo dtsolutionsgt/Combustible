@@ -195,7 +195,8 @@
             android:layout_marginTop="6dp"
             android:layout_toEndOf="@+id/textView26"
             android:ems="10"
-            android:inputType="phone"
+            android:hint="Ingrese su cedula"
+            android:inputType="number"
             android:textSize="24sp"
             android:textStyle="bold" />
 
