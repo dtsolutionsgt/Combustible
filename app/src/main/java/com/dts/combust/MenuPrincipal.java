@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.dts.classes.clsEstacionObj;
 
 import com.dts.base.clsClasses;
 import com.dts.listadapt.LA_Menu;
@@ -19,8 +20,10 @@ public class MenuPrincipal extends PBase {
     private TextView lblTitle;
 
     private ArrayList<clsClasses.clsMenu> menuitems = new ArrayList<clsClasses.clsMenu>();
+    private clsClasses.clsEstacion eitems=clsCls.new clsEstacion();
     private ListView listView;
     private LA_Menu adapter;
+    private clsEstacionObj estacion;
 
     private int rolid;
 
@@ -30,6 +33,8 @@ public class MenuPrincipal extends PBase {
         setContentView(R.layout.activity_menu_principal);
 
         super.InitBase(savedInstanceState);
+
+        estacion = new clsEstacionObj(this, Con, db);
 
         listView = (ListView) findViewById(R.id.listView1);
         lblTitle = (TextView) findViewById(R.id.textView3);
@@ -98,6 +103,32 @@ public class MenuPrincipal extends PBase {
                 startActivity(new Intent(this,ComWS.class));break;
             case 3:
                 msgAskExit("Salír de aplicación");break;
+            case 4:
+                if(gl.rolid == 3){
+
+                    msgAskInv("Como desea realizar el inventario");
+                    return;
+
+                }else if(gl.rolid==1){
+
+                    gl.tipoDepos = 1;
+
+                    estacion.fill("WHERE Activo = 1");
+
+                    eitems = estacion.first();
+
+                    gl.pipa = eitems.tanid;
+                    gl.pipaNom=eitems.nombre;
+                    gl.exitapp=false;
+
+                    startActivity(new Intent(this,Lectura.class));break;
+
+                }else if(gl.rolid==0){
+
+                    gl.tipoDepos = 0;
+                    startActivity(new Intent(this,Lectura.class));break;
+
+                }
             case 5:
                 startActivity(new Intent(this,Proyecto.class));break;
         }
@@ -106,6 +137,30 @@ public class MenuPrincipal extends PBase {
 
 
     // Dialogs
+
+    private void msgAskInv(String msg) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Combustible");
+        dialog.setMessage("¿" + msg + "?");
+
+        dialog.setPositiveButton("Cisterna", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                gl.tipoDepos=0;
+                goToInv();
+            }
+        });
+
+        dialog.setNegativeButton("Tanque", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                gl.tipoDepos=1;
+                goToInv();
+            }
+        });
+
+        dialog.show();
+
+    }
 
     private void msgAskExit(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -182,6 +237,21 @@ public class MenuPrincipal extends PBase {
         }
      }
 
+    public void goToInv(){
+        if(gl.tipoDepos==0){
+            startActivity(new Intent(this,Inventario.class));
+        }else{
+            estacion.fill("WHERE Activo = 1");
+
+            eitems = estacion.first();
+
+            gl.pipa = eitems.tanid;
+            gl.pipaNom=eitems.nombre;
+            gl.exitapp=false;
+
+            startActivity(new Intent(this,Lectura.class));
+        }
+    }
 
     // Activity Events
 
@@ -194,7 +264,11 @@ public class MenuPrincipal extends PBase {
         super.onResume();
 
         if (callback == -1) {
-            asignacionPipa();
+
+            if(gl.rolid==0){
+                asignacionPipa();
+            }
+
             return;
         }
 

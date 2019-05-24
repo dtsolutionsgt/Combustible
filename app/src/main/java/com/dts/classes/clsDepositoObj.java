@@ -141,7 +141,7 @@ public class clsDepositoObj {
             item.tipodep=dt.getInt(1);
             item.stamp=dt.getInt(2);
             item.turno=dt.getInt(3);
-            item.fecha=dt.getInt(4);
+            item.fecha=dt.getString(4);
             item.tini=dt.getDouble(5);
             item.tfin=dt.getDouble(6);
             item.rini=dt.getDouble(7);

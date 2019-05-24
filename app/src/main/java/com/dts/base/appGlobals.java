@@ -18,7 +18,7 @@ public class appGlobals extends Application {
 	public int turno, turnID, turnStamp, fotoTp;
 
 	public String nombreusuario;
-	public int rol;
+	public int rol, tipoDepos=0;
 	public boolean exitapp;
 
 	// Variables guardados al momento de botar la aplicacion

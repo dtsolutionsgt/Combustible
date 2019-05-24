@@ -58,7 +58,7 @@ public class MainActivity extends PBase {
             txtPass = (EditText) findViewById(R.id.editText3);
             lblTitle = (TextView) findViewById(R.id.textView2);
 
-            txtUser.setText("2");txtPass.setText("2");
+            txtUser.setText("1");txtPass.setText("1");
 
             setHandlers();
 
