@@ -1,5 +1,7 @@
 package com.dts.combust;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -70,9 +72,24 @@ public class Configuracion extends PBase {
             }
 
 
-            msgbox("Correcto");
-            finish();
+            msgAskExit("Correcto");
         }
+
+    }
+
+    private void msgAskExit(String msg) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle(R.string.app_name);
+        dialog.setMessage(msg);
+
+        dialog.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        dialog.show();
 
     }
 

@@ -84,11 +84,11 @@
         android:layout_marginBottom="8dp"
         android:text="Vehículo"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintBottom_toBottomOf="@+id/txtVeh"
         app:layout_constraintStart_toStartOf="@+id/textView6" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/txtVeh"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -112,9 +112,9 @@
         android:clickable="true"
         android:onClick="doSearch"
         android:src="@drawable/search32"
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintBottom_toBottomOf="@+id/txtVeh"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="@+id/editText" />
+        app:layout_constraintTop_toTopOf="@+id/txtVeh" />
 
     <ImageView
         android:id="@+id/imageView14"
@@ -123,7 +123,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/barcode"
-        app:layout_constraintEnd_toStartOf="@+id/editText"
+        app:layout_constraintEnd_toStartOf="@+id/txtVeh"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <EditText
@@ -136,8 +136,8 @@
         android:inputType="numberDecimal"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintStart_toStartOf="@+id/txtVeh"
+        app:layout_constraintTop_toBottomOf="@+id/txtVeh" />
 
     <TextView
         android:id="@+id/textView24"

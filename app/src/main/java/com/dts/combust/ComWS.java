@@ -12,6 +12,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ public class ComWS extends PBase {
     private boolean ftflag,esvacio;
     private RadioGroup radURL;
     private RadioButton radOficina, radOutOff;
+    private Button btnConfig;
 
     private final String NAMESPACE ="http://tempuri.org/";
     private String METHOD_NAME,URL;
@@ -74,6 +76,7 @@ public class ComWS extends PBase {
         radURL = (RadioGroup) findViewById(R.id.radURL);
         radOficina = (RadioButton) findViewById(R.id.radOffice);
         radOutOff = (RadioButton) findViewById(R.id.radOutOf);
+        btnConfig = (Button) findViewById(R.id.btnConfig);
 
         System.setProperty("line.separator","\r\n");
 
@@ -82,6 +85,10 @@ public class ComWS extends PBase {
         isbusy=0;
 
         getURL(1);
+
+        if(gl.rolid!=3){
+            btnConfig.setVisibility(View.INVISIBLE);
+        }
         //URL="http://192.168.1.52/wsCom/wsAndr.asmx";
 
     }

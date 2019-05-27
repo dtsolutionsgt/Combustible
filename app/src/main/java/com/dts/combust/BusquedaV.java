@@ -18,6 +18,7 @@ public class BusquedaV extends PBase {
     private clsEquipoObj equipo;
     private LA_BusquedaV adapter;
     private EditText txtSearch;
+    private String vF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class BusquedaV extends PBase {
                 clsClasses.clsEquipo item = (clsClasses.clsEquipo) lvObj;
 
                 adapter.setSelectedIndex(position);
+                gl.valida=2;
 
                 gl.placa = item.placa;
                 gl.equipoNombre=item.nombre;
@@ -82,13 +84,17 @@ public class BusquedaV extends PBase {
 
     private void listItems() {
         selid = 0;
-        String vF;
 
 
         vF=txtSearch.getText().toString().replace("'","");
         try {
             if(vF.isEmpty()){
-                equipo.fill();
+
+                if(gl.vehOrder.isEmpty()){
+                    equipo.fill();
+                }else {
+                    equipo.fill(" WHERE Placa LIKE '%\" + vF + \"%' ORDER BY Placa DESC");
+                }
 
                 adapter=new LA_BusquedaV(this,this, equipo.items);
                 listView.setAdapter(adapter);
@@ -114,5 +120,11 @@ public class BusquedaV extends PBase {
 
     public void doSearch(View view) {
         listItems();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
