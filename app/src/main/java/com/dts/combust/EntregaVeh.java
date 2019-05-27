@@ -161,6 +161,8 @@ public class EntregaVeh extends PBase {
 
             imprimeTicket();
 
+            toast("Transacción completa");
+
             finish();
         } catch (Exception e) {
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
@@ -207,17 +209,14 @@ public class EntregaVeh extends PBase {
 
             mov.add(item);
 
-            /*
-            Try
-            If gUsrPipa Then gDepos = gPipa
-            If gUsrEst Then gDepos = vEst
+            sql = "UPDATE Disponible SET Valor=Valor-"+vCant+" WHERE ID="+vEst+" ";
+            if (gl.rolid==0) {  // Cisterna
+                sql += " AND Tipo=0";
+            } else {            // Tanque
+                sql += " AND Tipo=1";
+            }
 
-            vSQL = "UPDATE Disponible SET Valor=Valor-" & CStr(vCant) & ",CombID=" & CStr(vCombEst) & " WHERE ID=" & gDepos & " "
-            If gUsrPipa Then vSQL &= " AND Tipo=0"
-            If gUsrEst Then vSQL &= " AND Tipo=1"
-
-            Xcute(vSQL)
-            */
+            db.execSQL(sql);
 
             return true;
 

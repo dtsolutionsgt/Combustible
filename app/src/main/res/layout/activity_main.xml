@@ -73,7 +73,7 @@
             android:layout_centerVertical="true"
             android:gravity="right"
             android:paddingLeft="10dp"
-            android:text="Ver 0.00 - 01/01/2019"
+            android:text="Ver 2.1.1 - 30/05/2019"
             android:textColor="#FFFFFF" />
     </RelativeLayout>
 
