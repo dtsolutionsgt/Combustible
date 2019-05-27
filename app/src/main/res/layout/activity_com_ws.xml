@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="276dp"
         android:background="@drawable/frame_round"
+        android:gravity="center"
         android:onClick="askSend"
         android:padding="10dp"
         android:text="Enviar"

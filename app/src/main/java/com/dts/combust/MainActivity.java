@@ -26,7 +26,7 @@ import java.io.File;
 public class MainActivity extends PBase {
 
     private EditText txtUser,txtPass;
-    private TextView lblTitle;
+    private TextView lblTitle,lblVer;
 
     private clsOperadorObj log;
 
@@ -34,6 +34,8 @@ public class MainActivity extends PBase {
     private int cod = 1;
 
     private Bundle instanceState;
+
+    private String ver="2.1.0",verf="30/05/2019";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class MainActivity extends PBase {
             txtUser = (EditText) findViewById(R.id.editText2);txtUser.requestFocus();
             txtPass = (EditText) findViewById(R.id.editText3);
             lblTitle = (TextView) findViewById(R.id.textView2);
+            lblVer = (TextView) findViewById(R.id.textView3);lblVer.setText("Ver. "+ver+" - "+verf);
 
             txtUser.setText("1");txtPass.setText("1");
 
@@ -81,8 +84,7 @@ public class MainActivity extends PBase {
             }
 
         } catch (Exception e) {
-            msgbox(new Object() {
-            }.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
+            msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
     }
 
@@ -255,7 +257,7 @@ public class MainActivity extends PBase {
     private void doMenuItem1() {
         //toast("Texto en centro de pagina");
 
-        startActivity(new Intent(this,Firma.class));
+        startActivity(new Intent(this,Configuracion.class));
     }
 
     private void doMenuItem2() {

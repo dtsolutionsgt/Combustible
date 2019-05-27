@@ -94,9 +94,13 @@ public class Configuracion extends PBase {
             txtWSLocal.setText(param.first().ws1);
             txtWSRemote.setText(param.first().ws2);
 
+            if (param.first().ws1.isEmpty()) txtWSLocal.setText("http://192.168.1._/comb/wsAndr.asmx");
+            if (param.first().ws2.isEmpty()) txtWSRemote.setText("http://192.168.1._/comb/wsAndr.asmx");
+
         } catch (Exception e) {
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
+
     }
 
 
