@@ -2,6 +2,7 @@ package com.dts.combust;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,7 +81,8 @@ public class EntregaVeh extends PBase {
     }
 
     public void doSearch(View view) {
-
+        callback=1;
+        startActivity(new Intent(this,BusquedaV.class));
     }
 
     public void doExit(View view) {
@@ -380,6 +382,22 @@ public class EntregaVeh extends PBase {
     //endregion
 
     //region Activity Events
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (callback==1) {
+            callback=0;
+
+
+            
+
+            return;
+        }
+
+
+    }
 
 
     //endregion
