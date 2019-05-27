@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -41,7 +40,7 @@ public class EntregaVeh extends PBase {
         lbl1 = (TextView) findViewById(R.id.textView6);;
         lbl3 = (TextView) findViewById(R.id.textView26);lbl3.setText("");
         lbl4 = (TextView) findViewById(R.id.textView27);lbl4.setText("");
-        txt1 = (EditText) findViewById(R.id.editText);
+        txt1 = (EditText) findViewById(R.id.txtVeh);
         txt2 = (EditText) findViewById(R.id.editText4);
         txt3 = (EditText) findViewById(R.id.editText5);
 
@@ -82,6 +81,8 @@ public class EntregaVeh extends PBase {
 
     public void doSearch(View view) {
         callback=1;
+        gl.vehOrder = txt1.getText().toString();
+        gl.valida=1;
         startActivity(new Intent(this,BusquedaV.class));
     }
 
@@ -257,7 +258,8 @@ public class EntregaVeh extends PBase {
             gl.vehNom=veh.first().nombre;
             vOrigen = 0;
 
-            lbl3.setText("");lbl4.setText("");
+            lbl3.setText(gl.vehNom);
+            lbl4.setText(""+mu.trunc(vCap,1));
 
             return 1;
         } catch (Exception e) {
@@ -344,12 +346,16 @@ public class EntregaVeh extends PBase {
                 lbl3.setText(gl.vehNom);
                 lbl4.setText(""+mu.trunc(vCap,1));
                 txt2.requestFocus();
+                validaPlaca();
             }
         });
 
         dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 vEqu=0;
+                txt1.setText("");
+                lbl3.setText("");
+                lbl4.setText("");
             }
         });
 
@@ -390,8 +396,18 @@ public class EntregaVeh extends PBase {
         if (callback==1) {
             callback=0;
 
+            txt1.setText(gl.placa);
 
-            
+            if(gl.placa.isEmpty()){
+                return;
+            }
+
+            if(gl.valida==2){
+                msgAsk1("El equipo no está asignado al proyecto. ¿Continuar?");
+                gl.valida=0;
+            }else if(gl.valida==1){
+                txt1.setText("");
+            }
 
             return;
         }
@@ -401,5 +417,7 @@ public class EntregaVeh extends PBase {
 
 
     //endregion
+
+
 
 }
