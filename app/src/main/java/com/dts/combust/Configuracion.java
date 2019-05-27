@@ -71,6 +71,7 @@ public class Configuracion extends PBase {
 
 
             msgbox("Correcto");
+            finish();
         }
 
     }
