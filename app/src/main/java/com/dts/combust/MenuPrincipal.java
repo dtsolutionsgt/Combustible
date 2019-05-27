@@ -78,7 +78,7 @@ public class MenuPrincipal extends PBase {
                 adapter.setSelectedIndex(position);
 
                 menuOption(item.id);
-            };
+        };
         });
     }
 

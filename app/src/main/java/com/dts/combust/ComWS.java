@@ -2,6 +2,7 @@ package com.dts.combust;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -10,11 +11,15 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.dts.base.BaseDatos;
 import com.dts.base.DateUtils;
 import com.dts.base.clsDataBuilder;
+import com.dts.classes.clsParamObj;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -51,6 +56,8 @@ public class ComWS extends PBase {
     private int scon,stockflag,reccnt;
     private String senv,gEmpresa,ActRuta;
     private boolean ftflag,esvacio;
+    private RadioGroup radURL;
+    private RadioButton radOficina, radOutOff;
 
     private final String NAMESPACE ="http://tempuri.org/";
     private String METHOD_NAME,URL;
@@ -64,6 +71,9 @@ public class ComWS extends PBase {
         super.InitBase(savedInstanceState);
 
         lbl1 = (TextView) findViewById(R.id.textView20);lbl1.setText("");
+        radURL = (RadioGroup) findViewById(R.id.radURL);
+        radOficina = (RadioButton) findViewById(R.id.radOffice);
+        radOutOff = (RadioButton) findViewById(R.id.radOutOf);
 
         System.setProperty("line.separator","\r\n");
 
@@ -71,10 +81,10 @@ public class ComWS extends PBase {
 
         isbusy=0;
 
-        URL="http://192.168.1.137/comb/wsAndr.asmx";
+        getURL(1);
+        //URL="http://192.168.1.52/wsCom/wsAndr.asmx";
 
     }
-
 
     //region Events
 
@@ -341,6 +351,26 @@ public class ComWS extends PBase {
 
         return 0;
 
+    }
+
+    public void checked(View view){
+
+        try {
+
+            if(radOficina.isChecked()){
+
+                radOutOff.setChecked(false);
+                getURL(1);
+
+            }else if (radOutOff.isChecked()){
+
+                radOficina.setChecked(false);
+                getURL(2);
+            }
+
+        }catch (Exception e){
+            msgbox("error en checked" + e);
+        }
     }
 
     public int getTest() {
@@ -623,6 +653,7 @@ public class ComWS extends PBase {
         senv = "Envío terminado\n\n";
 
         if (!envioMovimientos()) return false;
+        if (!envioDepositos()) return false;
 
         return true;
     }
@@ -700,13 +731,70 @@ public class ComWS extends PBase {
         return true;
     }
 
+    public boolean envioDepositos() {
+        Cursor dt;
+        String ss,trid;
+
+        fterr = "";
+        try {
+
+            sql = "SELECT " +
+                    "DepID,TipoDep,Stamp,Turno,Fecha, " +
+                    "Tini,Tfin,Rini,Rfin " +
+                    "FROM Deposito WHERE Radd=0";
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() == 0) return true;
+
+            dt.moveToFirst();
+            while (!dt.isAfterLast()) {
+                trid=dt.getString(0);
+
+                ins.init("Deposito");
+
+                ins.add("DepID", dt.getInt(0));
+                ins.add("TipoDep", dt.getInt(1));
+                ins.add("Stamp", dt.getInt(2));
+                ins.add("Turno", dt.getInt(3));
+                ins.add("Fecha", dt.getString(4));
+                ins.add("Tini", dt.getDouble(5));
+                ins.add("Tfin", dt.getDouble(6));
+                ins.add("Rini",  dt.getDouble(7));
+                ins.add("Rfin",  dt.getDouble(8));
+                ins.add("Radd", 0);
+
+                dbld.clear();
+                dbld.add(ins.sql());
+
+                String sts=ins.sql();
+
+                try {
+                    if (commitSQL() == 1) {
+                        sql="UPDATE Deposito SET Radd=1 WHERE DepID='"+gl.pipa+"' AND Stamp="+stamp+"";
+                        db.execSQL(sql);
+                    } else {
+                        fterr += sstr;dbg="Deposito : "+gl.pipa;
+                    }
+                } catch (Exception e) {
+                    errflag=true;fterr += "\n" + e.getMessage();dbg = e.getMessage();
+                }
+
+                dt.moveToNext();
+            }
+
+        } catch (Exception e) {
+            errflag=true;fstr = e.getMessage();dbg = fstr;
+        }
+
+        return true;
+    }
+
     //endregion
 
     //region WS Envio Handling Methods
 
     public void wsSendExecute(){
 
-       fstr="No connect";scon=0;
+        fstr="No connect";scon=0;
 
         try {
 
@@ -781,6 +869,28 @@ public class ComWS extends PBase {
 
         dialog.show();
 
+    }
+
+    public void getURL(int modo){
+
+        clsParamObj param =new clsParamObj(this,Con,db);;
+
+        try {
+            param.fill();
+
+            if(modo == 1){
+                URL = (param.first().ws1);
+            } else {
+                URL = (param.first().ws2);
+            }
+
+        } catch (Exception e) {
+            msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
+        }
+    }
+
+    public void goToConfig(View view){
+        startActivity(new Intent(this,Configuracion.class));
     }
 
     //endregion
