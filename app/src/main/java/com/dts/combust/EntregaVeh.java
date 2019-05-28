@@ -16,6 +16,7 @@ import com.dts.classes.clsCombustibleObj;
 import com.dts.classes.clsDisponibleObj;
 import com.dts.classes.clsEquipoObj;
 import com.dts.classes.clsMovObj;
+import com.dts.classes.clsParamObj;
 import com.dts.classes.clsProyectoequipoObj;
 import com.dts.classes.clsUsuarioObj;
 import com.dts.combust.PBase;
@@ -51,8 +52,12 @@ public class EntregaVeh extends PBase {
 
         //****************************
         gl.recibio="x";
-        gl.HH="1";
 
+
+        clsParamObj param =new clsParamObj(this,Con,db);
+
+        param.fill();
+        gl.HH=param.first().id;
         //****************************
 
         vEqu=0;vKilo=-1;vCant=-1;
