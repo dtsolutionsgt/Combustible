@@ -761,7 +761,9 @@ public class ComWS extends PBase {
 
             dt.moveToFirst();
             while (!dt.isAfterLast()) {
+
                 trid=dt.getString(0);
+                stamp=dt.getInt(2);
 
                 ins.init("Deposito");
 
@@ -776,6 +778,20 @@ public class ComWS extends PBase {
                 ins.add("Rfin",  dt.getDouble(8));
                 ins.add("Radd", 0);
 
+
+                upd.init("Deposito");
+
+                upd.add("Turno", dt.getInt(3));
+                upd.add("Fecha", dt.getString(4));
+                upd.add("Tini", dt.getDouble(5));
+                upd.add("Tfin", dt.getDouble(6));
+                upd.add("Rini",  dt.getDouble(7));
+                upd.add("Rfin",  dt.getDouble(8));
+                upd.add("Radd", 0);
+
+                upd.Where("DepID="+dt.getInt(0)+" AND TipoDep="+dt.getInt(1)+" AND Stamp="+dt.getInt(2));
+
+
                 dbld.clear();
                 dbld.add(ins.sql());
 
@@ -783,10 +799,19 @@ public class ComWS extends PBase {
 
                 try {
                     if (commitSQL() == 1) {
-                        sql="UPDATE Deposito SET Radd=1 WHERE DepID='"+gl.pipa+"' AND Stamp="+stamp+"";
+                        sql="UPDATE Deposito SET Radd=1 WHERE DepID='"+trid+"' AND Stamp="+stamp+"";
                         db.execSQL(sql);
                     } else {
-                        fterr += sstr;dbg="Deposito : "+gl.pipa;
+
+                        dbld.clear();
+                        dbld.add(upd.sql());
+
+                        if (commitSQL() == 1) {
+                            sql="UPDATE Deposito SET Radd=1 WHERE DepID='"+trid+"' AND Stamp="+stamp+"";
+                            db.execSQL(sql);
+                        } else {
+                            fterr += sstr;dbg = "Deposito : " + gl.pipa;
+                        }
                     }
                 } catch (Exception e) {
                     errflag=true;fterr += "\n" + e.getMessage();dbg = e.getMessage();
