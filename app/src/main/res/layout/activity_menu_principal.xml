@@ -29,8 +29,6 @@
             android:clickable="true"
             android:ellipsize="marquee"
             android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:onClick="doTables"
             android:paddingLeft="10dp"
             android:text="nombre usuario"
             android:textColor="#FFFFFF"
