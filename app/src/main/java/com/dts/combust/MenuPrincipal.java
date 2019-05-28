@@ -231,6 +231,9 @@ public class MenuPrincipal extends PBase {
     public void asignacionTanque(){
 
         try {
+
+            if(gl.rolid==3) return;
+
             clsEstacionObj estacion = new clsEstacionObj(this, Con, db);
             estacion.fill();
             gl.tanque=estacion.first().tanid;
