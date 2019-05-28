@@ -58,6 +58,7 @@ public class MenuPrincipal extends PBase {
         listItems();
 
         gl.exitapp=false;
+        asignacionTanque();
     }
 
 
@@ -227,8 +228,21 @@ public class MenuPrincipal extends PBase {
 
     }
 
+    public void asignacionTanque(){
+
+        try {
+            clsEstacionObj estacion = new clsEstacionObj(this, Con, db);
+            estacion.fill();
+            gl.tanque=estacion.first().tanid;
+        } catch (Exception e) {
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+        }
+
+    }
+
     public void asignacionPipa(){
-        if (gl.rolid==0) {
+
+           if (gl.rolid==0) {
             callback=2;
             gl.exitapp=false;
             startActivity(new Intent(this,Camion.class));

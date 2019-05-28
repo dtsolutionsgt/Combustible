@@ -59,7 +59,7 @@ public class EntregaVeh extends PBase {
         if (gl.rolid==0) {  // Cisterna
             vEst=gl.pipa;
         } else {            // Tanque
-            vEst=gl.pipa;
+            vEst=gl.tanque;
         }
 
     }
@@ -175,11 +175,14 @@ public class EntregaVeh extends PBase {
     private boolean guardaTrans() {
         clsMovObj mov = new clsMovObj(this, Con, db);
         clsClasses.clsMov item=clsCls.new clsMov();
+        String sfecha;
 
         try {
 
+            sfecha=du.univfechaextlong();
+
             item.hhid=gl.HH;
-            item.fecha=du.getActDateTime();
+            item.fecha=du.getActDateTimeSec();
             item.depid=vEst;
 
             if (gl.rolid==0) {  // Cisterna
@@ -208,7 +211,7 @@ public class EntregaVeh extends PBase {
             item.proyid=gl.proyID;
             item.faseid=0;
             //item.fase="-";
-            item.fase=du.univfechaext(fecha);
+            item.fase=sfecha;
 
             mov.add(item);
 
