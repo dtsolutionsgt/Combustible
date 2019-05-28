@@ -51,8 +51,10 @@ public class EntregaVeh extends PBase {
         setHandlers();
 
         //****************************
+
         gl.recibio="x";
 
+        //****************************
 
         clsParamObj param =new clsParamObj(this,Con,db);
 

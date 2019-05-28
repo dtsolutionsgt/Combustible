@@ -717,7 +717,7 @@ public class ComWS extends PBase {
                 ins.add("Origen", dt.getInt(19));
                 ins.add("ProyID", dt.getInt(20));
                 ins.add("FaseID", dt.getInt(21));
-                ins.add("Fase", dt.getString(22));
+                ins.add("Fase", "");
 
                 dbld.clear();
                 dbld.add(ins.sql());
