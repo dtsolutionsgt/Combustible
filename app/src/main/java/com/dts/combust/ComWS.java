@@ -689,7 +689,8 @@ public class ComWS extends PBase {
 
             dt.moveToFirst();
             while (!dt.isAfterLast()) {
-                trid=dt.getString(0);
+
+                trid=dt.getString(2);
 
                 ins.init("mov");
 
