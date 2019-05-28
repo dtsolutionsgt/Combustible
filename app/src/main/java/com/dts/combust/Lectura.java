@@ -123,8 +123,7 @@ public class Lectura extends PBase {
 
                 deposito.add(item);
 
-                msgbox("ok");
-                finish();
+                msgAskGuardado("Registro Guardado Correctamente");
 
             }else if(existencia == 1){
 
@@ -143,8 +142,7 @@ public class Lectura extends PBase {
 
                 deposito.update(item);
 
-                msgbox("ok");
-                finish();
+                msgAskGuardado("Registro Guardado Correctamente");
 
             }
 
@@ -196,7 +194,6 @@ public class Lectura extends PBase {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         dialog.setTitle("Combustible");
-        dialog.setMessage("¿" + msg + "?");
 
         dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -207,6 +204,22 @@ public class Lectura extends PBase {
         dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 return;
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    private void msgAskGuardado(String msg) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Combustible");
+        dialog.setMessage("¿" + msg + "?");
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
             }
         });
 
