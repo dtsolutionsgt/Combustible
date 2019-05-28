@@ -63,10 +63,6 @@ public class MenuPrincipal extends PBase {
 
     // Events
 
-    public void doTables(View view) {
-        startActivity(new Intent(this,Tablas.class));
-    }
-
     private void setHandlers() {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -109,7 +105,7 @@ public class MenuPrincipal extends PBase {
                     msgAskInv("Como desea realizar el inventario");
                     return;
 
-                }else if(gl.rolid==1){
+                } else if (gl.rolid==1){
 
                     gl.tipoDepos = 1;
 
@@ -123,7 +119,7 @@ public class MenuPrincipal extends PBase {
 
                     startActivity(new Intent(this,Lectura.class));break;
 
-                }else if(gl.rolid==0){
+                } else if (gl.rolid==0){
 
                     gl.tipoDepos = 0;
                     startActivity(new Intent(this,Lectura.class));break;
@@ -131,6 +127,8 @@ public class MenuPrincipal extends PBase {
                 }
             case 5:
                 startActivity(new Intent(this,Proyecto.class));break;
+            case 6:
+                toast("Pendiente implementación ...");
         }
 
     }

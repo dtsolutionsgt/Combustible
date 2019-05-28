@@ -11,10 +11,9 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dts.base.BaseDatos;
@@ -32,7 +31,10 @@ import java.util.ArrayList;
 
 public class ComWS extends PBase {
 
-    private TextView lbl1;
+    private TextView lbl1, lbl2;
+    private RadioGroup radURL;
+    private RadioButton radOficina, radOutOff;
+    private RelativeLayout relTab;
 
     private int isbusy;
     private String sp;
@@ -57,9 +59,7 @@ public class ComWS extends PBase {
     private int scon,stockflag,reccnt;
     private String senv,gEmpresa,ActRuta;
     private boolean ftflag,esvacio;
-    private RadioGroup radURL;
-    private RadioButton radOficina, radOutOff;
-    private Button btnConfig;
+
 
     private final String NAMESPACE ="http://tempuri.org/";
     private String METHOD_NAME,URL;
@@ -76,7 +76,8 @@ public class ComWS extends PBase {
         radURL = (RadioGroup) findViewById(R.id.radURL);
         radOficina = (RadioButton) findViewById(R.id.radOffice);
         radOutOff = (RadioButton) findViewById(R.id.radOutOf);
-        btnConfig = (Button) findViewById(R.id.btnConfig);
+        lbl2 = (TextView) findViewById(R.id.textView31);
+        relTab = (RelativeLayout) findViewById(R.id.rel006);
 
         System.setProperty("line.separator","\r\n");
 
@@ -87,7 +88,8 @@ public class ComWS extends PBase {
         getURL(1);
 
         if(gl.rolid!=3){
-            btnConfig.setVisibility(View.INVISIBLE);
+            lbl2.setVisibility(View.INVISIBLE);
+            relTab.setVisibility(View.INVISIBLE);
         }
         //URL="http://192.168.1.52/wsCom/wsAndr.asmx";
 
@@ -143,6 +145,10 @@ public class ComWS extends PBase {
 
         dialog.show();
 
+    }
+
+    public void doTables(View view) {
+        startActivity(new Intent(this,Tablas.class));
     }
 
     //endregion
@@ -903,6 +909,17 @@ public class ComWS extends PBase {
     //endregion
 
     //region Activity Events
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            if (radOficina.isChecked()) getURL(1);else getURL(2);
+        } catch (Exception e) {
+            msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
+        }
+    }
 
     @Override
     public void onBackPressed() {
