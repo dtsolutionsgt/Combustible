@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,18 +18,29 @@ import com.dts.classes.clsDisponibleObj;
 import com.dts.classes.clsEquipoObj;
 import com.dts.classes.clsMovObj;
 import com.dts.classes.clsParamObj;
+import com.dts.classes.clsPipaObj;
 import com.dts.classes.clsProyectoequipoObj;
 import com.dts.classes.clsUsuarioObj;
 import com.dts.combust.PBase;
 import com.dts.combust.R;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class EntregaVeh extends PBase {
 
     private TextView lbl1,lbl3,lbl4;
     private EditText txt1,txt2,txt3;
 
-    private int vEqu,vOrigen,vKilo,vEst,vCombEst;
+    private String fname,transhh;
+    private int vEqu,vOrigen,vKilo,vEst,vCombEst,placa;
     private double vCap,vCant;
+
+    private printer prn;
+    private Runnable printclose;
+
+    private BufferedWriter writer = null;
+    private FileWriter wfile;
 
 
     @Override
@@ -55,6 +67,15 @@ public class EntregaVeh extends PBase {
         //****************************
 
         clsParamObj param =new clsParamObj(this,Con,db);
+
+        prn=new printer(this,printclose);
+
+
+        printclose= new Runnable() {
+            public void run() {
+                finish();
+            }
+        };
 
         param.fill();
         gl.HH=param.first().id;
@@ -171,7 +192,7 @@ public class EntregaVeh extends PBase {
 
             toast("Transacción completa");
 
-            finish();
+            //finish();
         } catch (Exception e) {
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
@@ -210,6 +231,10 @@ public class EntregaVeh extends PBase {
             //item.nota", Mid(txtObserv.Text, 1, 50), "S")
             item.nota="";
             item.transhh=gl.HH+"_"+du.getCorelTimeLongStr();
+
+            transhh = item.transhh;
+
+            item.transid= gl.placa;
             item.coorx=0;
             item.coory=0;
             item.origen=vOrigen;
@@ -219,6 +244,7 @@ public class EntregaVeh extends PBase {
             item.fase=sfecha;
 
             mov.add(item);
+
 
             sql = "UPDATE Disponible SET Valor=Valor-"+vCant+" WHERE ID="+vEst+" ";
             if (gl.rolid==0) {  // Cisterna
@@ -241,6 +267,90 @@ public class EntregaVeh extends PBase {
 
     private void imprimeTicket() {
 
+        double Litros;
+        clsMovObj mov = new clsMovObj(this, Con, db);
+        clsClasses.clsMov item=clsCls.new clsMov();
+
+        try{
+
+            mov.fill(" WHERE TransHH = '"+ transhh +"'");
+
+            if(mov.count == 0) return;
+
+            item = mov.first();
+
+            Litros = item.cant * 3.7854;
+
+            fname = Environment.getExternalStorageDirectory()+"/print.txt";
+
+            wfile=new FileWriter(fname);
+            writer = new BufferedWriter(wfile);
+
+            writer.write("");
+
+            writer.write("                SERCONSA");
+            //'SP.WriteLine("DIRECCION: TOCUMEN, URBANIZACION")
+            //'SP.WriteLine("LAS AMERICAS")
+            //'SP.WriteLine("RUC: 1419267-1-631356")
+            writer.write("");
+            writer.write("\r\n");
+            writer.write("         COMPROBANTE DE ENTREGA");
+            writer.write("\r\n");
+            writer.write("\r\n");
+
+            writer.write("Transaccion :" + item.transhh);
+            writer.write("\r\n");
+            writer.write("Fecha : " + du.univfechaextlong(item.fecha));
+            writer.write("\r\n");
+            writer.write("Operador : " + gl.nombreusuario);
+            writer.write("\r\n");
+            writer.write("Cisterna : " + gl.pipaNom);
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("Diesel ");
+            writer.write("\r\n");
+            writer.write("------------------------------------");
+            writer.write("\r\n");
+            writer.write("     Galones : " + mu.decfrm(-item.cant));
+            writer.write("\r\n");
+            writer.write("     Litros  : " + mu.decfrm(-Litros));
+            writer.write("\r\n");
+            writer.write("------------------------------------");
+            writer.write("\r\n");
+            writer.write("\r\n");
+
+            writer.write("Vehiculo : " + gl.placa);
+            writer.write("\r\n");
+            writer.write("Kilometraje : " + (int)item.kilometraje);
+            writer.write("\r\n");
+            writer.write("Responsable :" + gl.recibio);
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("------------------------------------");
+            writer.write("\r\n");
+            writer.write("                Firma");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+            writer.write("\r\n");
+
+            writer.close();
+
+            if(prn.isEnabled()){
+                prn.printask(printclose, "print.txt");
+            }else {
+                msgbox("no Enabled");
+            }
+
+
+        }catch (Exception e){
+            msgbox("Error en imprimeTicket: "+e);
+        }
     }
 
 

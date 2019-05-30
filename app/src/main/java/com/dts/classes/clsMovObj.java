@@ -166,7 +166,7 @@ public class clsMovObj {
             item.hhid=dt.getString(0);
             item.fecha=dt.getInt(1);
             item.transhh=dt.getString(2);
-            item.transid=dt.getInt(3);
+            item.transid=dt.getString(3);
             item.depid=dt.getInt(4);
             item.tipodep=dt.getInt(5);
             item.activo=dt.getInt(6);

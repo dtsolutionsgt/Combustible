@@ -20,7 +20,7 @@ public class appGlobals extends Application {
 
 	public String nombreusuario;
 	public int rol, tipoDepos=0;
-	public boolean exitapp;
+	public boolean exitapp,devprncierre,endPrint;
 
 	// Variables guardados al momento de botar la aplicacion
 

@@ -172,6 +172,32 @@ public class DateUtils {
 		return s;
 	}
 
+	public String univfechaextlong(long f){
+		int cyear,cmonth,cday,ch,cm,cs,vd,vh;
+		String s;
+
+		Calendar c = Calendar.getInstance();
+
+		cyear = c.get(Calendar.YEAR);
+		cmonth = c.get(Calendar.MONTH)+1;
+		cday = c.get(Calendar.DAY_OF_MONTH);
+		ch=c.get(Calendar.HOUR_OF_DAY);
+		cm=c.get(Calendar.MINUTE);
+		cs=c.get(Calendar.SECOND);
+
+		s=""+cyear + "/";
+		if (cmonth>9) s=s+ String.valueOf(cmonth) + " - "; else s=s+"0"+ String.valueOf(cmonth) + "/";
+		if (cday>9) s=s+ String.valueOf(cday); else s=s+"0"+ String.valueOf(cday);
+		s=s+" ";
+		if (ch>9) s=s+ String.valueOf(ch); else s=s+"0"+ String.valueOf(ch);
+		s=s+":";
+		if (cm>9) s=s+ String.valueOf(cm); else s=s+"0"+ String.valueOf(cm);
+		s=s+":";
+		if (cs>9) s=s+ String.valueOf(cs); else s=s+"0"+ String.valueOf(cs);
+
+		return s;
+	}
+
 	public long fechames(long f) {
 		f=(int) f/1000000;
 		f=f*1000000;
