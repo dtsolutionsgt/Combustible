@@ -64,6 +64,8 @@ public class EntregaVeh extends PBase {
 
         //****************************
         gl.recibio="x";
+        gl.nombreRecibio="y";
+        gl.validacionFirma = false;
         //****************************
 
         clsParamObj param =new clsParamObj(this,Con,db);
@@ -101,7 +103,7 @@ public class EntregaVeh extends PBase {
         if (!validaProyecto()) {
             msgAsk2("El equipo no está asignado al proyecto. ¿Continuar?");
         } else {
-            saveTrans();
+            firma();
         }
     }
 
@@ -166,6 +168,10 @@ public class EntregaVeh extends PBase {
         txt3.setOnEditorActionListener(listener3);
 
 
+    }
+
+    private void firma(){
+        startActivity(new Intent(this,Firma.class));
     }
 
     //endregion
@@ -298,32 +304,32 @@ public class EntregaVeh extends PBase {
             writer.write("\r\n");
             writer.write("\r\n");
 
-            writer.write("Transaccion :" + item.transhh);
+            writer.write("Transaccion:" + item.transhh);
             writer.write("\r\n");
-            writer.write("Fecha : " + du.univfechaextlong(item.fecha));
+            writer.write("Fecha: " + du.univfechaextlong(item.fecha));
             writer.write("\r\n");
-            writer.write("Operador : " + gl.nombreusuario);
+            writer.write("Operador: " + gl.nombreusuario);
             writer.write("\r\n");
-            writer.write("Cisterna : " + gl.pipaNom);
+            writer.write("Cisterna: " + gl.pipaNom);
             writer.write("\r\n");
             writer.write("\r\n");
             writer.write("Diesel ");
             writer.write("\r\n");
             writer.write("------------------------------------");
             writer.write("\r\n");
-            writer.write("     Galones : " + mu.decfrm(-item.cant));
+            writer.write("     Galones: " + mu.decfrm(-item.cant));
             writer.write("\r\n");
-            writer.write("     Litros  : " + mu.decfrm(-Litros));
+            writer.write("     Litros : " + mu.decfrm(-Litros));
             writer.write("\r\n");
             writer.write("------------------------------------");
             writer.write("\r\n");
             writer.write("\r\n");
 
-            writer.write("Vehiculo : " + gl.placa);
+            writer.write("Vehiculo:" + gl.placa);
             writer.write("\r\n");
-            writer.write("Kilometraje : " + (int)item.kilometraje);
+            writer.write("Kilometraje: " + (int)item.kilometraje);
             writer.write("\r\n");
-            writer.write("Responsable :" + gl.recibio);
+            writer.write("Responsable:" + gl.recibio+"-"+gl.nombreRecibio);
             writer.write("\r\n");
             writer.write("\r\n");
             writer.write("\r\n");
@@ -344,7 +350,7 @@ public class EntregaVeh extends PBase {
             if(prn.isEnabled()){
                 prn.printask(printclose, "print.txt");
             }else {
-                msgbox("no Enabled");
+                msgbox("impresora: no Enabled");
             }
 
 
@@ -491,7 +497,7 @@ public class EntregaVeh extends PBase {
 
         dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                saveTrans();
+                firma();
             }
         });
 
@@ -530,6 +536,10 @@ public class EntregaVeh extends PBase {
             }
 
             return;
+        }
+
+        if(gl.validacionFirma){
+            saveTrans();
         }
 
 

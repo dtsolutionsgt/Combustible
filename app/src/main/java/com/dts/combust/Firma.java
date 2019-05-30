@@ -133,7 +133,7 @@ public class Firma extends PBase {
         }
     }
 
-    // Events
+    //region Events
 
     public void clearView(View view) {
         sign.clear();
@@ -158,11 +158,20 @@ public class Firma extends PBase {
         }else {
             surface.setDrawingCacheEnabled(true);
 
-            if (sign.save(surface)) super.finish();
+            if (sign.save(surface)){
+
+                gl.recibio = cedula.getText().toString();
+                gl.nombreRecibio = txtNombre.getText().toString();
+                gl.validacionFirma = true;
+                super.finish();
+
+            }
         }
     }
 
-    // Class
+    //endregion
+
+    //region Class
 
     public class Signature extends View  {
 
