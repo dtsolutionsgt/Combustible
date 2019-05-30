@@ -37,7 +37,7 @@ public class Lectura extends PBase {
         DU =  new DateUtils();
         deposito =  new clsDepositoObj(this, Con, db);
 
-        Inicial = (TextView) findViewById(R.id.txtInicial);
+        Inicial = (TextView) findViewById(R.id.txtInicial);Inicial.requestFocus();
         Final = (TextView) findViewById(R.id.txtFinal);
         IPulgadas = (TextView) findViewById(R.id.txtIPulgadas);
         FPulgadas = (TextView) findViewById(R.id.txtFPulgadas);
@@ -52,107 +52,27 @@ public class Lectura extends PBase {
             Inicial.setEnabled(false);
             IPulgadas.setEnabled(false);
             IOctavos.setEnabled(false);
+            Final.requestFocus();
         }
 
-        filltxt();
+        loadItem();
     }
+
+    //region Events
 
     public void doSave(View view) {
-
-        textInicial = Inicial.getText().toString();
-        textLFinal = Final.getText().toString();
-        textIniPulgadas = IPulgadas.getText().toString();
-        textFinPulgadas = FPulgadas.getText().toString();
-        textIniOctavos = IOctavos.getText().toString();
-        textFinOctavos = FOctavos.getText().toString();
-
-        if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty()) {
-
-            msgbox("Debe llenar todos los campos (Inicial y Final)");
-            return;
-
-        }else {
-
-            LInicial = Integer.parseInt(textInicial);
-            if(textLFinal.isEmpty()) ; else LFinal = Integer.parseInt(textLFinal);
-            IniPulgadas = Integer.parseInt(textIniPulgadas);
-            if(textFinPulgadas.isEmpty()) ; else FinPulgadas = Integer.parseInt(textFinPulgadas);
-            IniOctavos = Integer.parseInt(textIniOctavos);
-            if(textFinOctavos.isEmpty()) ; else FinOctavos = Integer.parseInt(textFinOctavos);
-
-            if(IniOctavos <=0) {msgbox("El inicial no puede ser 0"); return;}
-            //if(FinOctavos <=0) return;
-            if(IniOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
-            if(FinOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
-
-
-            if (LFinal==0){
-                msgAskLFinal("El final del totalizador va vacio, Desea Continuar");
-            }else {
-                if(LFinal<LInicial){
-                    msgbox("El valor de Final no puede ser menor al Inicial");
-                    return;
-                }
-
-                saveData();
-            }
-        }
-
+        save();
     }
 
-    public void saveData(){
-
-        try{
-            if(existencia == 0){
-
-                rini = IniPulgadas + IniOctavos * 0.125;
-                rfin = FinPulgadas + FinOctavos * 0.125;
-
-                fechaD = "20"+DU.univfechaext(fecha);
-
-                item.depid =  gl.pipa;
-                item.tipodep = gl.tipoDepos;
-                item.stamp = stamp;
-                item.turno = 1;
-                item.fecha = fechaD;
-                item.tini = LInicial;
-                item.tfin = LFinal;
-                item.rini = rini;
-                item.rfin = rfin;
-                item.radd = 0;
-
-                deposito.add(item);
-
-                msgAskGuardado("Registro Guardado Correctamente");
-
-            }else if(existencia == 1){
-
-
-                rini = IniPulgadas + IniOctavos * 0.125;
-                rfin = FinPulgadas + FinOctavos * 0.125;
-
-                fechaD = "20"+DU.univfechaext(fecha);
-
-                item.fecha = fechaD;
-                item.tini = LInicial;
-                item.tfin = LFinal;
-                item.rini = rini;
-                item.rfin = rfin;
-                item.radd = 0;
-
-                deposito.update(item);
-
-                msgAskGuardado("Registro Guardado Correctamente");
-
-            }
-
-        }catch (Exception e){
-            msgbox("Error en saveData= "+e);
-        }
-
+    public void doExit(View view) {
+        finish();
     }
 
-    public void filltxt(){
+    //endregion
+
+    //region Main
+
+    public void loadItem(){
 
         deposito.fill(" WHERE DepID = "+ gl.pipa +" AND Stamp = "+ stamp +" AND TipoDep = "+ gl.tipoDepos +"");
 
@@ -186,14 +106,106 @@ public class Lectura extends PBase {
 
     }
 
-    public void doExit(View view) {
-        finish();
+    public void save() {
+
+        textInicial = Inicial.getText().toString();
+        textLFinal = Final.getText().toString();
+        textIniPulgadas = IPulgadas.getText().toString();
+        textFinPulgadas = FPulgadas.getText().toString();
+        textIniOctavos = IOctavos.getText().toString();
+        textFinOctavos = FOctavos.getText().toString();
+
+        if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty()) {
+            msgbox("Debe llenar todos los campos (Inicial y Final)");return;
+        } else {
+
+            LInicial = Integer.parseInt(textInicial);
+            if(textLFinal.isEmpty()) ; else LFinal = Integer.parseInt(textLFinal);
+            IniPulgadas = Integer.parseInt(textIniPulgadas);
+            if(textFinPulgadas.isEmpty()) ; else FinPulgadas = Integer.parseInt(textFinPulgadas);
+            IniOctavos = Integer.parseInt(textIniOctavos);
+            if(textFinOctavos.isEmpty()) ; else FinOctavos = Integer.parseInt(textFinOctavos);
+
+            if(IniOctavos <=0) {msgbox("El inicial no puede ser 0"); return;}
+            //if(FinOctavos <=0) return;
+            if(IniOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
+            if(FinOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
+
+
+            if (LFinal==0){
+                msgAskLFinal("El final del totalizador va vacio, Desea Continuar");
+            }else {
+                if(LFinal<LInicial){
+                    msgbox("El valor de Final no puede ser menor al Inicial");
+                    return;
+                }
+                saveData();
+            }
+        }
+
     }
+
+    public void saveData(){
+
+        try{
+            if(existencia == 0){
+
+                rini = IniPulgadas + IniOctavos * 0.125;
+                rfin = FinPulgadas + FinOctavos * 0.125;
+
+                fechaD = "20"+DU.univfechaext(fecha);
+
+                item.depid =  gl.pipa;
+                item.tipodep = gl.tipoDepos;
+                item.stamp = stamp;
+                item.turno = 1;
+                item.fecha = fechaD;
+                item.tini = LInicial;
+                item.tfin = LFinal;
+                item.rini = rini;
+                item.rfin = rfin;
+                item.radd = 0;
+
+                deposito.add(item);
+
+                msgbox("Registro guardado correctamente");
+
+            }else if(existencia == 1){
+
+
+                rini = IniPulgadas + IniOctavos * 0.125;
+                rfin = FinPulgadas + FinOctavos * 0.125;
+
+                fechaD = "20"+DU.univfechaext(fecha);
+
+                item.fecha = fechaD;
+                item.tini = LInicial;
+                item.tfin = LFinal;
+                item.rini = rini;
+                item.rfin = rfin;
+                item.radd = 0;
+
+                deposito.update(item);
+
+                msgbox("Registro guardado correctamente");
+
+            }
+
+        }catch (Exception e){
+            msgbox("Error en saveData= "+e);
+        }
+
+    }
+
+    //endregion
+
+    //region Aux
 
     private void msgAskLFinal(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         dialog.setTitle("Combustible");
+        dialog.setMessage("¿" + msg + "?");
 
         dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -211,19 +223,6 @@ public class Lectura extends PBase {
 
     }
 
-    private void msgAskGuardado(String msg) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+    //endregion
 
-        dialog.setTitle("Combustible");
-        dialog.setMessage("¿" + msg + "?");
-
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-
-        dialog.show();
-
-    }
 }

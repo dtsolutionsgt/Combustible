@@ -56,6 +56,7 @@ public class Camion extends PBase {
 
                 gl.pipa = item.pipaid;
                 gl.pipaNom=item.nombre;
+                gl.pipacap=item.capacidad;
                 gl.exitapp=false;
 
                 finish();
