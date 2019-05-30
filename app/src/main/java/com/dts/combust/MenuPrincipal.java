@@ -61,8 +61,7 @@ public class MenuPrincipal extends PBase {
         asignacionTanque();
     }
 
-
-    // Events
+    //region Events
 
     private void setHandlers() {
 
@@ -79,8 +78,9 @@ public class MenuPrincipal extends PBase {
         });
     }
 
+    //endregion
 
-    // Main
+    //region Main
 
     private void listItems() {
         try {
@@ -101,17 +101,15 @@ public class MenuPrincipal extends PBase {
             case 3:
                 msgAskExit("Salír de aplicación");break;
             case 4:
-                if(gl.rolid == 3){
+                if (gl.rolid == 3){
 
                     msgAskInv("Como desea realizar el inventario");
                     return;
 
-                } else if (gl.rolid==1){
+                } else if (gl.rolid==1){  // tanque
 
                     gl.tipoDepos = 1;
-
                     estacion.fill("WHERE Activo = 1");
-
                     eitems = estacion.first();
 
                     gl.pipa = eitems.tanid;
@@ -120,22 +118,24 @@ public class MenuPrincipal extends PBase {
 
                     startActivity(new Intent(this,Lectura.class));break;
 
-                } else if (gl.rolid==0){
-
+                } else if (gl.rolid==0){ // cisterna
                     gl.tipoDepos = 0;
                     startActivity(new Intent(this,Lectura.class));break;
-
                 }
             case 5:
                 startActivity(new Intent(this,Proyecto.class));break;
             case 6:
-                toast("Pendiente implementación ...");
-        }
+                if (gl.rolid==1) { // tanque
 
+                } else { // cisterna
+                    //startActivity(new Intent(this,TransTan.class));break;
+                }
+        }
     }
 
+    //endregion
 
-    // Dialogs
+    //region Dialogs
 
     private void msgAskInv(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -182,8 +182,9 @@ public class MenuPrincipal extends PBase {
 
     }
 
+    //endregion
 
-    // Aux
+    //region Aux
 
     private void buildMenuItems() {
         clsClasses.clsMenu item;
@@ -268,7 +269,9 @@ public class MenuPrincipal extends PBase {
         }
     }
 
-    // Activity Events
+    //endregion
+
+    //region Activity Events
 
     @Override
     public void onBackPressed() {
@@ -296,5 +299,7 @@ public class MenuPrincipal extends PBase {
             }
         }
     }
+
+    //endregion
 
 }

@@ -61,7 +61,7 @@ public class MainActivity extends PBase {
             lblTitle = (TextView) findViewById(R.id.textView2);
             lblVer = (TextView) findViewById(R.id.textView3);lblVer.setText("Ver. "+ver+" - "+verf);
 
-            txtUser.setText("1");txtPass.setText("1");
+            txtUser.setText("2");txtPass.setText("2");
 
             setHandlers();
 
