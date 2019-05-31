@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Entrega a Vehículo"
+            android:text="Traslado del tanque"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -133,6 +133,7 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/imageView15"

@@ -72,7 +72,6 @@ public class EntregaVeh extends PBase {
 
         prn=new printer(this,printclose);
 
-
         printclose= new Runnable() {
             public void run() {
                 finish();

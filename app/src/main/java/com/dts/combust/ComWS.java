@@ -215,18 +215,6 @@ public class ComWS extends PBase {
             idbg=idbg+" rec " +rc +"  ";
 
             s="";
-            if (delcmd.equalsIgnoreCase("DELETE FROM P_STOCK")) {
-                if (rc==1) {
-                    stockflag=0;//return 1;
-                } else {
-                    stockflag=1;
-                }
-            }
-
-            // if (delcmd.equalsIgnoreCase("DELETE FROM P_COBRO")) {
-            // 	idbg=idbg+" RC ="+rc+"---";
-            //}
-
 
             for (int i = 0; i < rc; i++) {
                 String str = "";
@@ -667,6 +655,21 @@ public class ComWS extends PBase {
 
         if (!envioMovimientos()) return false;
         if (!envioDepositos()) return false;
+
+        try {
+            db.beginTransaction();
+
+            sql="DELETE FROM Mov WHERE Bandera=1";
+            db.execSQL(sql);
+
+            sql="DELETE FROM Deposito WHERE Stamp<"+stamp+"";
+            db.execSQL(sql);
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        } catch (Exception e) {
+            db.endTransaction();
+        }
 
         return true;
     }

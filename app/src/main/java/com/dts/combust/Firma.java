@@ -74,7 +74,7 @@ public class Firma extends PBase {
         cam1 = (ImageView) findViewById(R.id.Camera2);
         cam2 = (ImageView) findViewById(R.id.Camera3);
         txtC = (TextView) findViewById(R.id.txtC);
-        txtC2 = (TextView) findViewById(R.id.txtC2);
+        txtC2 = (TextView) findViewById(R.id.textView37);
         cedula = (TextView) findViewById(R.id.txtCedula);
         txtNombre = (TextView) findViewById(R.id.txtNombre);
 
@@ -365,7 +365,6 @@ public class Firma extends PBase {
                 Toast.makeText(this, "SIN FOTO.", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
 }

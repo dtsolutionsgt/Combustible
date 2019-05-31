@@ -58,7 +58,8 @@
             android:layout_toStartOf="@+id/imageView9"
             android:layout_toEndOf="@+id/imageView8"
             android:onClick="clearView"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:padding="5dp"
+            android:src="@drawable/clean" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -87,7 +88,7 @@
 
     <RelativeLayout
         android:id="@+id/relFirmaFrame"
-        android:layout_width="410dp"
+        android:layout_width="0dp"
         android:layout_height="630dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,42 +97,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.406">
 
-        <TextView
-            android:id="@+id/txtC2"
-            android:layout_width="106dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="146dp"
-            android:layout_marginTop="136dp"
-            android:layout_marginEnd="27dp"
-            android:layout_toEndOf="@+id/txtC"
-            android:text="Tomar otra foto" />
-
         <ImageView
             android:id="@+id/Camera3"
-            android:layout_width="70dp"
-            android:layout_height="54dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="158dp"
-            android:layout_marginTop="77dp"
-            android:layout_marginEnd="92dp"
-            android:layout_marginBottom="8dp"
-            android:layout_toEndOf="@+id/Camera2"
+            android:layout_width="113dp"
+            android:layout_height="45dp"
+            android:layout_alignTop="@+id/Camera2"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginRight="10dp"
             android:onClick="camera"
-            android:src="@android:drawable/ic_menu_camera"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relLogin" />
+            android:src="@android:drawable/ic_menu_camera" />
 
         <ImageView
             android:id="@+id/Camera2"
-            android:layout_width="70dp"
-            android:layout_height="54dp"
+            android:layout_width="109dp"
+            android:layout_height="45dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="77dp"
             android:layout_marginBottom="8dp"
             android:onClick="camera"
@@ -171,20 +154,22 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtC"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="66dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="11dp"
             android:text="Cedula: "
             android:textSize="24sp" />
 
         <TextView
             android:id="@+id/txtNombre"
-            android:layout_width="219dp"
-            android:layout_height="30dp"
+            android:layout_width="309dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/txtCedula"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="137dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="13dp"
             android:layout_marginTop="9dp"
-            android:textSize="24sp" />
+            android:layout_marginEnd="5dp"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/txtCedula"
@@ -199,6 +184,18 @@
             android:inputType="number"
             android:textSize="24sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView37"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/Camera3"
+            android:layout_alignBottom="@+id/txtC"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="121dp"
+            android:layout_marginRight="10dp"
+            android:text="Tomar otra foto" />
 
     </RelativeLayout>
 

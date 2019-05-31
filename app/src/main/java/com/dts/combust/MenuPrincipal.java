@@ -128,7 +128,7 @@ public class MenuPrincipal extends PBase {
                 if (gl.rolid==1) { // tanque
 
                 } else { // cisterna
-                    //startActivity(new Intent(this,TransTan.class));break;
+                    startActivity(new Intent(this,TransTan.class));break;
                 }
         }
     }
