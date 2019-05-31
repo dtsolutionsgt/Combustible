@@ -329,7 +329,7 @@ public class EntregaVeh extends PBase {
             writer.write("\r\n");
             writer.write("Kilometraje: " + (int)item.kilometraje);
             writer.write("\r\n");
-            writer.write("Responsable:" + gl.recibio+"-"+gl.nombreRecibio);
+            writer.write("Responsable:" + gl.recibio+"-+"+gl.nombreRecibio);
             writer.write("\r\n");
             writer.write("\r\n");
             writer.write("\r\n");
