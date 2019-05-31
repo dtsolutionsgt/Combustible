@@ -12,15 +12,15 @@ public class appGlobals extends Application {
 
 	// Variables publicas
 
-	public boolean usrPipa, usrEst, usrSup, usrDTS, comUpd;
-	public String HH, user, userNom, pipaNom,vehNom, trans, WSUrl, WSUrlR, fase, recibio, empl, placa, equipoNombre, vehOrder;
+	public boolean usrPipa, usrEst, usrSup, usrDTS, comUpd,  validacionFirma=false;
+	public String HH, user, userNom, pipaNom,vehNom, trans, WSUrl, WSUrlR, fase, recibio, empl, placa, equipoNombre, vehOrder, transhh, nombreRecibio;
 	public int suc, proyID, faseID, pipa,tanque, est, depos, dest, com, puerto;
 	public int turno, turnID, turnStamp, fotoTp,valida;
 	public double pipacap;
 
 	public String nombreusuario;
 	public int rol, tipoDepos=0;
-	public boolean exitapp;
+	public boolean exitapp,devprncierre,endPrint;
 
 	// Variables guardados al momento de botar la aplicacion
 

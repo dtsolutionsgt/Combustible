@@ -84,7 +84,7 @@ public class clsClasses {
         public String hhid;
         public long fecha;
         public String transhh;
-        public int transid;
+        public String transid;
         public int depid;
         public int tipodep;
         public int activo;

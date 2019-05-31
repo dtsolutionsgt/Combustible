@@ -128,7 +128,7 @@ public class BaseDatosScript {
 					"HHID TEXT NOT NULL," +
 					"Fecha INTEGER NOT NULL," +
 					"TransHH TEXT NOT NULL," +
-					"TransID INTEGER NOT NULL," +
+					"TransID TEXT NOT NULL," +
 					"DepID INTEGER NOT NULL," +
 					"TipoDep INTEGER NOT NULL," +
 					"Activo INTEGER NOT NULL," +

@@ -1,6 +1,7 @@
 package com.dts.base;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ public class AppMethods {
 	private BaseDatos.Insert ins;
 	private BaseDatos.Update upd;
 	private BaseDatos Con;
+	private String sql;
 	
 	public AppMethods(Context context, appGlobals global, BaseDatos dbconnection, SQLiteDatabase database) {
 		cont=context; 
@@ -56,7 +58,52 @@ public class AppMethods {
 
 		return f+"_";
 	}
-	
+
+	public String impresTipo() {
+		Cursor dt;
+		String prnid;
+
+		try {
+
+			/*sql="SELECT prn FROM Params";
+			dt=Con.OpenDT(sql);
+			dt.moveToFirst();
+			prnid=dt.getString(0);
+
+			sql="SELECT MARCA FROM P_IMPRESORA WHERE IDIMPRESORA='"+prnid+"'";
+			dt=Con.OpenDT(sql);
+			if (dt.getCount()==0) return "SIN IMPRESORA";
+			dt.moveToFirst();
+
+			return dt.getString(0);*/
+
+			return "DATAMAX";
+
+		} catch (Exception e) {
+			//msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+			return "SIN IMPRESORA";
+		}
+	}
+
+	public String impresParam() {
+		Cursor dt;
+		String prnid;
+
+		try {
+
+			sql="SELECT Puerto FROM Param";
+			dt=Con.OpenDT(sql);
+			dt.moveToFirst();
+			prnid=dt.getString(0);
+
+			return prnid;
+
+		} catch (Exception e) {
+			//msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+			return " #### ";
+		}
+
+	}
 
 	// Common
 	
