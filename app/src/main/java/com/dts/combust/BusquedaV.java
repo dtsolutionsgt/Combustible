@@ -26,6 +26,7 @@ public class BusquedaV extends PBase {
         setContentView(R.layout.activity_busqueda_v);
 
         super.InitBase(savedInstanceState);
+        addlog("BusquedaV",""+du.getActDateTime(),gl.nombreusuario);
 
         listView = (ListView) findViewById(R.id.lvBusqueda);
         txtSearch = (EditText) findViewById(R.id.txtSearch);
@@ -106,6 +107,7 @@ public class BusquedaV extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -125,6 +127,10 @@ public class BusquedaV extends PBase {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        try{
+            super.onBackPressed();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
     }
 }

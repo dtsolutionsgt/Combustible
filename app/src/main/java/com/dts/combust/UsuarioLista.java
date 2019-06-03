@@ -27,6 +27,7 @@ public class UsuarioLista extends PBase {
         setContentView(R.layout.activity_usuario_lista);
 
         super.InitBase(savedInstanceState);
+        addlog("UsuarioLista",""+du.getActDateTime(),gl.nombreusuario);
 
         listView = (ListView) findViewById(R.id.listView1);
 
@@ -38,9 +39,7 @@ public class UsuarioLista extends PBase {
 
     }
 
-
-
-    // Events
+    //region Events
 
     public void doEdit(View view) {
         editItem();
@@ -98,8 +97,9 @@ public class UsuarioLista extends PBase {
 
     }
 
+    //endregion
 
-    // Main
+    //region Main
 
     private void listItems() {
 
@@ -111,6 +111,7 @@ public class UsuarioLista extends PBase {
             adapter=new LA_Usuario(this,this, users.items);
             listView.setAdapter(adapter);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -132,12 +133,14 @@ public class UsuarioLista extends PBase {
             users.delete(selid);
             listItems();
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
     }
 
+    //endregion
 
-    // Popup Menu
+    //region Popup Menu
 
     private void showItemMenu() {
         final AlertDialog Dialog;
@@ -170,8 +173,9 @@ public class UsuarioLista extends PBase {
         Dialog.show();
     }
 
+    //endregion
 
-    // Dialogs
+    //region Dialogs
 
     private void msgAskDel(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -193,12 +197,15 @@ public class UsuarioLista extends PBase {
 
     }
 
+    //endregion
 
-    // Aux
+    //region Aux
 
 
 
-    // Activity Events
+    //endregion
+
+    //region Activity Events
 
     @Override
     protected void onResume() {
@@ -206,15 +213,18 @@ public class UsuarioLista extends PBase {
 
         try {
             users.reconnect(Con,db);
+
+            if (callback ==1) {
+                callback =0;
+                listItems();return;
+            }
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(e.getMessage());
         }
 
-        if (callback ==1) {
-            callback =0;
-            listItems();return;
-        }
 
     }
 
+    //endregion
 }

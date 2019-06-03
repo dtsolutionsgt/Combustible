@@ -11,6 +11,7 @@ public class TrasladoCist extends PBase {
         setContentView(R.layout.activity_traslado_cist);
 
         super.InitBase(savedInstanceState);
+        addlog("TrasladoCist",""+du.getActDateTime(),gl.nombreusuario);
     }
 
     //region Events

@@ -33,6 +33,7 @@ public class Lectura extends PBase {
         setContentView(R.layout.activity_lectura);
 
         super.InitBase(savedInstanceState);
+        addlog("Lectura",""+du.getActDateTime(),gl.nombreusuario);
 
         DU =  new DateUtils();
         deposito =  new clsDepositoObj(this, Con, db);
@@ -101,6 +102,7 @@ public class Lectura extends PBase {
             IOctavos.setText(Integer.toString(IniOctavos));
             FOctavos.setText(Integer.toString(FinOctavos));
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(""+e);
         }
 
@@ -108,40 +110,45 @@ public class Lectura extends PBase {
 
     public void save() {
 
-        textInicial = Inicial.getText().toString();
-        textLFinal = Final.getText().toString();
-        textIniPulgadas = IPulgadas.getText().toString();
-        textFinPulgadas = FPulgadas.getText().toString();
-        textIniOctavos = IOctavos.getText().toString();
-        textFinOctavos = FOctavos.getText().toString();
+        try {
+            textInicial = Inicial.getText().toString();
+            textLFinal = Final.getText().toString();
+            textIniPulgadas = IPulgadas.getText().toString();
+            textFinPulgadas = FPulgadas.getText().toString();
+            textIniOctavos = IOctavos.getText().toString();
+            textFinOctavos = FOctavos.getText().toString();
 
-        if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty()) {
-            msgbox("Debe llenar todos los campos (Inicial y Final)");return;
-        } else {
+            if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty()) {
+                msgbox("Debe llenar todos los campos (Inicial y Final)");return;
+            } else {
 
-            LInicial = Integer.parseInt(textInicial);
-            if(textLFinal.isEmpty()) ; else LFinal = Integer.parseInt(textLFinal);
-            IniPulgadas = Integer.parseInt(textIniPulgadas);
-            if(textFinPulgadas.isEmpty()) ; else FinPulgadas = Integer.parseInt(textFinPulgadas);
-            IniOctavos = Integer.parseInt(textIniOctavos);
-            if(textFinOctavos.isEmpty()) ; else FinOctavos = Integer.parseInt(textFinOctavos);
+                LInicial = Integer.parseInt(textInicial);
+                if(textLFinal.isEmpty()) ; else LFinal = Integer.parseInt(textLFinal);
+                IniPulgadas = Integer.parseInt(textIniPulgadas);
+                if(textFinPulgadas.isEmpty()) ; else FinPulgadas = Integer.parseInt(textFinPulgadas);
+                IniOctavos = Integer.parseInt(textIniOctavos);
+                if(textFinOctavos.isEmpty()) ; else FinOctavos = Integer.parseInt(textFinOctavos);
 
-            if(IniOctavos <=0) {msgbox("El inicial no puede ser 0"); return;}
-            //if(FinOctavos <=0) return;
-            if(IniOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
-            if(FinOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
+                if(IniOctavos <=0) {msgbox("El inicial no puede ser 0"); return;}
+                //if(FinOctavos <=0) return;
+                if(IniOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
+                if(FinOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
 
 
-            if (LFinal==0){
-                msgAskLFinal("El final del totalizador va vacio, Desea Continuar");
-            }else {
-                if(LFinal<LInicial){
-                    msgbox("El valor de Final no puede ser menor al Inicial");
-                    return;
+                if (LFinal==0){
+                    msgAskLFinal("El final del totalizador va vacio, Desea Continuar");
+                }else {
+                    if(LFinal<LInicial){
+                        msgbox("El valor de Final no puede ser menor al Inicial");
+                        return;
+                    }
+                    saveData();
                 }
-                saveData();
             }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
 
     }
 
@@ -192,6 +199,7 @@ public class Lectura extends PBase {
             }
 
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox("Error en saveData= "+e);
         }
 

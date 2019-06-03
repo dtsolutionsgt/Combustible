@@ -47,6 +47,7 @@ public class MainActivity extends PBase {
         //startApplication();
         grantPermissions();
         folder();
+        addlog("MainActivity",""+du.getActDateTime(),gl.nombreusuario);
     }
 
     // Manejo de permisos de la aplicacion - solo en MainActivity
@@ -66,6 +67,7 @@ public class MainActivity extends PBase {
             setHandlers();
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
 
@@ -84,19 +86,26 @@ public class MainActivity extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ) {
-            Toast.makeText(this, "Permisos aplicados.", Toast.LENGTH_SHORT).show();
-            startApplication();
-        } else {
-            Toast.makeText(this, "Permisos incompletos.", Toast.LENGTH_LONG).show();
-            super.finish();
+
+        try {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ) {
+                Toast.makeText(this, "Permisos aplicados.", Toast.LENGTH_SHORT).show();
+                startApplication();
+            } else {
+                Toast.makeText(this, "Permisos incompletos.", Toast.LENGTH_LONG).show();
+                super.finish();
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
     }
 
 
@@ -210,6 +219,7 @@ public class MainActivity extends PBase {
             startActivity(new Intent(this,MenuPrincipal.class));
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
 
@@ -222,7 +232,7 @@ public class MainActivity extends PBase {
     private void showMenu() {
 
         final AlertDialog Dialog;
-        final String[] selitems = {"Configuración"};
+        final String[] selitems = {"Configuración", "Soporte"};
 
         AlertDialog.Builder menudlg = new AlertDialog.Builder(this);
         menudlg.setTitle("Menu principal");
@@ -233,7 +243,7 @@ public class MainActivity extends PBase {
                     case 0:
                         doMenuItem1();break;
                     case 1:
-                        break;
+                        doMenuItem();break;
                     case 2:
                         break;
                 }
@@ -255,9 +265,11 @@ public class MainActivity extends PBase {
     }
 
     private void doMenuItem1() {
-        //toast("Texto en centro de pagina");
-
         startActivity(new Intent(this,Configuracion.class));
+    }
+
+    private void doMenuItem() {
+        //startActivity(new Intent(this,Soporte.class));
     }
 
     private void doMenuItem2() {
@@ -339,11 +351,16 @@ public class MainActivity extends PBase {
 
     @Override
     protected void onResume() {
-        super.onResume();
-        if (callback == 1) {
-            callback = 0;
-            if (gl.exitapp) finish();
+        try {
+            super.onResume();
+            if (callback == 1) {
+                callback = 0;
+                if (gl.exitapp) finish();
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
     }
 
     //endregion
@@ -365,6 +382,7 @@ public class MainActivity extends PBase {
 
             cod++;
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox("Error en camera: "+e.getMessage());
         }
     }
@@ -374,7 +392,7 @@ public class MainActivity extends PBase {
             File directory = new File(Environment.getExternalStorageDirectory() + "/ComFotos");
             directory.mkdirs();
         } catch (Exception e) {
-
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
     }
 }

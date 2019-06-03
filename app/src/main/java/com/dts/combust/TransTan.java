@@ -31,6 +31,7 @@ public class TransTan extends PBase {
         setContentView(R.layout.activity_trans_tan);
 
         super.InitBase(savedInstanceState);
+        addlog("TransTan",""+du.getActDateTime(),gl.nombreusuario);
 
         lbl1 = (TextView) findViewById(R.id.textView6);
         lbl2 = (TextView) findViewById(R.id.textView26);
@@ -46,11 +47,16 @@ public class TransTan extends PBase {
     //region Events
 
     public void doSave(View view) {
-        if (validaCantidad()) {
-            gl.validacionFirma = false;
-            callback=1;
-            startActivity(new Intent(this,Firma.class));
-        };
+        try {
+            if (validaCantidad()) {
+                gl.validacionFirma = false;
+                callback=1;
+                startActivity(new Intent(this,Firma.class));
+            };
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
     }
 
     public void doExit(View view) {
@@ -214,6 +220,7 @@ public class TransTan extends PBase {
             gl.HH=param.first().id;
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
     }
@@ -228,6 +235,7 @@ public class TransTan extends PBase {
             cant=vval;
             return true;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             toast("¡Cantidad incorrecta!");return false;
         }
     }

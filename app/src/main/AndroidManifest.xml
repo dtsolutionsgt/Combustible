@@ -97,7 +97,12 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".TransTan"
+        <activity
+            android:name=".TransTan"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".Soporte"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" />

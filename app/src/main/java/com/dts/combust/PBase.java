@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +21,9 @@ import com.dts.base.MiscUtils;
 import com.dts.base.appGlobals;
 import com.dts.base.clsClasses;
 import com.dts.combust.R;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class PBase extends Activity {
 
@@ -98,6 +103,43 @@ public class PBase extends Activity {
         return dt;
     }
 
+    protected void addlog(final String methodname, String msg, String info) {
+
+        final String vmethodname = methodname;
+        final String vmsg = msg;
+        final String vinfo = info;
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setAddlog(vmethodname,vmsg, vinfo);
+            }
+        }, 500);
+
+    }
+
+    protected void setAddlog(String methodname,String msg,String info) {
+
+        BufferedWriter writer = null;
+        FileWriter wfile;
+
+        try {
+
+            String fname = Environment.getExternalStorageDirectory()+"/comblog.txt";
+            wfile=new FileWriter(fname,true);
+            writer = new BufferedWriter(wfile);
+
+            writer.write("Método: " + methodname + " Mensaje: " +msg + " Info: "+ info );
+            writer.write("\r\n");
+
+            writer.close();
+
+        } catch (Exception e) {
+            msgbox("Error " + e.getMessage());
+        }
+    }
+
 
     // Messages
 
@@ -134,7 +176,13 @@ public class PBase extends Activity {
     }
 
     protected void msgbox(String msg){
-        mu.msgbox(msg);
+
+        try{
+            mu.msgbox(msg);
+        }catch (Exception ex){
+            addlog(new Object(){}.getClass().getEnclosingMethod().getName(),ex.getMessage(),"");
+        }
+
     }
 
     protected void msgbox(int val){

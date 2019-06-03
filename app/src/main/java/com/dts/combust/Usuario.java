@@ -33,6 +33,7 @@ public class Usuario extends PBase {
         setContentView(R.layout.activity_usuario);
 
         super.InitBase(savedInstanceState);
+        addlog("Usuario",""+du.getActDateTime(),gl.nombreusuario);
 
         lblCode = (TextView) findViewById(R.id.textView9);
         txtName = (EditText) findViewById(R.id.editText6);txtName.requestFocus();
@@ -52,14 +53,20 @@ public class Usuario extends PBase {
     }
 
 
-    // Events
+    //region Events
 
     public void doSave(View view) {
-        if (gl.itemid!=0) {
-            updateItem();
-         } else {
-            addItem();
+
+        try {
+            if (gl.itemid!=0) {
+                updateItem();
+            } else {
+                addItem();
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
     }
 
     public void doExit(View view) {
@@ -93,7 +100,9 @@ public class Usuario extends PBase {
         });
     }
 
-    // Main
+    //endregion
+
+    //region Main
 
     private void loadItem() {
         try {
@@ -108,6 +117,7 @@ public class Usuario extends PBase {
             rolid=item.rol;
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
     }
@@ -115,13 +125,18 @@ public class Usuario extends PBase {
     private void newItem() {
         clsUsuarioObj users =new clsUsuarioObj(this,Con,db);
 
-        userid=users.newID("SELECT MAX(ID) FROM Usuario");
-        rolid=0;
+        try {
+            userid=users.newID("SELECT MAX(ID) FROM Usuario");
+            rolid=0;
 
-        lblCode.setText(""+userid);
-        txtName.setText("");txtName.requestFocus();
-        txtLogin.setText("");
-        txtPass.setText("");
+            lblCode.setText(""+userid);
+            txtName.setText("");txtName.requestFocus();
+            txtLogin.setText("");
+            txtPass.setText("");
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
     }
 
     private void addItem() {
@@ -138,6 +153,7 @@ public class Usuario extends PBase {
             users.add(item);
             toast("Registro agregado");finish();
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
     }
@@ -154,42 +170,50 @@ public class Usuario extends PBase {
             users.update(item);
             toast("Registro actualizado");finish();
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
 
     }
 
+    //endregion
 
-    // Aux
+    //region Aux
 
     private boolean checkValues() {
         String val,login;
 
         val=txtName.getText().toString();
-        if (emptystr(val)) {
-            msgbox("Falta nombre.");txtName.requestFocus();return false;
-        }
 
-        val=txtLogin.getText().toString();login=val;
-        if (emptystr(val)) {
-            msgbox("Falta login.");txtName.requestFocus();return false;
-        }
-
-        val=txtPass.getText().toString();
-        if (emptystr(val)) {
-            msgbox("Falta clave.");txtName.requestFocus();return false;
-        }
-
-        users.fill("WHERE ID<>"+userid);
-        for (int i = 0; i <users.count; i++) {
-            if (users.items.get(i).login.equalsIgnoreCase(login)) {
-                msgbox("El login ya existe para usuario : " +users.items.get(i).nombre);
-                txtLogin.requestFocus();return false;
+        try {
+            if (emptystr(val)) {
+                msgbox("Falta nombre.");txtName.requestFocus();return false;
             }
-        }
 
-        if (rolid==0) {
-            msgbox("Falta definir un rol.");return false;
+            val=txtLogin.getText().toString();login=val;
+            if (emptystr(val)) {
+                msgbox("Falta login.");txtName.requestFocus();return false;
+            }
+
+            val=txtPass.getText().toString();
+            if (emptystr(val)) {
+                msgbox("Falta clave.");txtName.requestFocus();return false;
+            }
+
+            users.fill("WHERE ID<>"+userid);
+            for (int i = 0; i <users.count; i++) {
+                if (users.items.get(i).login.equalsIgnoreCase(login)) {
+                    msgbox("El login ya existe para usuario : " +users.items.get(i).nombre);
+                    txtLogin.requestFocus();return false;
+                }
+            }
+
+            if (rolid==0) {
+                msgbox("Falta definir un rol.");return false;
+            }
+
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
         return true;
@@ -200,46 +224,65 @@ public class Usuario extends PBase {
         int pos=0;
 
         try {
-            roles.fill("ORDER BY Nombre");
+            try {
+                roles.fill("ORDER BY Nombre");
 
-            for (int i = 0; i <roles.items.size(); i++) {
-                spinlist.add(roles.items.get(i).nombre);
-                if (roles.items.get(i).id==rolid) pos=i;
+                for (int i = 0; i <roles.items.size(); i++) {
+                    spinlist.add(roles.items.get(i).nombre);
+                    if (roles.items.get(i).id==rolid) pos=i;
+                }
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+                msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+ " . "+e.getMessage());
             }
-        } catch (Exception e) {
-            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+ " . "+e.getMessage());
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, spinlist);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinRol.setAdapter(dataAdapter);
+
+            try {
+                spinRol.setSelection(pos);
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            }
+
+            users.items.clear();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, spinlist);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinRol.setAdapter(dataAdapter);
-
-        try {
-            spinRol.setSelection(pos);
-        } catch (Exception e) {
-        }
-
-        users.items.clear();
     }
 
-    // Activity Events
+    //endregion
+
+    //region Activity Events
 
     @Override
     protected void onResume() {
         super.onResume();
 
         try {
-            users.reconnect(Con,db);
-        } catch (Exception e) {
-            msgbox(e.getMessage());
+
+            try {
+                users.reconnect(Con,db);
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+                msgbox(e.getMessage());
+            }
+
+            try {
+                roles.reconnect(Con,db);
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+                msgbox(e.getMessage());
+            }
+
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        try {
-            roles.reconnect(Con,db);
-        } catch (Exception e) {
-            msgbox(e.getMessage());
-        }
     }
 
+    //endregion
 }

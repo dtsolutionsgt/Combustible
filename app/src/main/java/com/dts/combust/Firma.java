@@ -60,6 +60,7 @@ public class Firma extends PBase {
         setContentView(R.layout.activity_firma);
 
         super.InitBase(savedInstanceState);
+        addlog("Firma",""+du.getActDateTime(),gl.nombreusuario);
 
         appGlobals gl=((appGlobals) this.getApplication());
         //signfile=gl.signfile;
@@ -129,6 +130,7 @@ public class Firma extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -136,12 +138,17 @@ public class Firma extends PBase {
     //region Events
 
     public void clearView(View view) {
-        sign.clear();
-        signed=false;
-        codCamera = 1;
-        cedula.setText("");
-        txtNombre.setText("");
-        showCamera();
+        try {
+            sign.clear();
+            signed=false;
+            codCamera = 1;
+            cedula.setText("");
+            txtNombre.setText("");
+            showCamera();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
     }
 
     public void cancelCapture(View view) {
@@ -150,28 +157,33 @@ public class Firma extends PBase {
 
     public void saveSignature(View view) {
 
-        cedula.getText();
+        try {
+            cedula.getText();
 
-        if(!signed || cedula.equals("") || codCamera ==1 || txtNombre.equals("")){
-            msgbox("Debe llenar todos los campos");
-            return;
-        }else {
-            surface.setDrawingCacheEnabled(true);
+            if(!signed || cedula.equals("") || codCamera ==1 || txtNombre.equals("")){
+                msgbox("Debe llenar todos los campos");
+                return;
+            }else {
+                surface.setDrawingCacheEnabled(true);
 
-            if (sign.save(surface)){
+                if (sign.save(surface)){
 
-                gl.recibio = cedula.getText().toString();
-                gl.nombreRecibio = txtNombre.getText().toString();
-                gl.validacionFirma = true;
-                super.finish();
+                    gl.recibio = cedula.getText().toString();
+                    gl.nombreRecibio = txtNombre.getText().toString();
+                    gl.validacionFirma = true;
+                    super.finish();
 
+                }
             }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
     }
 
     //endregion
 
-    //region Class
+    //region Aux
 
     public class Signature extends View  {
 
@@ -229,14 +241,21 @@ public class Firma extends PBase {
 
                 return true;
             } catch(Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
                 Toast.makeText(Firma.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
 
         public void clear() {
-            path.reset();
-            invalidate();
+
+            try {
+                path.reset();
+                invalidate();
+            }catch (Exception e){
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            }
+
         }
 
         @Override
@@ -251,64 +270,82 @@ public class Firma extends PBase {
 
             signed=true;
 
-            switch (event.getAction())  {
-                case MotionEvent.ACTION_DOWN:
-                    path.moveTo(eventX, eventY);
-                    lastTouchX = eventX;
-                    lastTouchY = eventY;
-                    return true;
+            try {
+                switch (event.getAction())  {
+                    case MotionEvent.ACTION_DOWN:
+                        path.moveTo(eventX, eventY);
+                        lastTouchX = eventX;
+                        lastTouchY = eventY;
+                        return true;
 
-                case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_MOVE:
 
-                case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_UP:
 
-                    resetDirtyRect(eventX, eventY);
-                    int historySize = event.getHistorySize();
-                    for (int i = 0; i < historySize; i++)  {
-                        float historicalX = event.getHistoricalX(i);
-                        float historicalY = event.getHistoricalY(i);
-                        expandDirtyRect(historicalX, historicalY);
-                        path.lineTo(historicalX, historicalY);
-                    }
-                    path.lineTo(eventX, eventY);
-                    break;
+                        resetDirtyRect(eventX, eventY);
+                        int historySize = event.getHistorySize();
+                        for (int i = 0; i < historySize; i++)  {
+                            float historicalX = event.getHistoricalX(i);
+                            float historicalY = event.getHistoricalY(i);
+                            expandDirtyRect(historicalX, historicalY);
+                            path.lineTo(historicalX, historicalY);
+                        }
+                        path.lineTo(eventX, eventY);
+                        break;
 
-                default:
-                    return false;
+                    default:
+                        return false;
+                }
+
+                invalidate((int) (dirtyRect.left - HALF_STROKE_WIDTH),
+                        (int) (dirtyRect.top - HALF_STROKE_WIDTH),
+                        (int) (dirtyRect.right + HALF_STROKE_WIDTH),
+                        (int) (dirtyRect.bottom + HALF_STROKE_WIDTH));
+
+                lastTouchX = eventX;
+                lastTouchY = eventY;
+            }catch (Exception e){
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
 
-            invalidate((int) (dirtyRect.left - HALF_STROKE_WIDTH),
-                    (int) (dirtyRect.top - HALF_STROKE_WIDTH),
-                    (int) (dirtyRect.right + HALF_STROKE_WIDTH),
-                    (int) (dirtyRect.bottom + HALF_STROKE_WIDTH));
 
-            lastTouchX = eventX;
-            lastTouchY = eventY;
 
             return true;
         }
 
         private void expandDirtyRect(float historicalX, float historicalY)  {
-            if (historicalX < dirtyRect.left) {
-                dirtyRect.left = historicalX;
-            }
-            else if (historicalX > dirtyRect.right) {
-                dirtyRect.right = historicalX;
+
+            try {
+                if (historicalX < dirtyRect.left) {
+                    dirtyRect.left = historicalX;
+                }
+                else if (historicalX > dirtyRect.right) {
+                    dirtyRect.right = historicalX;
+                }
+
+                if (historicalY < dirtyRect.top) {
+                    dirtyRect.top = historicalY;
+                }
+                else if (historicalY > dirtyRect.bottom) {
+                    dirtyRect.bottom = historicalY;
+                }
+            }catch (Exception e){
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
 
-            if (historicalY < dirtyRect.top) {
-                dirtyRect.top = historicalY;
-            }
-            else if (historicalY > dirtyRect.bottom) {
-                dirtyRect.bottom = historicalY;
-            }
         }
 
         private void resetDirtyRect(float eventX, float eventY) {
-            dirtyRect.left = Math.min(lastTouchX, eventX);
-            dirtyRect.right = Math.max(lastTouchX, eventX);
-            dirtyRect.top = Math.min(lastTouchY, eventY);
-            dirtyRect.bottom = Math.max(lastTouchY, eventY);
+
+            try {
+                dirtyRect.left = Math.min(lastTouchX, eventX);
+                dirtyRect.right = Math.max(lastTouchX, eventX);
+                dirtyRect.top = Math.min(lastTouchY, eventY);
+                dirtyRect.bottom = Math.max(lastTouchY, eventY);
+            }catch (Exception e){
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            }
+
         }
     }
 
@@ -326,6 +363,7 @@ public class Firma extends PBase {
                 txtC2.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox("Error en showCamera: "+e);
         }
     }
@@ -347,23 +385,30 @@ public class Firma extends PBase {
             startActivityForResult(cameraIntent,TAKE_PHOTO_CODE);
 
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox("Error en camera: "+e.getMessage());
         }
     }
+
+    //endregion
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == TAKE_PHOTO_CODE) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Foto OK.", Toast.LENGTH_SHORT).show();
+        try {
+            if (requestCode == TAKE_PHOTO_CODE) {
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(this, "Foto OK.", Toast.LENGTH_SHORT).show();
 
-                codCamera =  2;
-                showCamera();
-            } else {
-                Toast.makeText(this, "SIN FOTO.", Toast.LENGTH_SHORT).show();
+                    codCamera =  2;
+                    showCamera();
+                } else {
+                    Toast.makeText(this, "SIN FOTO.", Toast.LENGTH_SHORT).show();
+                }
             }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
     }
 

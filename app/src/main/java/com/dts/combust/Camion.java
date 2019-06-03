@@ -26,6 +26,7 @@ public class Camion extends PBase {
         setContentView(R.layout.activity_camion);
 
         super.InitBase(savedInstanceState);
+        addlog("Camion",""+du.getActDateTime(),gl.nombreusuario);
 
         listView = (ListView) findViewById(R.id.lvCamion);
         pipa =  new clsPipaObj(this,Con,db);
@@ -81,6 +82,7 @@ public class Camion extends PBase {
             adapter=new LA_Camion(this,this, pipa.items);
             listView.setAdapter(adapter);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -120,21 +122,27 @@ public class Camion extends PBase {
 
         try {
             pipa.reconnect(Con,db);
+
+            if (callback ==1) {
+                callback =0;
+                listItems();return;
+            }
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(e.getMessage());
         }
 
-        if (callback ==1) {
-            callback =0;
-            listItems();return;
-        }
 
     }
 
     @Override
     public void onBackPressed() {
-        gl.exitapp=true;
-        super.onBackPressed();
+        try{
+            gl.exitapp=true;
+            super.onBackPressed();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
     }
 
     //endregion

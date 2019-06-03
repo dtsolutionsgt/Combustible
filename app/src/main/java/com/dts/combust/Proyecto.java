@@ -31,6 +31,7 @@ public class Proyecto extends PBase {
         setContentView(R.layout.activity_proyecto);
 
         super.InitBase(savedInstanceState);
+        addlog("Proyecto",""+du.getActDateTime(),gl.nombreusuario);
 
         listView =(ListView) findViewById(R.id.listView1);
         lbl1 = (TextView) findViewById(R.id.textView23);
@@ -111,6 +112,7 @@ public class Proyecto extends PBase {
             adapter=new LA_Proyecto(this,this,proy.items);
             listView.setAdapter(adapter);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -141,6 +143,7 @@ public class Proyecto extends PBase {
                 }, 500);
             }
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
     }
@@ -171,6 +174,7 @@ public class Proyecto extends PBase {
             proy.reconnect(Con,db);
             proyfind.reconnect(Con,db);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(e.getMessage());
         }
     }
