@@ -92,6 +92,8 @@ public class ComWS extends PBase {
 
         isbusy=0;
 
+        gl.validacionRating=0;
+
         getURL(1);
 
         if(gl.rolid!=3) {
@@ -129,7 +131,7 @@ public class ComWS extends PBase {
             dialog.setNegativeButton("Cancelar", null);
 
             dialog.show();
-        }catch (Exception e){
+        }catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
@@ -143,6 +145,17 @@ public class ComWS extends PBase {
                 toast("Por favor, espere que se termine la tarea actual.");return;
             }
 
+            startActivity(new Intent(this,Rating.class));
+
+        }catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
+
+    }
+
+    public void msgSend(){
+        try{
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         dialog.setTitle("Comunicación");
@@ -157,11 +170,9 @@ public class ComWS extends PBase {
             dialog.setNegativeButton("Cancelar", null);
 
             dialog.show();
-        }catch (Exception e) {
+        }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
-
-
     }
 
     public void doTables(View view) {
@@ -464,7 +475,6 @@ public class ComWS extends PBase {
 
         try {
 
-
             String fname = Environment.getExternalStorageDirectory() + "/combcarga.txt";
             wfile = new FileWriter(fname, false);
             writer = new BufferedWriter(wfile);
@@ -480,6 +490,7 @@ public class ComWS extends PBase {
             if (!AddTable("Proyecto")) return false;
             if (!AddTable("ProyectoEquipo")) return false;
             if (!AddTable("ProyectoFase")) return false;
+            if (!AddTable("TransError")) return false;
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             return false;
@@ -552,7 +563,8 @@ public class ComWS extends PBase {
 
             SQL=getTableSQL(TN);
 
-            sprog = TN;wsRtask.onProgressUpdate();
+            sprog = TN;
+            wsRtask.onProgressUpdate();
 
             if (fillTable(SQL,"DELETE FROM "+TN)==1) {
                 if (TN.equalsIgnoreCase("P_STOCK")) dbg=dbg+" ok ";
@@ -630,6 +642,12 @@ public class ComWS extends PBase {
                 return SQL;
             }
 
+            if (TN.equalsIgnoreCase("TransError")) {
+                SQL = " SELECT IDTRANSERROR, TRANSERROR FROM TransError";
+                return SQL;
+            }
+
+
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
@@ -643,7 +661,8 @@ public class ComWS extends PBase {
 
     public void wsExecute(){
 
-        sprog = "Conectando ....";wsRtask.onProgressUpdate();
+        sprog = "Conectando ...";
+        wsRtask.onProgressUpdate();
         fstr="No connect";scon=0;errflag=false;
 
         try {
@@ -655,7 +674,6 @@ public class ComWS extends PBase {
                 fstr="No se puede conectar al web service : "+sstr;
             }
         } catch (Exception e) {
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             scon=0;
             fstr="No se puede conectar al web service. "+e.getMessage();
         }
@@ -688,8 +706,7 @@ public class ComWS extends PBase {
             try {
                 wsExecute();
             } catch (Exception e) {
-                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            }
+           }
 
             return null;
         }
@@ -712,7 +729,6 @@ public class ComWS extends PBase {
             try {
                 lbl1.setText(sprog);
              } catch (Exception e) {
-                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
          }
 
@@ -741,6 +757,11 @@ public class ComWS extends PBase {
             }
 
             if (!envioDepositos()) {
+                dbld.savelog();
+                return false;
+            }
+
+             if (!envioRating()) {
                 dbld.savelog();
                 return false;
             }
@@ -928,6 +949,77 @@ public class ComWS extends PBase {
         return true;
     }
 
+    public boolean envioRating() {
+        Cursor DT;
+        int ratingID,fecha;
+        String fechadb;
+
+        try {
+            sql = " SELECT IDRATING, PIPA, USUARIO, RATING, COMENTARIO, IDTRANSERROR, FECHA, STATCOM " +
+                    " FROM RATING WHERE STATCOM='N'";
+            DT = Con.OpenDT(sql);
+            if (DT.getCount() == 0) return true;
+
+            DT.moveToFirst();
+            while (!DT.isAfterLast()) {
+
+                ratingID=DT.getInt(0);
+                fecha=DT.getInt(6);
+
+                fechadb = du.univfechaextlong(fecha);
+
+                ins.init("Rating");
+
+                ins.add("IDRATING", DT.getInt(0));
+                ins.add("PIPA", DT.getInt(1));
+                ins.add("USUARIO", DT.getInt(2));
+                ins.add("RATING", DT.getInt(3));
+                ins.add("COMENTARIO", DT.getString(4));
+                ins.add("IDTRANSERROR", DT.getInt(5));
+                ins.add("FECHA", fechadb);
+                ins.add("STATCOM",  DT.getString(7));
+
+
+                upd.init("Rating");
+
+                upd.add("PIPA", DT.getInt(1));
+                upd.add("USUARIO", DT.getInt(2));
+                upd.add("RATING", DT.getInt(3));
+                upd.add("COMENTARIO", DT.getString(4));
+                upd.add("IDTRANSERROR", DT.getInt(5));
+                upd.add("STATCOM",  DT.getString(7));
+
+                upd.Where("IDRATING="+DT.getInt(0)+" AND FECHA="+DT.getInt(6));
+
+
+                dbld.clear();
+                dbld.add(ins.sql());
+
+                String sts=ins.sql();
+
+                try {
+                   if (commitSQL() == 1) {
+                        sql="UPDATE Rating SET STATCOM='S' WHERE IDRATING='"+ratingID+"'";
+                        db.execSQL(sql);
+                        if (DT.getCount() == 0) msgbox("123654");
+                    } else {
+                        fterr += sstr;dbg="Rating : "+ratingID;
+                    }
+                } catch (Exception e) {
+                    errflag=true;fterr += "\n" + e.getMessage();dbg = e.getMessage();
+                }
+
+                DT.moveToNext();
+            }
+
+        } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            fstr = e.getMessage();
+        }
+
+        return true;
+    }
+
     //endregion
 
     //region WS Envio Handling Methods
@@ -1087,7 +1179,16 @@ public class ComWS extends PBase {
         super.onResume();
 
         try {
+
             if (radOficina.isChecked()) getURL(1);else getURL(2);
+
+            if(gl.validacionRating == 1){
+                msgSend();
+                gl.validacionRating = 0;
+            }else if(gl.validacionRating == 2){
+                msgbox("No se ha enviado los datos, pruebe de nuevo y envienos sus comentarios");
+            }
+
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());

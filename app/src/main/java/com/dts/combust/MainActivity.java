@@ -62,7 +62,7 @@ public class MainActivity extends PBase {
             lblTitle = (TextView) findViewById(R.id.textView2);
             lblVer = (TextView) findViewById(R.id.textView3);lblVer.setText("Ver. "+ver+" - "+verf);
 
-            txtUser.setText("4");txtPass.setText("4");
+            txtUser.setText("2");txtPass.setText("2");
 
             setHandlers();
 
@@ -80,8 +80,7 @@ public class MainActivity extends PBase {
                 if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ) {
                     startApplication();
                 } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
 
@@ -232,7 +231,7 @@ public class MainActivity extends PBase {
     private void showMenu() {
 
         final AlertDialog Dialog;
-        final String[] selitems = {"Configuración", "Soporte"};
+        final String[] selitems = {"Configuración"};
 
         AlertDialog.Builder menudlg = new AlertDialog.Builder(this);
         menudlg.setTitle("Menu principal");
@@ -243,7 +242,7 @@ public class MainActivity extends PBase {
                     case 0:
                         doMenuItem1();break;
                     case 1:
-                        doMenuItem();break;
+                        break;
                     case 2:
                         break;
                 }
@@ -268,9 +267,7 @@ public class MainActivity extends PBase {
         startActivity(new Intent(this,Configuracion.class));
     }
 
-    private void doMenuItem() {
-        //startActivity(new Intent(this,Soporte.class));
-    }
+    private void doMenuItem() {    }
 
     private void doMenuItem2() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);

@@ -14,7 +14,7 @@ public class appGlobals extends Application {
 
 	public boolean usrPipa, usrEst, usrSup, usrDTS, comUpd,  validacionFirma=false;
 	public String HH, user, userNom, pipaNom,vehNom, trans, WSUrl, WSUrlR, fase, recibio, empl, placa, equipoNombre, vehOrder, transhh, nombreRecibio;
-	public int suc, proyID, faseID, pipa,tanque, est, depos, dest, com, puerto;
+	public int suc, proyID, faseID, pipa,tanque, est, depos, dest, com, puerto,validacionRating;
 	public int turno, turnID, turnStamp, fotoTp,valida;
 	public double pipacap;
 

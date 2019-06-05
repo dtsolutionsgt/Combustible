@@ -140,6 +140,10 @@ public class PBase extends Activity {
         }
     }
 
+    protected void hidekeyb() {
+        keyboard.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
 
     // Messages
 

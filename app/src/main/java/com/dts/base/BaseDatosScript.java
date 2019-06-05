@@ -258,6 +258,25 @@ public class BaseDatosScript {
 					");";
 			db.execSQL(sql);
 
+			sql= "CREATE TABLE [TransError]("+
+					"[IDTRANSERROR] INTEGER NOT NULL,"+
+					"[TRANSERROR] TEXT NOT NULL,"+
+					"PRIMARY KEY ([IDTRANSERROR])"+
+					");";
+			db.execSQL(sql);
+
+			sql= "CREATE TABLE [Rating]("+
+					"[IDRATING] INTEGER PRIMARY KEY AUTOINCREMENT,"+
+					"[PIPA] INTEGER NOT NULL,"+
+					"[USUARIO] INTEGER NOT NULL,"+
+					"[RATING] REAL NOT NULL,"+
+					"[COMENTARIO] TEXT NOT NULL,"+
+					"[IDTRANSERROR] INTEGER NOT NULL,"+
+					"[FECHA] INTEGER NOT NULL,"+
+					"[STATCOM] TEXT NOT NULL"+
+					");";
+			db.execSQL(sql);
+
 			return 1;
 
 		} catch (SQLiteException e) {
