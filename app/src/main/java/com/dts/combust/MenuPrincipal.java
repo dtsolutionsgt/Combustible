@@ -344,23 +344,20 @@ public class MenuPrincipal extends PBase {
         checkDBStatus();
 
         if (callback == -1) {
-
-                if(gl.rolid==0){
-                    asignacionPipa();
-                }
-
-                return;
+            callback = 0;
+            if (gl.rolid == 0) {
+                asignacionPipa();
             }
+            return;
+        }
 
         if (callback == 2) {
             callback = 0;
             lblIdent.setText(gl.pipaNom);
             if (gl.exitapp) {
-                gl.exitapp=false;
+                gl.exitapp = false;
                 finish();
             }
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
     }
 
