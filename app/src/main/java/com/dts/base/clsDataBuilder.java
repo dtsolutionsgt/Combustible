@@ -21,13 +21,15 @@ public class clsDataBuilder {
 
 	
 	private ArrayList<Integer> tcol=new ArrayList<Integer>();
+	private ArrayList<String> sendlog=new ArrayList<String>();
 	
 	private DateUtils DU;
 	private MiscUtils MU;
-	
-	private BufferedWriter writer = null;
-	private FileWriter wfile;
-	private String fname;
+
+	private BufferedWriter writer = null,lwriter = null;
+	private FileWriter wfile,lfile;
+
+	private String fname,logname;
 
 	public clsDataBuilder(Context context) {
 		
@@ -46,6 +48,7 @@ public class clsDataBuilder {
 		System.setProperty("line.separator","\r\n");
 		
 		fname = Environment.getExternalStorageDirectory()+"/SyncFold/rd_data.txt";
+		logname = Environment.getExternalStorageDirectory()+"/combenvio.txt";
 	}
 	
 	public void close(){
@@ -56,6 +59,7 @@ public class clsDataBuilder {
 	
 	public void add(String si) {
 		items.add(si);
+		sendlog.add(si);
 	}
 	
 	public boolean insert(String tn,String ws){
@@ -125,6 +129,7 @@ public class clsDataBuilder {
 				
 				si=si+")";
 				items.add(si);
+				sendlog.add(si);
 						  
 			    DT.moveToNext();
 			}
@@ -167,6 +172,32 @@ public class clsDataBuilder {
 		}
 				
 		return 1;		
+	}
+
+	public void clearlog() {
+		sendlog.clear();
+	}
+
+	public void savelog() {
+		String s;
+
+		if (sendlog.size()==0) return ;
+
+		try {
+
+			lfile=new FileWriter(logname,false);
+			lwriter = new BufferedWriter(lfile);
+
+			for (int i = 0; i < sendlog.size(); i++) {
+				s=sendlog.get(i);
+				lwriter.write(s);lwriter.write("\r\n");
+			}
+
+			lwriter.close();
+
+		} catch(Exception e){
+			return;
+		}
 	}
 	
 	// Private

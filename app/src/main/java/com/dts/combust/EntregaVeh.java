@@ -49,6 +49,7 @@ public class EntregaVeh extends PBase {
         setContentView(R.layout.activity_entrega_veh);
 
         super.InitBase(savedInstanceState);
+        addlog("EntregaVeh",""+du.getActDateTime(),gl.nombreusuario);
 
         lbl1 = (TextView) findViewById(R.id.textView6);;
         lbl3 = (TextView) findViewById(R.id.textView26);lbl3.setText("");
@@ -95,22 +96,36 @@ public class EntregaVeh extends PBase {
     //region Events
 
     public void doSave(View view) {
-        if (validaPlaca()!=1) return;
-        if (!validaCantidad()) return;
-        if (!validaKilometraje()) return;
 
-        if (!validaProyecto()) {
-            msgAsk2("El equipo no está asignado al proyecto. ¿Continuar?");
-        } else {
-            firma();
+        try {
+            if (validaPlaca()!=1) return;
+            if (!validaCantidad()) return;
+            if (!validaKilometraje()) return;
+
+            if (!validaProyecto()) {
+                msgAsk2("El equipo no está asignado al proyecto. ¿Continuar?");
+            } else {
+                firma();
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
+
     }
 
     public void doSearch(View view) {
-        callback=1;
-        gl.vehOrder = txt1.getText().toString();
-        gl.valida=1;
-        startActivity(new Intent(this,BusquedaV.class));
+
+        try {
+            callback=1;
+            gl.vehOrder = txt1.getText().toString();
+            gl.valida=1;
+            startActivity(new Intent(this,BusquedaV.class));
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
+
     }
 
     public void doExit(View view) {
@@ -199,6 +214,7 @@ public class EntregaVeh extends PBase {
 
             //finish();
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
     }
@@ -265,6 +281,7 @@ public class EntregaVeh extends PBase {
             return true;
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
             return false;
         }
@@ -354,6 +371,7 @@ public class EntregaVeh extends PBase {
 
 
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox("Error en imprimeTicket: "+e);
         }
     }
@@ -388,6 +406,7 @@ public class EntregaVeh extends PBase {
 
             return 1;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());return -2;
         }
 
@@ -403,6 +422,7 @@ public class EntregaVeh extends PBase {
             vCant=vval;
             return true;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             toast("¡Cantidad incorrecta!");return false;
         }
     }
@@ -430,6 +450,7 @@ public class EntregaVeh extends PBase {
 
             return true;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             toast("¡Kilometraje incorrecto!");return false;
         }
     }
@@ -449,6 +470,7 @@ public class EntregaVeh extends PBase {
                 return true;
             }
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
             return false;
         }
@@ -518,28 +540,33 @@ public class EntregaVeh extends PBase {
     protected void onResume() {
         super.onResume();
 
-        if (callback==1) {
-            callback=0;
+        try {
+            if (callback==1) {
+                callback=0;
 
-            txt1.setText(gl.placa);
+                txt1.setText(gl.placa);
 
-            if(gl.placa.isEmpty()){
+                if(gl.placa.isEmpty()){
+                    return;
+                }
+
+                if(gl.valida==2){
+                    msgAsk1("El equipo no está asignado al proyecto. ¿Continuar?");
+                    gl.valida=0;
+                }else if(gl.valida==1){
+                    txt1.setText("");
+                }
+
                 return;
             }
 
-            if(gl.valida==2){
-                msgAsk1("El equipo no está asignado al proyecto. ¿Continuar?");
-                gl.valida=0;
-            }else if(gl.valida==1){
-                txt1.setText("");
+            if(gl.validacionFirma){
+                saveTrans();
             }
-
-            return;
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        if(gl.validacionFirma){
-            saveTrans();
-        }
 
 
     }

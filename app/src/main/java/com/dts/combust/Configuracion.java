@@ -27,6 +27,7 @@ public class Configuracion extends PBase {
         setContentView(R.layout.activity_configuracion);
 
         super.InitBase(savedInstanceState);
+        addlog("Configuracion",""+du.getActDateTime(),gl.nombreusuario);
 
         txtHH = (EditText) findViewById(R.id.txtHH);
         txtMAC = (EditText) findViewById(R.id.txtMAC);
@@ -43,37 +44,41 @@ public class Configuracion extends PBase {
 
     public void doSave(View view) {
 
+        try {
+            HH=txtHH.getText().toString();
+            MAC=txtMAC.getText().toString();
+            WSL=txtWSLocal.getText().toString();
+            WSR=txtWSRemote.getText().toString();
 
-        HH=txtHH.getText().toString();
-        MAC=txtMAC.getText().toString();
-        WSL=txtWSLocal.getText().toString();
-        WSR=txtWSRemote.getText().toString();
+            if(HH.isEmpty() || MAC.isEmpty() || WSL.isEmpty() || WSR.isEmpty()){
+                msgbox("Debe llenar todos los campos");
+            }else{
+                try{
 
-        if(HH.isEmpty() || MAC.isEmpty() || WSL.isEmpty() || WSR.isEmpty()){
-            msgbox("Debe llenar todos los campos");
-        }else{
-            try{
+                    item.id=HH;
+                    item.puerto=MAC;
+                    item.ws1=WSL;
+                    item.ws2=WSR;
 
-                item.id=HH;
-                item.puerto=MAC;
-                item.ws1=WSL;
-                item.ws2=WSR;
+                    if (HH.equalsIgnoreCase(ID)) {
+                        param.update(item);
+                    } else {
+                        param.delete(ID);
+                        param.add(item);
+                    }
 
-                if (HH.equalsIgnoreCase(ID)) {
-                    param.update(item);
-                } else {
-                    param.delete(ID);
-                    param.add(item);
+
+                }catch (Exception e){
+                    msgbox("Error en DoSave: "+ e);
                 }
 
 
-            }catch (Exception e){
-                msgbox("Error en DoSave: "+ e);
+                msgAskExit("Correcto");
             }
-
-
-            msgAskExit("Correcto");
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
 
     }
 
@@ -116,6 +121,7 @@ public class Configuracion extends PBase {
             if (param.first().ws2.isEmpty()) txtWSRemote.setText("http://192.168.1._/comb/wsAndr.asmx");
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
 

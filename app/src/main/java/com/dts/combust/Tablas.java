@@ -44,6 +44,7 @@ public class Tablas extends PBase {
         setContentView(R.layout.activity_tablas);
 
         super.InitBase(savedInstanceState);
+        addlog("Tablas",""+du.getActDateTime(),gl.nombreusuario);
 
         grid = (GridView) findViewById(R.id.gridview1);
         dgrid = (GridView) findViewById(R.id.gridview2);
@@ -63,13 +64,14 @@ public class Tablas extends PBase {
     }
 
 
-    // Events
+    //region Events
 
     public void doClear(View view) {
         try {
             txt1.setText("");
             txt1.requestFocus();
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
     }
 
@@ -176,8 +178,10 @@ public class Tablas extends PBase {
 
     }
 
+    //endregion
 
-    // Main
+
+    //region Main
 
     private void processTable() {
         try {
@@ -210,6 +214,7 @@ public class Tablas extends PBase {
             };
             mtimer.postDelayed(mrunner, 1000);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
     }
@@ -220,85 +225,94 @@ public class Tablas extends PBase {
         int cc = 1, j;
 
         try {
-            ss = "SELECT ";
+            try {
+                ss = "SELECT ";
 
-            sql = "PRAGMA table_info('" + tn + "')";
-            PRG = db.rawQuery(sql, null);
-            cc = PRG.getCount();
+                sql = "PRAGMA table_info('" + tn + "')";
+                PRG = db.rawQuery(sql, null);
+                cc = PRG.getCount();
 
-            PRG.moveToFirst();
-            j = 0;
+                PRG.moveToFirst();
+                j = 0;
 
-            while (!PRG.isAfterLast()) {
-                n = PRG.getString(PRG.getColumnIndex("name"));
-                // t=PRG.getString(PRG.getColumnIndex("type"));// INTEGER , TEXT , REAL
+                while (!PRG.isAfterLast()) {
+                    n = PRG.getString(PRG.getColumnIndex("name"));
+                    // t=PRG.getString(PRG.getColumnIndex("type"));// INTEGER , TEXT , REAL
 
-                values.add(n);
-                ss = ss + n;
-                if (j < cc - 1) ss = ss + ",";
-                PRG.moveToNext();
-                j++;
-            }
-
-            ss = ss + " FROM " + tn;
-
-            flt = txt1.getText().toString();
-            if (!mu.emptystr(flt)) ss = ss + " WHERE " + flt;
-
-        } catch (Exception e) {
-        }
-
-        ViewGroup.LayoutParams layoutParams = grid.getLayoutParams();
-        layoutParams.width = ((int) (cw * cc)) + 25;
-        grid.setLayoutParams(layoutParams);
-
-        grid.setColumnWidth(cw);
-        grid.setStretchMode(GridView.NO_STRETCH);
-        grid.setNumColumns(cc);
-
-        adapter = new ListAdaptTablas(this, values);
-        grid.setAdapter(adapter);
-
-
-        ViewGroup.LayoutParams dlayoutParams = dgrid.getLayoutParams();
-        dlayoutParams.width = ((int) (cw * cc)) + 25;
-        dgrid.setLayoutParams(dlayoutParams);
-
-        dgrid.setColumnWidth(cw);
-        dgrid.setStretchMode(GridView.NO_STRETCH);
-        dgrid.setNumColumns(cc);
-
-        try {
-            dt = Con.OpenDT(ss);
-            if (dt.getCount() == 0) {
-                pbar.setVisibility(View.INVISIBLE);
-                return;
-            }
-
-            dt.moveToFirst();
-            while (!dt.isAfterLast()) {
-
-                for (int i = 0; i < cc; i++) {
-                    try {
-                        ss = dt.getString(i);
-                    } catch (Exception e) {
-                        ss = "?";
-                    }
-                    dvalues.add(ss);
+                    values.add(n);
+                    ss = ss + n;
+                    if (j < cc - 1) ss = ss + ",";
+                    PRG.moveToNext();
+                    j++;
                 }
-                dt.moveToNext();
+
+                ss = ss + " FROM " + tn;
+
+                flt = txt1.getText().toString();
+                if (!mu.emptystr(flt)) ss = ss + " WHERE " + flt;
+
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
-        } catch (Exception e) {
+
+            ViewGroup.LayoutParams layoutParams = grid.getLayoutParams();
+            layoutParams.width = ((int) (cw * cc)) + 25;
+            grid.setLayoutParams(layoutParams);
+
+            grid.setColumnWidth(cw);
+            grid.setStretchMode(GridView.NO_STRETCH);
+            grid.setNumColumns(cc);
+
+            adapter = new ListAdaptTablas(this, values);
+            grid.setAdapter(adapter);
+
+
+            ViewGroup.LayoutParams dlayoutParams = dgrid.getLayoutParams();
+            dlayoutParams.width = ((int) (cw * cc)) + 25;
+            dgrid.setLayoutParams(dlayoutParams);
+
+            dgrid.setColumnWidth(cw);
+            dgrid.setStretchMode(GridView.NO_STRETCH);
+            dgrid.setNumColumns(cc);
+
+            try {
+                dt = Con.OpenDT(ss);
+                if (dt.getCount() == 0) {
+                    pbar.setVisibility(View.INVISIBLE);
+                    return;
+                }
+
+                dt.moveToFirst();
+                while (!dt.isAfterLast()) {
+
+                    for (int i = 0; i < cc; i++) {
+                        try {
+                            ss = dt.getString(i);
+                        } catch (Exception e) {
+                            ss = "?";
+                        }
+                        dvalues.add(ss);
+                    }
+                    dt.moveToNext();
+                }
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            }
+
+            dadapter = new ListAdaptTablas2(this, dvalues);
+            dgrid.setAdapter(dadapter);
+
+            pbar.setVisibility(View.INVISIBLE);
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        dadapter = new ListAdaptTablas2(this, dvalues);
-        dgrid.setAdapter(dadapter);
-
-        pbar.setVisibility(View.INVISIBLE);
 
     }
 
-    // Aux
+    //endregion
+
+    //region Aux
 
     private void fillSpinner() {
         Cursor DT;
@@ -307,22 +321,30 @@ public class Tablas extends PBase {
         spinlist.add(" ");
 
         try {
-            sql = "SELECT name FROM sqlite_master WHERE type='table' AND name<>'android_metadata' order by name";
-            DT = Con.OpenDT(sql);
+            try {
+                sql = "SELECT name FROM sqlite_master WHERE type='table' AND name<>'android_metadata' order by name";
+                DT = Con.OpenDT(sql);
 
-            DT.moveToFirst();
-            while (!DT.isAfterLast()) {
-                spinlist.add(DT.getString(0));
-                DT.moveToNext();
+                DT.moveToFirst();
+                while (!DT.isAfterLast()) {
+                    spinlist.add(DT.getString(0));
+                    DT.moveToNext();
+                }
+            } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+                mu.msgbox(e.getMessage());
             }
-        } catch (Exception e) {
-            mu.msgbox(e.getMessage());
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinlist);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spin.setAdapter(dataAdapter);
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinlist);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spin.setAdapter(dataAdapter);
     }
+
+    //endregion
 
 }

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -28,6 +29,9 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class ComWS extends PBase {
@@ -73,6 +77,7 @@ public class ComWS extends PBase {
         setContentView(R.layout.activity_com_ws);
 
         super.InitBase(savedInstanceState);
+        addlog("ComWS",""+du.getActDateTime(),gl.nombreusuario);
 
         lbl1 = (TextView) findViewById(R.id.textView20);lbl1.setText("");
         radURL = (RadioGroup) findViewById(R.id.radURL);
@@ -105,34 +110,40 @@ public class ComWS extends PBase {
 
     public void askRec(View view) {
 
-        if (isbusy==1) {
-            toast("Por favor, espere que se termine la tarea actual.");return;
+        try{
+            if (isbusy==1) {
+                toast("Por favor, espere que se termine la tarea actual.");return;
+            }
+
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+            dialog.setTitle("Recepción");
+            dialog.setMessage("¿Recibir datos nuevos?");
+
+            dialog.setPositiveButton("Recibir", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    runRecep();
+                }
+            });
+
+            dialog.setNegativeButton("Cancelar", null);
+
+            dialog.show();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
-        dialog.setTitle("Recepción");
-        dialog.setMessage("¿Recibir datos nuevos?");
-
-        dialog.setPositiveButton("Recibir", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                runRecep();
-            }
-        });
-
-        dialog.setNegativeButton("Cancelar", null);
-
-        dialog.show();
 
     }
 
     public void askSend(View view) {
 
-        if (isbusy==1) {
-            toast("Por favor, espere que se termine la tarea actual.");return;
-        }
+        try{
+            if (isbusy==1) {
+                toast("Por favor, espere que se termine la tarea actual.");return;
+            }
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         dialog.setTitle("Comunicación");
         dialog.setMessage("¿Enviar y recibir datos?");
@@ -143,9 +154,13 @@ public class ComWS extends PBase {
             }
         });
 
-        dialog.setNegativeButton("Cancelar", null);
+            dialog.setNegativeButton("Cancelar", null);
 
-        dialog.show();
+            dialog.show();
+        }catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
 
     }
 
@@ -158,27 +173,44 @@ public class ComWS extends PBase {
     //region Main
 
     private void runRecep() {
-        if (isbusy==1) return;
-        isbusy=1;
 
-        wsRtask = new AsyncCallRec();
-        wsRtask.execute();
+        try{
+            if (isbusy==1) return;
+            isbusy=1;
+
+            wsRtask = new AsyncCallRec();
+            wsRtask.execute();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
     }
 
     private void runSend() {
 
-        if (isbusy==1) return;
-        isbusy=1;
+        try {
+            if (isbusy==1) return;
+            isbusy=1;
 
-        wsStask = new AsyncCallSend();
-        wsStask.execute();
+            wsStask = new AsyncCallSend();
+            wsStask.execute();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
 
     }
 
     public void writeData(View view){
-        dbld.clear();
-        dbld.insert("USUARIO","WHERE 1=1");
-        dbld.save();
+
+        try {
+            dbld.clear();
+            dbld.insert("USUARIO","WHERE 1=1");
+            dbld.save();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
+
     }
 
     //endregion
@@ -251,7 +283,7 @@ public class ComWS extends PBase {
 
             return 1;
         } catch (Exception e) {
-
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             idbg=idbg+" ERR "+e.getMessage();
             return 0;
         }
@@ -298,6 +330,7 @@ public class ComWS extends PBase {
             sstr = s;
             return 0;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             sstr=e.getMessage();
         }
 
@@ -349,6 +382,7 @@ public class ComWS extends PBase {
 
             return 1;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             sstr=e.getMessage();
         }
 
@@ -372,6 +406,7 @@ public class ComWS extends PBase {
             }
 
         }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox("error en checked" + e);
         }
     }
@@ -403,6 +438,7 @@ public class ComWS extends PBase {
 
             return 1;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             sstr=e.getMessage();
         }
 
@@ -417,6 +453,8 @@ public class ComWS extends PBase {
         Cursor DT;
         int rc;
         String val="";
+        BufferedWriter writer = null;
+        FileWriter wfile;
 
 
         listItems.clear();
@@ -425,6 +463,12 @@ public class ComWS extends PBase {
         ftmsg="";ftflag=false;
 
         try {
+
+
+            String fname = Environment.getExternalStorageDirectory() + "/combcarga.txt";
+            wfile = new FileWriter(fname, false);
+            writer = new BufferedWriter(wfile);
+
             if (!AddTable("Proyecto")) return false;
             if (!AddTable("Combustible")) return false;
             if (!AddTable("Disponible")) return false;
@@ -437,6 +481,7 @@ public class ComWS extends PBase {
             if (!AddTable("ProyectoEquipo")) return false;
             if (!AddTable("ProyectoFase")) return false;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             return false;
         }
 
@@ -444,7 +489,8 @@ public class ComWS extends PBase {
 
         try {
 
-            rc=listItems.size();reccnt=rc;
+            rc=listItems.size();
+            reccnt=rc;
             if (rc==0) return true;
 
             ConT = new BaseDatos(this);
@@ -457,6 +503,12 @@ public class ComWS extends PBase {
                 try {
                     sql = listItems.get(i);
                     sql=sql.replace("MOV","DISPONIBLE");
+
+                    try {
+                        writer.write(sql);writer.write("\r\n");
+                    } catch (Exception e) {
+                    }
+
                     dbT.execSQL(sql);
                     if (i % 10==0) SystemClock.sleep(20);
                 } catch (Exception e) {
@@ -471,6 +523,11 @@ public class ComWS extends PBase {
             try {
                 ConT.close();
             } catch (Exception e) { }
+
+            try {
+                writer.close();
+            } catch (Exception e) {
+            }
 
             return true;
 
@@ -508,6 +565,7 @@ public class ComWS extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             fstr="Tab:"+TN+", "+ e.getMessage();idbg=idbg + e.getMessage();errflag=true;
             return false;
         }
@@ -516,60 +574,66 @@ public class ComWS extends PBase {
     private String getTableSQL(String TN) {
         String SQL = "";
 
-        if (TN.equalsIgnoreCase("Proyecto")) {
-            SQL = "SELECT ProyID,Nombre,Codigo,Activo,SucID FROM Proyecto WHERE Activo=1";
-            return SQL;
+        try {
+            if (TN.equalsIgnoreCase("Proyecto")) {
+                SQL = "SELECT ProyID,Nombre,Codigo,Activo,SucID FROM Proyecto WHERE Activo=1";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Combustible")) {
+                SQL = "SELECT CombID,Nombre,Activo FROM Combustible";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Disponible")) {
+                SQL = "SELECT DepID, TipoDep, SUM(Cant) AS Disponible, 0 ,0 FROM Mov WHERE (Activo = 1) GROUP BY DepID, TipoDep";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Empleados")) {
+                SQL = "SELECT EmpID,Barra,Nombre,Activo FROM Empleados WHERE Activo=1";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Equipo")) {
+                SQL = "SELECT VehID,Nombre,Tipo,CombID,CantComb,ConsProm,Kilometraje,Numero,Placa,Barra,Activo FROM Equipo WHERE Activo=1";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Estacion")) {
+                SQL = "SELECT TanID,Tipo,CombID,Codigo,Nombre,Capacidad,SucID,Activo,Barra FROM Estacion WHERE Activo=1";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Operador")) {
+                SQL = "SELECT OperID,Tipo,Nombre,Activo,Barra,SucID,Usuario,Clave FROM Operador WHERE Activo=1 AND Tipo>=0";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Pipa")) {
+                SQL = "SELECT  PipaID, Placa, Nombre, Capacidad, Activo, SucID, Barra FROM Pipa WHERE Activo=1";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("Proyecto")) {
+                SQL = "SELECT ProyID,Nombre,Activo,SucID,Codigo FROM Proyecto WHERE Activo=1";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("ProyectoEquipo")) {
+                SQL = "SELECT  ProyectoEquipo.ProyID,ProyectoEquipo.VehID FROM ProyectoEquipo INNER JOIN Proyecto ON ProyectoEquipo.ProyID=Proyecto.ProyID WHERE (Proyecto.Activo = 1)";
+                return SQL;
+            }
+
+            if (TN.equalsIgnoreCase("ProyectoFase")) {
+                SQL = "SELECT ProyectoFase.FaseID, ProyectoFase.ProyID, ProyectoFase.Nombre, ProyectoFase.Activo FROM ProyectoFase INNER JOIN Proyecto ON ProyectoFase.ProyID =Proyecto.ProyID WHERE  (Proyecto.Activo=1) AND (ProyectoFase.Activo=1)";
+                return SQL;
+            }
+
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        if (TN.equalsIgnoreCase("Combustible")) {
-            SQL = "SELECT CombID,Nombre,Activo FROM Combustible";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Disponible")) {
-            SQL = "SELECT DepID, TipoDep, SUM(Cant) AS Disponible, 0 ,0 FROM Mov WHERE (Activo = 1) GROUP BY DepID, TipoDep";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Empleados")) {
-            SQL = "SELECT EmpID,Barra,Nombre,Activo FROM Empleados WHERE Activo=1";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Equipo")) {
-            SQL = "SELECT VehID,Nombre,Tipo,CombID,CantComb,ConsProm,Kilometraje,Numero,Placa,Barra,Activo FROM Equipo WHERE Activo=1";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Estacion")) {
-            SQL = "SELECT TanID,Tipo,CombID,Codigo,Nombre,Capacidad,SucID,Activo,Barra FROM Estacion WHERE Activo=1";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Operador")) {
-            SQL = "SELECT OperID,Tipo,Nombre,Activo,Barra,SucID,Usuario,Clave FROM Operador WHERE Activo=1 AND Tipo>=0";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Pipa")) {
-            SQL = "SELECT  PipaID, Placa, Nombre, Capacidad, Activo, SucID, Barra FROM Pipa WHERE Activo=1";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("Proyecto")) {
-            SQL = "SELECT ProyID,Nombre,Activo,SucID,Codigo FROM Proyecto WHERE Activo=1";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("ProyectoEquipo")) {
-            SQL = "SELECT  ProyectoEquipo.ProyID,ProyectoEquipo.VehID FROM ProyectoEquipo INNER JOIN Proyecto ON ProyectoEquipo.ProyID=Proyecto.ProyID WHERE (Proyecto.Activo = 1)";
-            return SQL;
-        }
-
-        if (TN.equalsIgnoreCase("ProyectoFase")) {
-            SQL = "SELECT ProyectoFase.FaseID, ProyectoFase.ProyID, ProyectoFase.Nombre, ProyectoFase.Activo FROM ProyectoFase INNER JOIN Proyecto ON ProyectoFase.ProyID =Proyecto.ProyID WHERE  (Proyecto.Activo=1) AND (ProyectoFase.Activo=1)";
-            return SQL;
-        }
         return SQL;
     }
 
@@ -591,6 +655,7 @@ public class ComWS extends PBase {
                 fstr="No se puede conectar al web service : "+sstr;
             }
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             scon=0;
             fstr="No se puede conectar al web service. "+e.getMessage();
         }
@@ -598,18 +663,22 @@ public class ComWS extends PBase {
     }
 
     public void wsFinished(){
+        try {
+            if (!errflag) {
+                msgAskExit("Recepción completa.");
+                lbl1.setText("");
+            } else {
+                mu.msgbox("Ocurrió error : \n"+fstr+" ("+reccnt+") " + ferr);
+                lbl1.setText(fstr);
+                isbusy=0;
+                return;
+            }
 
-        if (!errflag) {
-            msgAskExit("Recepción completa.");
-            lbl1.setText("");
-        } else {
-            mu.msgbox("Ocurrió error : \n"+fstr+" ("+reccnt+") " + ferr);
-            lbl1.setText(fstr);
             isbusy=0;
-            return;
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
-        isbusy=0;
     }
 
     private class AsyncCallRec extends AsyncTask<String, Void, Void> {
@@ -619,6 +688,7 @@ public class ComWS extends PBase {
             try {
                 wsExecute();
             } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
 
             return null;
@@ -633,6 +703,7 @@ public class ComWS extends PBase {
         protected void onPreExecute() {
             try {
             } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
         }
 
@@ -640,7 +711,9 @@ public class ComWS extends PBase {
         protected void onProgressUpdate(Void... values) {
             try {
                 lbl1.setText(sprog);
-             } catch (Exception e) {}
+             } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            }
          }
 
     }
@@ -656,10 +729,25 @@ public class ComWS extends PBase {
 
         errflag=false;
 
-        senv = "Envío terminado\n\n";
+        try {
+            senv = "Envío terminado\n\n";
 
-        if (!envioMovimientos()) return false;
-        if (!envioDepositos()) return false;
+            //items.clear();
+            dbld.clearlog();
+
+            if (!envioMovimientos()) {
+                dbld.savelog();
+                return false;
+            }
+
+            if (!envioDepositos()) {
+                dbld.savelog();
+                return false;
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
 
         try {
             db.beginTransaction();
@@ -750,6 +838,7 @@ public class ComWS extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             errflag=true;fstr = e.getMessage();dbg = fstr;
         }
 
@@ -832,6 +921,7 @@ public class ComWS extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             errflag=true;fstr = e.getMessage();dbg = fstr;
         }
 
@@ -862,6 +952,7 @@ public class ComWS extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             scon=0;
             fstr="No se puede conectar al web service. "+e.getMessage();
         }
@@ -896,16 +987,20 @@ public class ComWS extends PBase {
                 Looper.prepare();
                 wsSendExecute();
             } catch (Exception e) {
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
-
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            wsSendFinished();
-            Looper.loop();
+            try {
+                wsSendFinished();
+                Looper.loop();
+            }catch (Exception e){
+                addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            }
+
         }
 
         @Override
@@ -954,12 +1049,33 @@ public class ComWS extends PBase {
             }
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
     }
 
     public void goToConfig(View view){
         startActivity(new Intent(this,Configuracion.class));
+    }
+
+    private void writeErrLog(String errstr) {
+        BufferedWriter writer = null;
+        FileWriter wfile;
+
+        try {
+            String fname = Environment.getExternalStorageDirectory()+"/comberror.txt";
+
+            wfile=new FileWriter(fname,false);
+            writer = new BufferedWriter(wfile);
+            writer.write(errstr);writer.write("\r\n");
+            writer.close();
+
+        } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            addlog(new Object(){}.getClass().getEnclosingMethod().getName(),e.getMessage(),"");
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+        }
+
     }
 
     //endregion
@@ -973,13 +1089,21 @@ public class ComWS extends PBase {
         try {
             if (radOficina.isChecked()) getURL(1);else getURL(2);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (isbusy==0) super.onBackPressed();
+
+        try {
+            if (isbusy==0);
+            super.onBackPressed();
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+
      }
 
     //endregion

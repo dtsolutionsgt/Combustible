@@ -31,6 +31,7 @@ public class Inventario extends PBase {
         setContentView(R.layout.activity_inventario);
 
         super.InitBase(savedInstanceState);
+        addlog("Inventario",""+du.getActDateTime(),gl.nombreusuario);
 
         listView = (ListView) findViewById(R.id.lvInventario);
         pipa =  new clsPipaObj(this,Con,db);
@@ -45,10 +46,6 @@ public class Inventario extends PBase {
 
 
     //region Events
-
-    public void doExit(View view) {
-        finish();
-    }
 
     private void setHandlers() {
 
@@ -110,6 +107,7 @@ public class Inventario extends PBase {
 
 
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -139,6 +137,10 @@ public class Inventario extends PBase {
 
     }
 
+    public void doExit(View view) {
+        finish();
+    }
+
     //endregion
 
     //region Activity Events
@@ -150,6 +152,7 @@ public class Inventario extends PBase {
         try {
             pipa.reconnect(Con,db);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(e.getMessage());
         }
 

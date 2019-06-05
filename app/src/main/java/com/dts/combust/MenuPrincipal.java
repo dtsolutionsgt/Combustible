@@ -35,6 +35,7 @@ public class MenuPrincipal extends PBase {
         setContentView(R.layout.activity_menu_principal);
 
         super.InitBase(savedInstanceState);
+        addlog("MenuPrincipal",""+du.getActDateTime(),gl.nombreusuario);
 
         estacion = new clsEstacionObj(this, Con, db);
 
@@ -90,6 +91,7 @@ public class MenuPrincipal extends PBase {
             adapter=new LA_Menu(this,this, menuitems);
             listView.setAdapter(adapter);
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             mu.msgbox(e.getMessage());
         }
     }
@@ -107,20 +109,20 @@ public class MenuPrincipal extends PBase {
             case 4:
                 if (gl.rolid == 3){
 
-                    msgAskInv("Como desea realizar el inventario");
-                    return;
+                        msgAskInv("Como desea realizar el inventario");
+                        return;
 
-                } else if (gl.rolid==1){  // tanque
+                    } else if (gl.rolid==1){  // tanque
 
-                    gl.tipoDepos = 1;
-                    estacion.fill("WHERE Activo = 1");
-                    eitems = estacion.first();
+                        gl.tipoDepos = 1;
+                        estacion.fill("WHERE Activo = 1");
+                        eitems = estacion.first();
 
-                    gl.pipa = eitems.tanid;
-                    gl.pipaNom=eitems.nombre;
-                    gl.exitapp=false;
+                        gl.pipa = eitems.tanid;
+                        gl.pipaNom=eitems.nombre;
+                        gl.exitapp=false;
 
-                    startActivity(new Intent(this,Lectura.class));break;
+                        startActivity(new Intent(this,Lectura.class));break;
 
                 } else if (gl.rolid==0){ // cisterna
                     gl.tipoDepos = 0;
@@ -135,6 +137,7 @@ public class MenuPrincipal extends PBase {
                     startActivity(new Intent(this,TransTan.class));break;
                 }
         }
+
     }
 
     //endregion
@@ -193,7 +196,9 @@ public class MenuPrincipal extends PBase {
     private void buildMenuItems() {
         clsClasses.clsMenu item;
 
-        menuitems.clear();
+
+        try {
+            menuitems.clear();
 
         checkDBStatus();
 
@@ -203,23 +208,23 @@ public class MenuPrincipal extends PBase {
                 item.id=5;item.nombre="Despacho";
                 menuitems.add(item);
 
-                item=clsCls.new clsMenu();
-                item.id=6;item.nombre="Traslado";
-                menuitems.add(item);
+                    item=clsCls.new clsMenu();
+                    item.id=6;item.nombre="Traslado";
+                    menuitems.add(item);
 
-                break;
-            case 1: // Cisterna
-                item=clsCls.new clsMenu();
-                item.id=5;item.nombre="Despacho";
-                menuitems.add(item);
+                    break;
+                case 1: // Cisterna
+                    item=clsCls.new clsMenu();
+                    item.id=5;item.nombre="Despacho";
+                    menuitems.add(item);
 
-                item=clsCls.new clsMenu();
-                item.id=6;item.nombre="Traslado";
-                menuitems.add(item);
-                break;
-            case 3: // Supervisor
-                break;
-        }
+                    item=clsCls.new clsMenu();
+                    item.id=6;item.nombre="Traslado";
+                    menuitems.add(item);
+                    break;
+                case 3: // Supervisor
+                    break;
+            }
 
         if (!emptydb) {
             item=clsCls.new clsMenu();
@@ -227,13 +232,16 @@ public class MenuPrincipal extends PBase {
             menuitems.add(item);
         }
 
-        item=clsCls.new clsMenu();
-        item.id=2;item.nombre="Comunicación";
-        menuitems.add(item);
+            item=clsCls.new clsMenu();
+            item.id=2;item.nombre="Comunicación";
+            menuitems.add(item);
 
-        item=clsCls.new clsMenu();
-        item.id=3;item.nombre="Salir";
-        menuitems.add(item);
+            item=clsCls.new clsMenu();
+            item.id=3;item.nombre="Salir";
+            menuitems.add(item);
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
 
         listItems();
 
@@ -249,6 +257,7 @@ public class MenuPrincipal extends PBase {
             estacion.fill();
             gl.tanque=estacion.first().tanid;
         } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
 
@@ -256,11 +265,16 @@ public class MenuPrincipal extends PBase {
 
     public void asignacionPipa(){
 
-        if (gl.rolid==0) {
-            callback=2;
-            gl.exitapp=false;
-            startActivity(new Intent(this,Camion.class));
+        try {
+            if (gl.rolid==0) {
+                callback=2;
+                gl.exitapp=false;
+                startActivity(new Intent(this,Camion.class));
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
      }
 
     public void asignacionPipaTan(){
@@ -281,19 +295,25 @@ public class MenuPrincipal extends PBase {
     }
 
     public void goToInv(){
-        if(gl.tipoDepos==0){
-            startActivity(new Intent(this,Inventario.class));
-        }else{
-            estacion.fill("WHERE Activo = 1");
 
-            eitems = estacion.first();
+        try {
+            if(gl.tipoDepos==0){
+                startActivity(new Intent(this,Inventario.class));
+            }else{
+                estacion.fill("WHERE Activo = 1");
 
-            gl.pipa = eitems.tanid;
-            gl.pipaNom=eitems.nombre;
-            gl.exitapp=false;
+                eitems = estacion.first();
 
-            startActivity(new Intent(this,Lectura.class));
+                gl.pipa = eitems.tanid;
+                gl.pipaNom=eitems.nombre;
+                gl.exitapp=false;
+
+                startActivity(new Intent(this,Lectura.class));
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
+
     }
 
     private void checkDBStatus() {
@@ -325,12 +345,12 @@ public class MenuPrincipal extends PBase {
 
         if (callback == -1) {
 
-            if(gl.rolid==0){
-                asignacionPipa();
-            }
+                if(gl.rolid==0){
+                    asignacionPipa();
+                }
 
-            return;
-        }
+                return;
+            }
 
         if (callback == 2) {
             callback = 0;
@@ -339,20 +359,9 @@ public class MenuPrincipal extends PBase {
                 gl.exitapp=false;
                 finish();
             }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
-
-        if (callback == 4) {
-            callback = 0;
-            startTrasladoTanque();
-            return;
-        }
-
-        if (callback == 5) {
-            callback = 0;
-            buildMenuItems();
-            return;
-        }
-
     }
 
     //endregion
