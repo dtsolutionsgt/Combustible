@@ -17,7 +17,7 @@ import com.dts.classes.clsMovObj;
 import com.dts.classes.clsParamObj;
 import com.dts.classes.clsPipaObj;
 
-public class TransTan extends PBase {
+public class TransCis extends PBase {
 
     private TextView lbl1,lbl2,lbl3,lbl4;
     private EditText txt1;
@@ -28,7 +28,7 @@ public class TransTan extends PBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trans_tan);
+        setContentView(R.layout.activity_trans_cis);
 
         super.InitBase(savedInstanceState);
 
@@ -39,7 +39,6 @@ public class TransTan extends PBase {
         txt1 = (EditText) findViewById(R.id.editText4);
 
         iniciaTrans();
-
     }
 
     //region Events
@@ -117,7 +116,7 @@ public class TransTan extends PBase {
             item.combid=vCombEst;
             if (gUsrPipa) item.cant=cant;else item.cant=-cant;
             item.total=du.nfechaflat(fecha)*10+1;
-            item.tanorigid=tanqid;
+            item.tanorigid=pipaid;
             item.recibio=gl.recibio;
             item.equid=0;
             item.kilometraje=0;
@@ -152,8 +151,8 @@ public class TransTan extends PBase {
 
             item.hhid=gl.HH;
             item.fecha=du.getActDateTimeSec();
-            item.depid=tanqid;
-            item.tipodep=1;
+            item.depid=0;
+            item.tipodep=0;
             item.transid=" ";
             item.bandera=0;
             item.tipotransid=1;
@@ -235,7 +234,6 @@ public class TransTan extends PBase {
 
     //region Dialogs
 
-
     private void msgAskOK(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
@@ -268,6 +266,5 @@ public class TransTan extends PBase {
     }
 
     //endregion
-
 
 }

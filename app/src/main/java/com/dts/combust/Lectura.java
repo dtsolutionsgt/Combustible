@@ -12,9 +12,12 @@ import com.dts.base.DateUtils;
 
 public class Lectura extends PBase {
 
-    private TextView Inicial, Final, IPulgadas, FPulgadas, IOctavos, FOctavos,Pipa;
+    private TextView Inicial,Final,IPulgadas,FPulgadas,IOctavos,FOctavos,Pipa,lbl1,lbl2,lbl3;
+
+
     private int LInicial, LFinal, IniPulgadas, FinPulgadas, IniOctavos, FinOctavos,stamp, existencia;
     private double rini, rfin, resIniP, resFinP, resIniO, resFinO;
+
     private String textInicial;
     private String textLFinal;
     private String textIniPulgadas;
@@ -22,8 +25,8 @@ public class Lectura extends PBase {
     private String textIniOctavos;
     private String textFinOctavos;
     private String fechaD;
+
     private clsDepositoObj deposito;
-    private DateUtils DU;
 
     private clsClasses.clsDeposito item=clsCls.new clsDeposito();
 
@@ -34,7 +37,6 @@ public class Lectura extends PBase {
 
         super.InitBase(savedInstanceState);
 
-        DU =  new DateUtils();
         deposito =  new clsDepositoObj(this, Con, db);
 
         Inicial = (TextView) findViewById(R.id.txtInicial);Inicial.requestFocus();
@@ -45,10 +47,15 @@ public class Lectura extends PBase {
         FOctavos = (TextView) findViewById(R.id.txtFOctavos);
         Pipa = (TextView) findViewById(R.id.txtPipa);
 
-        Pipa.setText(gl.pipaNom);
-        stamp = (int) DU.nfechaflat(fecha);
+        lbl1=(TextView) findViewById(R.id.textView38);lbl1.setText("");
+        lbl2=(TextView) findViewById(R.id.textView39);lbl2.setText("");
+        lbl3=(TextView) findViewById(R.id.textView40);lbl3.setText("");
 
-        if(gl.rolid != 3){
+        Pipa.setText(gl.pipaNom);
+        stamp = (int) du.nfechaflat(fecha);
+        //stamp=stamp-1;
+
+        if (gl.rolid != 3){
             Inicial.setEnabled(false);
             IPulgadas.setEnabled(false);
             IOctavos.setEnabled(false);
@@ -74,18 +81,23 @@ public class Lectura extends PBase {
 
     public void loadItem(){
 
-        deposito.fill(" WHERE DepID = "+ gl.pipa +" AND Stamp = "+ stamp +" AND TipoDep = "+ gl.tipoDepos +"");
+        lecturaAnterior();
 
-        if(deposito.count == 0){ existencia=0; return;} else existencia = 1;
+        try {
 
-        item = deposito.first();
+            deposito.fill(" WHERE DepID = " + gl.pipa + " AND Stamp = " + stamp + " AND TipoDep = " + gl.tipoDepos + "");
 
-        resIniO = (item.rini % 1) * 8;
-        resFinO = (item.rfin % 1) * 8;
-        resIniP = item.rini - (item.rini % 1);
-        resFinP = item.rfin - (item.rfin % 1);
+            if (deposito.count == 0) {
+                existencia = 0;
+                return;
+            } else existencia = 1;
 
-        try{
+            item = deposito.first();
+
+            resIniO = (item.rini % 1) * 8;
+            resFinO = (item.rfin % 1) * 8;
+            resIniP = item.rini - (item.rini % 1);
+            resFinP = item.rfin - (item.rfin % 1);
 
             LInicial = (int) item.tini;
             LFinal = (int) item.tfin;
@@ -100,8 +112,8 @@ public class Lectura extends PBase {
             FPulgadas.setText(Integer.toString(FinPulgadas));
             IOctavos.setText(Integer.toString(IniOctavos));
             FOctavos.setText(Integer.toString(FinOctavos));
-        }catch (Exception e){
-            msgbox(""+e);
+        } catch (Exception e) {
+            msgbox("" + e);
         }
 
     }
@@ -153,7 +165,7 @@ public class Lectura extends PBase {
                 rini = IniPulgadas + IniOctavos * 0.125;
                 rfin = FinPulgadas + FinOctavos * 0.125;
 
-                fechaD = "20"+DU.univfechaext(fecha);
+                fechaD = "20"+du.univfechaext(fecha);
 
                 item.depid =  gl.pipa;
                 item.tipodep = gl.tipoDepos;
@@ -176,7 +188,7 @@ public class Lectura extends PBase {
                 rini = IniPulgadas + IniOctavos * 0.125;
                 rfin = FinPulgadas + FinOctavos * 0.125;
 
-                fechaD = "20"+DU.univfechaext(fecha);
+                fechaD = "20"+du.univfechaext(fecha);
 
                 item.fecha = fechaD;
                 item.tini = LInicial;
@@ -200,6 +212,33 @@ public class Lectura extends PBase {
     //endregion
 
     //region Aux
+
+    private void lecturaAnterior() {
+
+        if (gl.rolid != 3) return;
+
+        try {
+            sql=" WHERE (DepID="+gl.pipa+") AND " +
+                    " (Stamp<"+stamp+") AND (TipoDep="+gl.tipoDepos+") ORDER BY Stamp DESC";
+
+            deposito.fill(sql);
+            if (deposito.count == 0) return;
+
+            item = deposito.first();
+
+            resFinO = (item.rfin % 1) * 8;FinOctavos = (int) resFinO;
+            resFinP = item.rfin - (item.rfin % 1);FinPulgadas = (int) resFinP;
+            LFinal = (int) item.tfin;
+
+            lbl3.setText(""+LFinal);
+            lbl1.setText(""+FinPulgadas);
+            lbl2.setText(""+FinOctavos);
+
+        } catch (Exception e){
+            String ss=e.getMessage();
+        }
+
+    }
 
     private void msgAskLFinal(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);

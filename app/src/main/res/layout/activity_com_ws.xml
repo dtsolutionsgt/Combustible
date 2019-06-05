@@ -34,7 +34,7 @@
         android:gravity="center"
         android:onClick="askSend"
         android:padding="10dp"
-        android:text="Enviar"
+        android:text="Comunicar"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,9 +118,9 @@
 
     <TextView
         android:id="@+id/textView13"
-        android:layout_width="205dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_width="107dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/frame_round"
         android:gravity="center"
         android:onClick="askRec"
@@ -128,22 +128,28 @@
         android:text="Recibir"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relTop" />
 
     <TextView
         android:id="@+id/textView20"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="44dp"
         android:gravity="center_horizontal"
+        android:maxLines="3"
         android:text="TextView"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textView15"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintTop_toTopOf="@+id/textView13"
+        app:layout_constraintVertical_bias="0.0" />
 
     <RadioGroup
         android:id="@+id/radURL"

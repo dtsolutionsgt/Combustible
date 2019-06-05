@@ -18,7 +18,7 @@ public class appGlobals extends Application {
 	public int turno, turnID, turnStamp, fotoTp,valida;
 	public double pipacap;
 
-	public String nombreusuario;
+	public String nombreusuario,nomtanque;
 	public int rol, tipoDepos=0;
 	public boolean exitapp,devprncierre,endPrint;
 

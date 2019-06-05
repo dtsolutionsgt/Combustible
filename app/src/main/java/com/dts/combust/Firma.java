@@ -155,7 +155,10 @@ public class Firma extends PBase {
         if(!signed || cedula.equals("") || codCamera ==1 || txtNombre.equals("")){
             msgbox("Debe llenar todos los campos");
             return;
-        }else {
+        } else {
+
+            toast ("Guardando ...");
+
             surface.setDrawingCacheEnabled(true);
 
             if (sign.save(surface)){

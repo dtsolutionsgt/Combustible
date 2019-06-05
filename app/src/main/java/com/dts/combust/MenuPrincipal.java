@@ -3,6 +3,7 @@ package com.dts.combust;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class MenuPrincipal extends PBase {
 
-    private TextView lblTitle;
+    private TextView lblIdent,lblUser;
 
     private ArrayList<clsClasses.clsMenu> menuitems = new ArrayList<clsClasses.clsMenu>();
     private clsClasses.clsEstacion eitems=clsCls.new clsEstacion();
@@ -26,6 +27,7 @@ public class MenuPrincipal extends PBase {
     private clsEstacionObj estacion;
 
     private int rolid;
+    private boolean emptydb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +39,27 @@ public class MenuPrincipal extends PBase {
         estacion = new clsEstacionObj(this, Con, db);
 
         listView = (ListView) findViewById(R.id.listView1);
-        lblTitle = (TextView) findViewById(R.id.textView3);
+        lblIdent = (TextView) findViewById(R.id.textView3);
+        lblUser = (TextView) findViewById(R.id.textView2);
 
         rolid=gl.rolid;
+        setTanque();
 
         switch (rolid) {
             case 0:
-                lblTitle.setText(gl.pipaNom);break;
+                lblIdent.setText(gl.pipaNom);break;
             case 1:
-                lblTitle.setText("");break;
+                lblIdent.setText(gl.nomtanque);break;
             case 3:
-                lblTitle.setText(gl.nombreusuario);break;
+                lblIdent.setText("Supervisor");break;
         }
 
+        lblUser.setText(gl.nombreusuario);
         callback=-1;
 
         setHandlers();
 
         buildMenuItems();
-        listItems();
 
         gl.exitapp=false;
         asignacionTanque();
@@ -72,9 +76,8 @@ public class MenuPrincipal extends PBase {
                 clsClasses.clsMenu item = (clsClasses.clsMenu)lvObj;
 
                 adapter.setSelectedIndex(position);
-
                 menuOption(item.id);
-        };
+           };
         });
     }
 
@@ -97,6 +100,7 @@ public class MenuPrincipal extends PBase {
                 callback =1;
                 startActivity(new Intent(this,UsuarioLista.class));break;
             case 2:
+                callback=5;
                 startActivity(new Intent(this,ComWS.class));break;
             case 3:
                 msgAskExit("Salír de aplicación");break;
@@ -126,7 +130,7 @@ public class MenuPrincipal extends PBase {
                 startActivity(new Intent(this,Proyecto.class));break;
             case 6:
                 if (gl.rolid==1) { // tanque
-
+                    asignacionPipaTan();break;
                 } else { // cisterna
                     startActivity(new Intent(this,TransTan.class));break;
                 }
@@ -191,6 +195,8 @@ public class MenuPrincipal extends PBase {
 
         menuitems.clear();
 
+        checkDBStatus();
+
         switch (gl.rolid) {
             case 0: // Tanque
                 item=clsCls.new clsMenu();
@@ -215,9 +221,11 @@ public class MenuPrincipal extends PBase {
                 break;
         }
 
-        item=clsCls.new clsMenu();
-        item.id=4;item.nombre="Inventario";
-        menuitems.add(item);
+        if (!emptydb) {
+            item=clsCls.new clsMenu();
+            item.id=4;item.nombre="Inventario";
+            menuitems.add(item);
+        }
 
         item=clsCls.new clsMenu();
         item.id=2;item.nombre="Comunicación";
@@ -226,6 +234,8 @@ public class MenuPrincipal extends PBase {
         item=clsCls.new clsMenu();
         item.id=3;item.nombre="Salir";
         menuitems.add(item);
+
+        listItems();
 
     }
 
@@ -246,12 +256,29 @@ public class MenuPrincipal extends PBase {
 
     public void asignacionPipa(){
 
-           if (gl.rolid==0) {
+        if (gl.rolid==0) {
             callback=2;
             gl.exitapp=false;
             startActivity(new Intent(this,Camion.class));
         }
      }
+
+    public void asignacionPipaTan(){
+        callback=4;
+        gl.pipa=0;
+        gl.exitapp=false;
+        startActivity(new Intent(this,Camion.class));
+    }
+
+    public void startTrasladoTanque() {
+        if (gl.pipa>0) startActivity(new Intent(this,TransCis.class));
+    }
+
+    public void setTanque(){
+        estacion.fill("WHERE Activo = 1");
+        gl.tanque = estacion.first().tanid;
+        gl.nomtanque = estacion.first().nombre;
+    }
 
     public void goToInv(){
         if(gl.tipoDepos==0){
@@ -269,6 +296,19 @@ public class MenuPrincipal extends PBase {
         }
     }
 
+    private void checkDBStatus() {
+        Cursor dt;
+
+        try {
+            sql="SELECT * FROM Operador";
+            dt=Con.OpenDT(sql);
+            emptydb=dt.getCount()==0;
+        } catch (Exception e) {
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+            emptydb=true;
+        }
+    }
+
     //endregion
 
     //region Activity Events
@@ -281,6 +321,8 @@ public class MenuPrincipal extends PBase {
     protected void onResume() {
         super.onResume();
 
+        checkDBStatus();
+
         if (callback == -1) {
 
             if(gl.rolid==0){
@@ -292,12 +334,25 @@ public class MenuPrincipal extends PBase {
 
         if (callback == 2) {
             callback = 0;
-            lblTitle.setText(gl.pipaNom);
+            lblIdent.setText(gl.pipaNom);
             if (gl.exitapp) {
                 gl.exitapp=false;
                 finish();
             }
         }
+
+        if (callback == 4) {
+            callback = 0;
+            startTrasladoTanque();
+            return;
+        }
+
+        if (callback == 5) {
+            callback = 0;
+            buildMenuItems();
+            return;
+        }
+
     }
 
     //endregion

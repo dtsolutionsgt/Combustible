@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
@@ -57,6 +58,7 @@ public class ComWS extends PBase {
 
     private static String sstr,fstr,ferr,fterr,idbg,dbg,ftmsg,sprog;
     private int scon,stockflag,reccnt;
+    private long dstamp;
     private String senv,gEmpresa,ActRuta;
     private boolean ftflag,esvacio;
 
@@ -87,7 +89,7 @@ public class ComWS extends PBase {
 
         getURL(1);
 
-        if(gl.rolid!=3){
+        if(gl.rolid!=3) {
             lbl2.setVisibility(View.INVISIBLE);
             relTab.setVisibility(View.INVISIBLE);
         }
@@ -132,10 +134,10 @@ public class ComWS extends PBase {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
-        dialog.setTitle("Envio");
-        dialog.setMessage("¿Enviar datos?");
+        dialog.setTitle("Comunicación");
+        dialog.setMessage("¿Enviar y recibir datos?");
 
-        dialog.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 runSend();
             }
@@ -649,6 +651,9 @@ public class ComWS extends PBase {
 
     private boolean sendData() {
 
+        dstamp=du.addDays(du.getActDate(),-30);
+        dstamp = (int) du.nfechaflat(dstamp);
+
         errflag=false;
 
         senv = "Envío terminado\n\n";
@@ -662,7 +667,7 @@ public class ComWS extends PBase {
             sql="DELETE FROM Mov WHERE Bandera=1";
             db.execSQL(sql);
 
-            sql="DELETE FROM Deposito WHERE Stamp<"+stamp+"";
+            sql="DELETE FROM Deposito WHERE Stamp<"+dstamp+"";
             db.execSQL(sql);
 
             db.setTransactionSuccessful();
@@ -677,6 +682,7 @@ public class ComWS extends PBase {
     public boolean envioMovimientos() {
         Cursor dt;
         String ss,trid;
+        int tn=1;
 
         fterr = "";
         try {
@@ -692,6 +698,8 @@ public class ComWS extends PBase {
 
             dt.moveToFirst();
             while (!dt.isAfterLast()) {
+
+                sprog = "Despacho "+tn;wsRtask.onProgressUpdate();
 
                 trid=dt.getString(2);
 
@@ -738,7 +746,7 @@ public class ComWS extends PBase {
                     errflag=true;fterr += "\n" + e.getMessage();dbg = e.getMessage();
                 }
 
-                dt.moveToNext();
+                dt.moveToNext();tn++;
             }
 
         } catch (Exception e) {
@@ -860,9 +868,24 @@ public class ComWS extends PBase {
     }
 
     public void wsSendFinished(){
-        if (errflag) mu.msgbox(fterr);
-        mu.msgbox("Envio completo");
-        isbusy=0;
+        if (errflag) {
+            mu.msgbox(fterr);
+            isbusy=0;
+        } else {
+
+            lbl1.setText("Recibiendo ... ");
+
+            Handler mtimer = new Handler();
+            Runnable mrunner=new Runnable() {
+            @Override
+                public void run() {
+            	    wsRtask = new AsyncCallRec();
+            	    wsRtask.execute();
+                }
+          	};
+            mtimer.postDelayed(mrunner, 500);
+        }
+
     }
 
     private class AsyncCallSend extends AsyncTask<String, Void, Void> {
@@ -889,7 +912,11 @@ public class ComWS extends PBase {
         protected void onPreExecute() {  }
 
         @Override
-        protected void onProgressUpdate(Void... values) {  }
+        protected void onProgressUpdate(Void... values) {
+            try {
+                lbl1.setText(sprog);
+            } catch (Exception e) {}
+        }
 
     }
 
