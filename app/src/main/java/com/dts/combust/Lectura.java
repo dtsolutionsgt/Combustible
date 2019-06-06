@@ -187,7 +187,8 @@ public class Lectura extends PBase {
 
                 deposito.add(item);
 
-                msgbox("Registro guardado correctamente");
+                msgAskOK("Registro guardado correctamente");
+                callback=2;
 
             }else if(existencia == 1){
 
@@ -206,8 +207,7 @@ public class Lectura extends PBase {
 
                 deposito.update(item);
 
-                msgbox("Registro guardado correctamente");
-
+                msgAskOK("Registro guardado correctamente");
             }
 
         }catch (Exception e){
@@ -268,6 +268,21 @@ public class Lectura extends PBase {
 
         dialog.show();
 
+    }
+
+    private void msgAskOK(String msg) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Lectura de Inventario");
+        dialog.setMessage(msg);
+
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        dialog.show();
     }
 
     //endregion

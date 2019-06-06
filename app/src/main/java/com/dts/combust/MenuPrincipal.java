@@ -289,9 +289,12 @@ public class MenuPrincipal extends PBase {
     }
 
     public void setTanque(){
-        estacion.fill("WHERE Activo = 1");
-        gl.tanque = estacion.first().tanid;
-        gl.nomtanque = estacion.first().nombre;
+        try{
+            estacion.fill("WHERE Activo = 1");
+            gl.tanque = estacion.first().tanid;
+            gl.nomtanque = estacion.first().nombre;
+        }catch (Exception e){
+        }
     }
 
     public void goToInv(){
@@ -341,7 +344,8 @@ public class MenuPrincipal extends PBase {
     protected void onResume() {
         super.onResume();
 
-        checkDBStatus();
+        //checkDBStatus();
+        buildMenuItems();
 
         if (callback == -1) {
             callback = 0;
@@ -359,6 +363,7 @@ public class MenuPrincipal extends PBase {
                 finish();
             }
         }
+
     }
 
     //endregion

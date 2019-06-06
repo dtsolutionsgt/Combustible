@@ -81,6 +81,7 @@ public class EntregaVeh extends PBase {
 
         param.fill();
         gl.HH=param.first().id;
+        gl.transhh = gl.HH+"_"+du.getCorelTimeLongStr();
         //****************************
 
         vEqu=0;vKilo=-1;vCant=-1;
@@ -212,7 +213,7 @@ public class EntregaVeh extends PBase {
 
             toast("Transacción completa");
 
-            //finish();
+            finish();
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
@@ -251,9 +252,7 @@ public class EntregaVeh extends PBase {
             item.kilometraje=vKilo;
             //item.nota", Mid(txtObserv.Text, 1, 50), "S")
             item.nota="";
-            item.transhh=gl.HH+"_"+du.getCorelTimeLongStr();
-
-            transhh = item.transhh;
+            item.transhh= gl.transhh;
 
             item.transid= gl.placa;
             item.coorx=0;

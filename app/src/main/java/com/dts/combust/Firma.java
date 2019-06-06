@@ -63,8 +63,7 @@ public class Firma extends PBase {
         addlog("Firma",""+du.getActDateTime(),gl.nombreusuario);
 
         appGlobals gl=((appGlobals) this.getApplication());
-        //signfile=gl.signfile;
-        signfile= Environment.getExternalStorageDirectory()+"/ComFotos/111.jpg";;
+        signfile= Environment.getExternalStorageDirectory()+"/ComFotos/"+gl.transhh+".jpg";
         this.setTitle("Firma digital");
 
         Content = (LinearLayout) findViewById(R.id.linFirmaCanvas);

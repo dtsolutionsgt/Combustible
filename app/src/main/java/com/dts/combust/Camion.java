@@ -127,6 +127,11 @@ public class Camion extends PBase {
                 callback =0;
                 listItems();return;
             }
+
+            if (callback ==2) {
+                callback =0;
+                finish();
+            }
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(e.getMessage());
