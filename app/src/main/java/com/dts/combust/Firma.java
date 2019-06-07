@@ -31,7 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dts.base.appGlobals;
+import com.dts.base.clsClasses;
 import com.dts.classes.clsEmpleadosObj;
+import com.dts.classes.clsFotosObj;
 
 public class Firma extends PBase {
 
@@ -44,6 +46,7 @@ public class Firma extends PBase {
 
     private Bitmap bm;
     private clsEmpleadosObj empleado;
+    private clsFotosObj foto;
 
     private String signfile,tl,txt;
     private int codCamera,check=0;
@@ -80,6 +83,7 @@ public class Firma extends PBase {
 
         dateName =  new DateUtils();
         empleado =  new clsEmpleadosObj(this,Con,db);
+        foto =  new clsFotosObj(this,Con,db);
 
         codCamera = 1;
         surface = Content;
@@ -170,6 +174,9 @@ public class Firma extends PBase {
                     gl.recibio = cedula.getText().toString();
                     gl.nombreRecibio = txtNombre.getText().toString();
                     gl.validacionFirma = true;
+
+                    if(!saveFoto()) return;
+
                     super.finish();
 
                 }
@@ -178,6 +185,27 @@ public class Firma extends PBase {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
+    }
+
+    public boolean saveFoto(){
+        clsFotosObj foto = new clsFotosObj(this, Con, db);
+        clsClasses.clsFotos item=clsCls.new clsFotos();
+
+        try {
+
+            item.transhh= gl.transhh;
+            item.imagen = signfile;
+            item.bandera = 0;
+
+            foto.add(item);
+
+            return true;
+
+        } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+            return false;
+        }
     }
 
     //endregion

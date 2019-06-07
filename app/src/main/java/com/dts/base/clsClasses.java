@@ -65,6 +65,7 @@ public class clsClasses {
     public class clsFotos {
         public String transhh;
         public String imagen;
+        public Integer bandera;
     }
 
     public class clsInventario {

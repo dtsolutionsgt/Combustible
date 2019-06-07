@@ -105,6 +105,14 @@ public class BaseDatosScript {
 			sql = "CREATE TABLE [Fotos] (" +
 					"TransHH TEXT NOT NULL," +
 					"Imagen TEXT NOT NULL," +
+					"Bandera INTEGER NOT NULL," +
+					"PRIMARY KEY ([TransHH])" +
+					");";
+			db.execSQL(sql);
+
+			sql = "CREATE TABLE [Firma] (" +
+					"TransHH TEXT NOT NULL," +
+					"Bandera INTEGER NOT NULL," +
 					"PRIMARY KEY ([TransHH])" +
 					");";
 			db.execSQL(sql);
