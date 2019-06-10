@@ -32,7 +32,7 @@ public class EntregaVeh extends PBase {
     private TextView lbl1,lbl3,lbl4;
     private EditText txt1,txt2,txt3;
 
-    private String fname,transhh;
+    private String fname;
     private int vEqu,vOrigen,vKilo,vEst,vCombEst,placa;
     private double vCap,vCant;
 
@@ -72,13 +72,14 @@ public class EntregaVeh extends PBase {
         clsParamObj param =new clsParamObj(this,Con,db);
 
         prn=new printer(this,printclose);
-        //prn=new printer(this,null);
 
         printclose= new Runnable() {
             public void run() {
-                finish();
+                EntregaVeh.super.finish();
             }
         };
+
+        prn=new printer(this,printclose);
 
         param.fill();
         gl.HH=param.first().id;
@@ -183,6 +184,7 @@ public class EntregaVeh extends PBase {
         txt3.setOnEditorActionListener(listener3);
 
 
+
     }
 
     private void firma(){
@@ -213,7 +215,7 @@ public class EntregaVeh extends PBase {
 
             toast("Transacción completa");
 
-            finish();
+            //finish();
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
@@ -294,7 +296,7 @@ public class EntregaVeh extends PBase {
 
         try{
 
-            mov.fill(" WHERE TransHH = '"+ transhh +"'");
+            mov.fill(" WHERE TransHH = '"+ gl.transhh +"'");
 
             if(mov.count == 0) return;
 
@@ -560,6 +562,11 @@ public class EntregaVeh extends PBase {
 
             if(gl.validacionFirma){
                 saveTrans();
+            }
+
+            if(gl.devprncierre) {
+                gl.devprncierre=false;
+                finish();
             }
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);

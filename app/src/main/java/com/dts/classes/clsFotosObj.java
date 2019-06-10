@@ -79,6 +79,7 @@ public class clsFotosObj {
 
         ins.add("TransHH",item.transhh);
         ins.add("Imagen",item.imagen);
+        ins.add("Bandera",item.bandera);
 
         db.execSQL(ins.sql());
 
@@ -89,6 +90,7 @@ public class clsFotosObj {
         upd.init("Fotos");
 
         upd.add("Imagen",item.imagen);
+        ins.add("Bandera",item.bandera);
 
         upd.Where("(TransHH='"+item.transhh+"')");
 
@@ -153,6 +155,7 @@ public class clsFotosObj {
 
         ins.add("TransHH",item.transhh);
         ins.add("Imagen",item.imagen);
+        ins.add("Bandera",item.bandera);
 
         return ins.sql();
 
@@ -163,6 +166,7 @@ public class clsFotosObj {
         upd.init("Fotos");
 
         upd.add("Imagen",item.imagen);
+        ins.add("Bandera",item.bandera);
 
         upd.Where("(TransHH='"+item.transhh+"')");
 

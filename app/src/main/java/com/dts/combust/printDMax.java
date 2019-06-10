@@ -275,10 +275,9 @@ public class printDMax extends printBase {
 					@Override
 					public void run() {
 						try {
-							appG.devprncierre=true;
-  							printclose.run();
+							printclose.run();
 						} catch (Exception e) {
-							//showmsg(e.getMessage());
+							showmsg(e.getMessage());
 						}
 
 					}
