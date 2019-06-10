@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -50,8 +51,6 @@ public class Firma extends PBase {
     private int TAKE_PHOTO_CODE = 0;
     private boolean signed;
 
-    private DateUtils dateName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -78,12 +77,13 @@ public class Firma extends PBase {
         cedula = (TextView) findViewById(R.id.txtCedula);
         txtNombre = (TextView) findViewById(R.id.txtNombre);
 
-        dateName =  new DateUtils();
         empleado =  new clsEmpleadosObj(this,Con,db);
 
         codCamera = 1;
         surface = Content;
         signed=false;
+
+        name = du.getCorelBase();
 
         setHandlers();
 
@@ -91,46 +91,22 @@ public class Firma extends PBase {
 
     }
 
-    private void setHandlers() {
-        cedula.addTextChangedListener(new TextWatcher() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            public void afterTextChanged(Editable s) {
-
-                tl = cedula.getText().toString();
-
-                consultaNombre();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count){
-            }
-        });
-    }
-
-    public void consultaNombre(){
         try {
-            if(tl.isEmpty()){
-
-                txtNombre.setText("");
-                return;
-
-            } else {
-                empleado.fill(" WHERE Barra ='" + tl + "'");
-
-                if(empleado.items.isEmpty()){
-
-                    txtNombre.setText("");
-                    return;
+            if (requestCode == TAKE_PHOTO_CODE) {
+                if (resultCode == RESULT_OK) {
+                    toast("Foto OK.");
+                    codCamera =  2;
+                    showCamera();
                 } else {
-                    txtNombre.setText(empleado.first().nombre);
+                    Toast.makeText(this,"SIN FOTO.", Toast.LENGTH_SHORT).show();
                 }
             }
-
-        } catch (Exception e) {
+        } catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            mu.msgbox(e.getMessage());
         }
     }
 
@@ -180,9 +156,94 @@ public class Firma extends PBase {
 
     }
 
+    private void setHandlers() {
+        cedula.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                tl = cedula.getText().toString();
+
+                consultaNombre();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count){
+            }
+        });
+    }
+
     //endregion
 
     //region Aux
+
+    public void consultaNombre(){
+        try {
+            if(tl.isEmpty()){
+
+                txtNombre.setText("");
+                return;
+
+            } else {
+                empleado.fill(" WHERE Barra ='" + tl + "'");
+
+                if(empleado.items.isEmpty()){
+
+                    txtNombre.setText("");
+                    return;
+                } else {
+                    txtNombre.setText(empleado.first().nombre);
+                }
+            }
+
+        } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            mu.msgbox(e.getMessage());
+        }
+    }
+
+    public void showCamera(){
+        try{
+            if (codCamera == 1){
+                cam1.setVisibility(View.VISIBLE);
+                txtC.setVisibility(View.VISIBLE);
+                cam2.setVisibility(View.INVISIBLE);
+                txtC2.setVisibility(View.INVISIBLE);
+            }else if(codCamera == 2 ){
+                cam1.setVisibility(View.INVISIBLE);
+                txtC.setVisibility(View.INVISIBLE);
+                cam2.setVisibility(View.VISIBLE);
+                txtC2.setVisibility(View.VISIBLE);
+            }
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            msgbox("Error en showCamera: "+e);
+        }
+    }
+
+    public void camera(View view){
+        try{
+            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                msgbox("El dispositivo no soporta toma de foto");return;
+            }
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + name + ".jpg");
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
+            startActivityForResult(cameraIntent,TAKE_PHOTO_CODE);
+
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            mu.msgbox("Error en camera: "+e.getMessage());
+        }
+    }
+
+    //endregion
 
     public class Signature extends View  {
 
@@ -210,31 +271,28 @@ public class Firma extends PBase {
             int nx,ny;
             double ox,oy,fact;
 
-            //Log.v("log_tag", "Width: " + v.getWidth());
-            //Log.v("log_tag", "Height: " + v.getHeight());
-
             ox=v.getWidth();oy=v.getHeight();
-            fact=800/ox;
-            nx=(int) (fact*ox);ny=(int) (fact*oy);
+            fact=500/ox;nx=(int) (fact*ox);ny=(int) (fact*oy);
 
             if(bm == null) bm=Bitmap.createBitmap (Content.getWidth(), Content.getHeight(), Bitmap.Config.RGB_565);;
-
             Canvas canvas = new Canvas(bm);
 
             try {
-
                 File sfile= new File(signfile);
                 FileOutputStream mFileOutStream = new FileOutputStream(sfile);
 
                 v.draw(canvas);
+                Bitmap bms=Bitmap.createScaledBitmap(bm,327,107,true);
+                //Bitmap bms=Bitmap.createScaledBitmap(bm,654,214,true);
+                //Bitmap bms=mu.scaleBitmap(bm,327,107);
+                bms.compress(Bitmap.CompressFormat.JPEG,50,mFileOutStream);
 
-                Bitmap bms=Bitmap.createScaledBitmap(bm,nx,ny, true);
-                bms.compress(Bitmap.CompressFormat.JPEG, 75, mFileOutStream);
+                mFileOutStream.flush();mFileOutStream.close();
 
-                //bm.compress(Bitmap.CompressFormat.PNG, 90, mFileOutStream);
-
-                mFileOutStream.flush();
-                mFileOutStream.close();
+                try {
+                    db.execSQL("INSERT INTO Firma VALUES('"+gl.transhh+"',0)");
+                } catch (SQLException e) {
+                }
 
                 Toast.makeText(Firma.this, "Firma guardada.", Toast.LENGTH_SHORT).show();
 
@@ -345,69 +403,6 @@ public class Firma extends PBase {
                 addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             }
 
-        }
-    }
-
-    public void showCamera(){
-        try{
-            if (codCamera == 1){
-                cam1.setVisibility(View.VISIBLE);
-                txtC.setVisibility(View.VISIBLE);
-                cam2.setVisibility(View.INVISIBLE);
-                txtC2.setVisibility(View.INVISIBLE);
-            }else if(codCamera == 2 ){
-                cam1.setVisibility(View.INVISIBLE);
-                txtC.setVisibility(View.INVISIBLE);
-                cam2.setVisibility(View.VISIBLE);
-                txtC2.setVisibility(View.VISIBLE);
-            }
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            msgbox("Error en showCamera: "+e);
-        }
-    }
-
-    public void camera(View view){
-        try{
-            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                msgbox("El dispositivo no soporta toma de foto");return;
-            }
-
-            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());
-
-            name = dateName.getCorelBase();
-
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + name + ".jpg");
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
-            startActivityForResult(cameraIntent,TAKE_PHOTO_CODE);
-
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            mu.msgbox("Error en camera: "+e.getMessage());
-        }
-    }
-
-    //endregion
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        try {
-            if (requestCode == TAKE_PHOTO_CODE) {
-                if (resultCode == RESULT_OK) {
-                    Toast.makeText(this, "Foto OK.", Toast.LENGTH_SHORT).show();
-
-                    codCamera =  2;
-                    showCamera();
-                } else {
-                    Toast.makeText(this, "SIN FOTO.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
     }
 

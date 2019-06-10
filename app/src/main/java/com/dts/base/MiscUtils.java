@@ -3,6 +3,7 @@ package com.dts.base;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.widget.Toast;
 
@@ -196,6 +197,27 @@ public class MiscUtils {
 			return false;
 		}	
 	}
-	
+
+	public Bitmap scaleBitmap(Bitmap bm, int size1, int size2) {
+		Bitmap bms;
+		int imw,imh;
+		double bmw,bmh,z1,z2,z3,z4,zm1,zm2,zm;
+
+		bmw=bm.getWidth();bmh=bm.getHeight();
+
+		z1=bmw/size1;z2=bmh/size2;
+		zm1=Math.max(z1,z2);
+		z3=bmw/size2;z4=bmh/size1;
+		zm2=Math.max(z3,z4);
+		zm=Math.min(zm1,zm2);
+
+		imw=(int) (bmw/zm);
+		imh=(int) (bmh/zm);
+
+		bms=Bitmap.createScaledBitmap(bm,imw,imh,true);
+
+		return bms;
+	}
+
 }
 

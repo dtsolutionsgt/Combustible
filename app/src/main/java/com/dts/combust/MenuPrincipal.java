@@ -196,50 +196,56 @@ public class MenuPrincipal extends PBase {
     private void buildMenuItems() {
         clsClasses.clsMenu item;
 
-
         try {
             menuitems.clear();
 
-        checkDBStatus();
+            checkDBStatus();
 
-        switch (gl.rolid) {
-            case 0: // Tanque
-                item=clsCls.new clsMenu();
-                item.id=5;item.nombre="Despacho";
-                menuitems.add(item);
+            switch (gl.rolid) {
+                case 0: // Tanque
+                    item = clsCls.new clsMenu();
+                    item.id = 5;
+                    item.nombre = "Despacho";
+                    menuitems.add(item);
 
-                    item=clsCls.new clsMenu();
-                    item.id=6;item.nombre="Traslado";
+                    item = clsCls.new clsMenu();
+                    item.id = 6;
+                    item.nombre = "Traslado";
                     menuitems.add(item);
 
                     break;
                 case 1: // Cisterna
-                    item=clsCls.new clsMenu();
-                    item.id=5;item.nombre="Despacho";
+                    item = clsCls.new clsMenu();
+                    item.id = 5;
+                    item.nombre = "Despacho";
                     menuitems.add(item);
 
-                    item=clsCls.new clsMenu();
-                    item.id=6;item.nombre="Traslado";
+                    item = clsCls.new clsMenu();
+                    item.id = 6;
+                    item.nombre = "Traslado";
                     menuitems.add(item);
                     break;
                 case 3: // Supervisor
                     break;
             }
 
-        if (!emptydb) {
-            item=clsCls.new clsMenu();
-            item.id=4;item.nombre="Inventario";
-            menuitems.add(item);
-        }
+            if (!emptydb) {
+                item = clsCls.new clsMenu();
+                item.id = 4;
+                item.nombre = "Inventario";
+                menuitems.add(item);
+            }
 
-            item=clsCls.new clsMenu();
-            item.id=2;item.nombre="Comunicación";
+            item = clsCls.new clsMenu();
+            item.id = 2;
+            item.nombre = "Comunicación";
             menuitems.add(item);
 
-            item=clsCls.new clsMenu();
-            item.id=3;item.nombre="Salir";
+            item = clsCls.new clsMenu();
+            item.id = 3;
+            item.nombre = "Salir";
             menuitems.add(item);
-        }catch (Exception e){
+        } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 

@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,6 +25,9 @@ import com.dts.base.DateUtils;
 import com.dts.base.clsDataBuilder;
 import com.dts.classes.clsParamObj;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.kobjects.base64.Base64;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -31,6 +36,9 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -42,7 +50,7 @@ public class ComWS extends PBase {
     private RelativeLayout relTab;
 
     private int isbusy;
-    private String sp;
+    private String sp,rootdir,jsonWS,trid;
     private boolean errflag;
 
     private SQLiteDatabase dbT;
@@ -87,6 +95,8 @@ public class ComWS extends PBase {
         relTab = (RelativeLayout) findViewById(R.id.rel006);
 
         System.setProperty("line.separator","\r\n");
+
+        rootdir= Environment.getExternalStorageDirectory()+"/ComFotos/";
 
         dbld=new clsDataBuilder(this);
 
@@ -143,6 +153,12 @@ public class ComWS extends PBase {
         try{
             if (isbusy==1) {
                 toast("Por favor, espere que se termine la tarea actual.");return;
+            }
+
+            if(radOficina.isChecked()){
+                getURL(1);
+            }else if (radOutOff.isChecked()){
+                getURL(2);
             }
 
             startActivity(new Intent(this,Rating.class));
@@ -348,6 +364,196 @@ public class ComWS extends PBase {
         return 0;
     }
 
+    public int sendSignature(String transid,String fname) {
+        int rc;
+        String s, ss,resstr;
+        byte bb,ub,lb;
+
+        METHOD_NAME = "saveImageF";
+        sstr = "OK";
+
+        try {
+
+            Bitmap bmp = BitmapFactory.decodeFile(fname);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 75, out);
+            byte[] imagebyte = out.toByteArray();
+            String sdata = "";
+
+            for (int i = 0; i <4; i++) {
+                bb=imagebyte[i];
+                ub=(byte) (bb/16);lb=(byte) (bb % 16);
+                sdata=sdata+((char) ub)+((char) lb);
+            }
+
+            int iv1=sdata.length();
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            PropertyInfo param = new PropertyInfo();
+            param.setType(String.class);
+            param.setName("transid");
+            param.setValue(transid);
+            request.addProperty(param);
+
+            PropertyInfo param2 = new PropertyInfo();
+            param2.setType(String.class);
+            param2.setName("imgdata");
+            param2.setValue(sdata);
+            request.addProperty(param2);
+
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call(NAMESPACE + METHOD_NAME, envelope);
+
+            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+            resstr = response.toString();
+            if (resstr.equalsIgnoreCase("#")) return 1;else return 0;
+
+        } catch (Exception e) {
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+        }
+
+        return 1;
+    }
+
+    public int sendSignature2(String transid,String fname) {
+        JSONObject jsonItem = new JSONObject();
+        JSONArray  jsonArray = new JSONArray();
+        JSONObject json = new JSONObject();
+
+        Bitmap bmp;
+        String resstr,imagen64;
+
+        File file=new File(fname);
+
+        METHOD_NAME = "saveImageF";
+        sstr = "OK";
+
+        try {
+
+            ByteArrayOutputStream bst = new ByteArrayOutputStream();
+            Bitmap bitmap = BitmapFactory.decodeFile(fname);
+
+            /*
+            try {
+                bmp=mu.scaleBitmap(bitmap,640,360);
+                FileOutputStream out = new FileOutputStream(file);
+                bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                bmp=bitmap;
+            }
+            */
+
+            //bmp=bitmap;
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100, bst);
+            byte[] imageBytes = bst.toByteArray();
+            imagen64 = android.util.Base64.encodeToString(imageBytes, android.util.Base64.NO_PADDING);
+
+            jsonItem = new JSONObject();
+            jsonItem.put("CODIGO",transid);
+            jsonItem.put("IMAGEN",imagen64);
+            //jsonItem.put("IMAGEN",imageBytes);
+
+            jsonArray.put(jsonItem);
+            json.put("FIRMA",jsonArray);
+            jsonWS = json.toString();
+
+            int iv1=imagen64.length();
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            PropertyInfo param = new PropertyInfo();
+            param.setType(String.class);
+            param.setName("transid");
+            param.setValue(transid);
+            request.addProperty(param);
+
+            PropertyInfo param2 = new PropertyInfo();
+            param2.setType(String.class);
+            param2.setName("imgdata");
+            param2.setValue(jsonWS);
+            request.addProperty(param2);
+
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call(NAMESPACE + METHOD_NAME, envelope);
+
+            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+            resstr = response.toString();
+
+            if (resstr.equalsIgnoreCase("#")) return 1;else return 0;
+
+        } catch (Exception e) {
+            String see=e.getMessage();
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+        }
+
+        return 0;
+    }
+
+    public int sendSignatureOLD(String transid,String firmaid) {
+        int rc;
+        String fname,s, ss,resstr;
+
+        fname=rootdir+firmaid;
+
+        METHOD_NAME = "saveImageF";
+        sstr = "OK";
+
+        try {
+
+            Bitmap bmp = BitmapFactory.decodeFile(fname);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 75, out);
+            byte[] imagebyte = out.toByteArray();
+            String strBase64 = Base64.encode(imagebyte);
+
+            int iv1=strBase64.length();
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            PropertyInfo param = new PropertyInfo();
+            param.setType(String.class);
+            param.setName("transid");
+            param.setValue(transid);
+            request.addProperty(param);
+
+            PropertyInfo param2 = new PropertyInfo();
+            param2.setType(String.class);
+            param2.setName("imgdata");
+            param2.setValue(strBase64);
+            request.addProperty(param2);
+
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call(NAMESPACE + METHOD_NAME, envelope);
+
+            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+            resstr = response.toString();
+
+        } catch (Exception e) {
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+        }
+
+        return 1;
+    }
+
     public int OpenDTt(String sql) {
         int rc;
 
@@ -402,21 +608,15 @@ public class ComWS extends PBase {
     }
 
     public void checked(View view){
-
         try {
-
             if(radOficina.isChecked()){
-
                 radOutOff.setChecked(false);
                 getURL(1);
-
             }else if (radOutOff.isChecked()){
-
                 radOficina.setChecked(false);
                 getURL(2);
             }
-
-        }catch (Exception e){
+        } catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox("error en checked" + e);
         }
@@ -467,7 +667,6 @@ public class ComWS extends PBase {
         BufferedWriter writer = null;
         FileWriter wfile;
 
-
         listItems.clear();
         idbg="";stockflag=0;
 
@@ -490,7 +689,7 @@ public class ComWS extends PBase {
             if (!AddTable("Proyecto")) return false;
             if (!AddTable("ProyectoEquipo")) return false;
             if (!AddTable("ProyectoFase")) return false;
-            if (!AddTable("TransError")) return false;
+            //if (!AddTable("TransError")) return false;
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             return false;
@@ -704,6 +903,7 @@ public class ComWS extends PBase {
         @Override
         protected Void doInBackground(String... params) {
             try {
+                Looper.prepare();
                 wsExecute();
             } catch (Exception e) {
            }
@@ -761,14 +961,16 @@ public class ComWS extends PBase {
                 return false;
             }
 
-             if (!envioRating()) {
+            envioFirmas();
+
+            /*if (!envioRating()) {
                 dbld.savelog();
                 return false;
-            }
+            }*/
+
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
-
 
         try {
             db.beginTransaction();
@@ -790,7 +992,7 @@ public class ComWS extends PBase {
 
     public boolean envioMovimientos() {
         Cursor dt;
-        String ss,trid;
+        String ss;
         int tn=1;
 
         fterr = "";
@@ -808,7 +1010,7 @@ public class ComWS extends PBase {
             dt.moveToFirst();
             while (!dt.isAfterLast()) {
 
-                sprog = "Despacho "+tn;wsRtask.onProgressUpdate();
+                sprog = "Despacho "+tn;wsStask.onProgressUpdate();
 
                 trid=dt.getString(2);
 
@@ -912,7 +1114,6 @@ public class ComWS extends PBase {
 
                 upd.Where("DepID="+dt.getInt(0)+" AND TipoDep="+dt.getInt(1)+" AND Stamp="+dt.getInt(2));
 
-
                 dbld.clear();
                 dbld.add(ins.sql());
 
@@ -948,6 +1149,60 @@ public class ComWS extends PBase {
 
         return true;
     }
+
+    public void envioFirmas() {
+        Cursor dt;
+        File file;
+        String trid,fname;
+        int tn=1,ft=0;
+        boolean transflag;
+
+        try {
+
+            sql="SELECT TransHH FROM Firma";
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() == 0) return;
+
+            dt.moveToFirst();
+            while (!dt.isAfterLast()) {
+
+                sprog = "Firmas : " + ft;wsStask.onProgressUpdate();
+
+                trid = dt.getString(0);
+                fname=rootdir+trid+".jpg";
+
+                try {
+                    file=new File(fname);
+                    if (file.exists()) {
+                        if (sendSignature(trid,fname)==1) {
+                            transflag=true;ft++;
+                        } else {
+                            transflag=false;
+                         }
+                    } else {
+                        transflag=true;
+                    }
+
+                    if (transflag) {
+                        //sql="DELETE FROM Firma WHERE TransHH='" + trid + "'";
+                        //db.execSQL(sql);
+                        //file.delete();
+                    }
+
+                } catch (Exception e) {
+                    dbg = e.getMessage();
+                }
+
+                dt.moveToNext();tn++;
+
+                sprog = "Firmas : " + ft;wsStask.onProgressUpdate();
+
+            }
+       } catch (Exception e) {
+            fname=e.getMessage();
+        }
+
+     }
 
     public boolean envioRating() {
         Cursor DT;
@@ -1059,15 +1314,18 @@ public class ComWS extends PBase {
             lbl1.setText("Recibiendo ... ");
 
             Handler mtimer = new Handler();
-            Runnable mrunner=new Runnable() {
-            @Override
+            Runnable mrunner = new Runnable() {
+                @Override
                 public void run() {
-            	    wsRtask = new AsyncCallRec();
-            	    wsRtask.execute();
+                    //wsRtask = new AsyncCallRec();
+                    //wsRtask.execute();
                 }
-          	};
-            mtimer.postDelayed(mrunner, 500);
+            };
+            mtimer.postDelayed(mrunner, 1000);
         }
+
+        toast("Done");
+        finish();
 
     }
 
@@ -1193,6 +1451,7 @@ public class ComWS extends PBase {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
+
     }
 
     @Override

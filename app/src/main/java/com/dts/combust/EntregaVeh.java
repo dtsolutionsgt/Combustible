@@ -72,6 +72,7 @@ public class EntregaVeh extends PBase {
         clsParamObj param =new clsParamObj(this,Con,db);
 
         prn=new printer(this,printclose);
+        //prn=new printer(this,null);
 
         printclose= new Runnable() {
             public void run() {
@@ -92,7 +93,6 @@ public class EntregaVeh extends PBase {
         }
 
     }
-
 
     //region Events
 
@@ -363,11 +363,10 @@ public class EntregaVeh extends PBase {
             writer.close();
 
             if(prn.isEnabled()){
-                prn.printask(printclose, "print.txt");
+                prn.printask(printclose,"print.txt");
             }else {
-                msgbox("impresora: no Enabled");
+                //msgbox("impresora: no Enabled");
             }
-
 
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
@@ -572,7 +571,6 @@ public class EntregaVeh extends PBase {
 
 
     //endregion
-
 
 
 }

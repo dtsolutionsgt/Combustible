@@ -126,15 +126,18 @@
         <LinearLayout
             android:id="@+id/linFirmaCanvas"
             android:layout_width="match_parent"
-            android:layout_height="266dp"
+            android:layout_height="167dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="0dp"
+            android:layout_marginLeft="2dp"
             android:layout_marginTop="254dp"
-            android:layout_marginBottom="110dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="209dp"
             android:layout_weight="0.60"
-            android:orientation="horizontal">
+            android:background="@drawable/frame_rect"
+            android:orientation="horizontal"
+            android:padding="2dp">
 
         </LinearLayout>
 

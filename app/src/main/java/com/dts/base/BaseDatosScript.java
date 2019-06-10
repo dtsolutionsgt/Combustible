@@ -105,6 +105,14 @@ public class BaseDatosScript {
 			sql = "CREATE TABLE [Fotos] (" +
 					"TransHH TEXT NOT NULL," +
 					"Imagen TEXT NOT NULL," +
+					"Bandera INTEGER NOT NULL," +
+					"PRIMARY KEY ([TransHH])" +
+					");";
+			db.execSQL(sql);
+
+			sql = "CREATE TABLE [Firma] (" +
+					"TransHH TEXT NOT NULL," +
+					"Bandera INTEGER NOT NULL," +
 					"PRIMARY KEY ([TransHH])" +
 					");";
 			db.execSQL(sql);
@@ -215,10 +223,6 @@ public class BaseDatosScript {
 					");";
 			db.execSQL(sql);
 
-
-
-			// *************************************
-
 			sql = "CREATE TABLE [Usuario] (" +
 					"[ID] INTEGER NOT NULL," +
 					"[Nombre] TEXT NOT NULL," +
@@ -244,20 +248,6 @@ public class BaseDatosScript {
 			sql="CREATE INDEX Rol_idx1 ON Rol(Nombre)";
 			db.execSQL(sql);
 
-
-			sql = "CREATE TABLE [Params] (" +
-					"ID integer NOT NULL," +
-					"dbver INTEGER  NOT NULL," +
-					"param1 TEXT  NOT NULL," +
-					"param2 TEXT  NOT NULL," +
-					"param3 INTEGER  NOT NULL," +
-					"param4 INTEGER  NOT NULL," +
-					"lic1 TEXT  NOT NULL," +
-					"lic2 INTEGER  NOT NULL," +
-					"PRIMARY KEY ([ID])" +
-					");";
-			db.execSQL(sql);
-
 			sql= "CREATE TABLE [TransError]("+
 					"[IDTRANSERROR] INTEGER NOT NULL,"+
 					"[TRANSERROR] TEXT NOT NULL,"+
@@ -276,6 +266,22 @@ public class BaseDatosScript {
 					"[STATCOM] TEXT NOT NULL"+
 					");";
 			db.execSQL(sql);
+
+			// *********************************
+
+			sql = "CREATE TABLE [Params] (" +
+					"ID integer NOT NULL," +
+					"dbver INTEGER  NOT NULL," +
+					"param1 TEXT  NOT NULL," +
+					"param2 TEXT  NOT NULL," +
+					"param3 INTEGER  NOT NULL," +
+					"param4 INTEGER  NOT NULL," +
+					"lic1 TEXT  NOT NULL," +
+					"lic2 INTEGER  NOT NULL," +
+					"PRIMARY KEY ([ID])" +
+					");";
+			db.execSQL(sql);
+
 
 			return 1;
 
