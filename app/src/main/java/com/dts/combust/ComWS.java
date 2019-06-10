@@ -368,6 +368,7 @@ public class ComWS extends PBase {
         int rc;
         String s, ss,resstr;
         byte bb,ub,lb;
+        int ui,li;
 
         METHOD_NAME = "saveImageF";
         sstr = "OK";
@@ -382,7 +383,10 @@ public class ComWS extends PBase {
 
             for (int i = 0; i <4; i++) {
                 bb=imagebyte[i];
-                ub=(byte) (bb/16);lb=(byte) (bb % 16);
+                ui=(int) (64+bb/16);
+                li=(int) (64+bb % 16);
+                ub=(byte) ui;
+                lb=(byte) li;
                 sdata=sdata+((char) ub)+((char) lb);
             }
 
