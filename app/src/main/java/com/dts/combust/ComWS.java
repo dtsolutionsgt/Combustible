@@ -1304,7 +1304,7 @@ public class ComWS extends PBase {
                     }
 
                     if (transflag) {
-                        sql="DELETE FROM Fotos WHERE ()TransHH='"+trid+"') AND (Imagen='"+fname+"')";
+                        sql="DELETE FROM Fotos WHERE (TransHH='"+trid+"') AND (Imagen='"+fname+"')";
                         db.execSQL(sql);
                         file.delete();
                     }
