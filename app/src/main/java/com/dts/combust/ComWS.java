@@ -380,7 +380,6 @@ public class ComWS extends PBase {
 
         try {
 
-
             Bitmap bmp = BitmapFactory.decodeFile(fname);
             bmp=mu.scaleBitmap(bmp,640,360);
 
@@ -442,8 +441,7 @@ public class ComWS extends PBase {
             resstr = response.toString();
             if (resstr.equalsIgnoreCase("#")) return 1;else return 0;
 
-        } catch (Exception e)
-        {
+        } catch (Exception e)        {
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
 
@@ -1360,7 +1358,7 @@ public class ComWS extends PBase {
         }
 
         toast("Done");
-       finish();
+        finish();
 
     }
 
