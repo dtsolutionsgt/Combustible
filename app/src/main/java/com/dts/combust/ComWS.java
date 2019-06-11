@@ -380,19 +380,23 @@ public class ComWS extends PBase {
 
         try {
 
-            Bitmap bmp = BitmapFactory.decodeFile(fname);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 75, out);
-            byte[] imagebyte = out.toByteArray();
 
-            bmp = BitmapFactory.decodeFile(fname);
-            ByteArrayOutputStream bos = null;
-            bos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            byte[] bt = null;
-            bt = bos.toByteArray();
-            String encodeString = null;
-            encodeString = Base64.encodeBytes(bt);
+            Bitmap bmp = BitmapFactory.decodeFile(fname);
+            bmp=mu.scaleBitmap(bmp,640,360);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            byte[] bt = out.toByteArray();
+            String encodeString = Base64.encodeBytes(bt);
+//
+//            bmp = BitmapFactory.decodeFile(fname);
+//            ByteArrayOutputStream bos = null;
+//            bos = new ByteArrayOutputStream();
+//            bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+//            byte[] bt = null;
+//            bt = bos.toByteArray();
+//            String encodeString = null;
+//            encodeString = Base64.encodeBytes(bt);
 
             String sdata = "";
 
@@ -972,16 +976,16 @@ public class ComWS extends PBase {
 
             //items.clear();
             dbld.clearlog();
-
-            if (!envioMovimientos()) {
-                dbld.savelog();
-                return false;
-            }
-
-            if (!envioDepositos()) {
-                dbld.savelog();
-                return false;
-            }
+//
+//            if (!envioMovimientos()) {
+//                dbld.savelog();
+//                return false;
+//            }
+//
+//            if (!envioDepositos()) {
+//                dbld.savelog();
+//                return false;
+//            }
 
             envioFirmas();
 
@@ -1173,6 +1177,7 @@ public class ComWS extends PBase {
     }
 
     public void envioFirmas() {
+
         Cursor dt;
         File file;
         String trid,fname;
@@ -1181,11 +1186,12 @@ public class ComWS extends PBase {
 
         try {
 
-            sql="SELECT TransHH FROM Firma";
+            sql="SELECT TransHH FROM Firma ";
             dt = Con.OpenDT(sql);
             if (dt.getCount() == 0) return;
 
             dt.moveToFirst();
+
             while (!dt.isAfterLast()) {
 
                 sprog = "Firmas : " + ft;wsStask.onProgressUpdate();
@@ -1194,7 +1200,9 @@ public class ComWS extends PBase {
                 fname=rootdir+trid+".jpg";
 
                 try {
+
                     file=new File(fname);
+
                     if (file.exists()) {
                         if (sendSignature(trid,fname)==1) {
                             transflag=true;ft++;
