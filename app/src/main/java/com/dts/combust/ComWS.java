@@ -385,9 +385,12 @@ public class ComWS extends PBase {
             bmp=mu.scaleBitmap(bmp,640,360);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            bmp.compress(Bitmap.CompressFormat.PNG, 70, out);
             byte[] bt = out.toByteArray();
             String encodeString = Base64.encodeBytes(bt);
+
+            out.flush();
+            bt = null;
 //
 //            bmp = BitmapFactory.decodeFile(fname);
 //            ByteArrayOutputStream bos = null;
