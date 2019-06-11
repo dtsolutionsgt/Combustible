@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dts.base.Base64;
 import com.dts.base.BaseDatos;
 import com.dts.base.DateUtils;
 import com.dts.base.clsDataBuilder;
@@ -27,7 +28,6 @@ import com.dts.classes.clsParamObj;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.kobjects.base64.Base64;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -422,7 +422,7 @@ public class ComWS extends PBase {
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
         }
 
-        return 1;
+        return 0;
     }
 
     public int sendSignature2(String transid,String fname) {
@@ -509,7 +509,7 @@ public class ComWS extends PBase {
 
     public int sendSignature(String transid,String firmaid) {
         int rc;
-        String fname,s, ss,resstr;
+        String fname,resstr="";
 
         fname=firmaid;
 
@@ -520,9 +520,9 @@ public class ComWS extends PBase {
 
             Bitmap bmp = BitmapFactory.decodeFile(fname);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 75, out);
+            bmp.compress(Bitmap.CompressFormat.PNG,100, out);
             byte[] imagebyte = out.toByteArray();
-            String strBase64 = Base64.encode(imagebyte);
+            String strBase64 = Base64.encodeBytes(imagebyte);
 
             int iv1=strBase64.length();
 
@@ -551,11 +551,72 @@ public class ComWS extends PBase {
 
             resstr = response.toString();
 
+            if (resstr.equalsIgnoreCase("#")) {
+                return 1;
+            } else {
+                throw new Exception();
+            }
         } catch (Exception e) {
-            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . "+e.getMessage());
+            errflag=true;fterr=resstr;
         }
 
-        return 1;
+        return 0;
+    }
+
+    public int sendFoto(String transid,String firmaid) {
+        int rc;
+        String fname,resstr="";
+
+        fname=firmaid;
+
+        METHOD_NAME = "saveImageFT";
+        sstr = "OK";
+
+        try {
+
+            Bitmap bmp = BitmapFactory.decodeFile(fname);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG,100, out);
+            byte[] imagebyte = out.toByteArray();
+            String strBase64 = Base64.encodeBytes(imagebyte);
+
+            int iv1=strBase64.length();
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            PropertyInfo param = new PropertyInfo();
+            param.setType(String.class);
+            param.setName("transid");
+            param.setValue(transid);
+            request.addProperty(param);
+
+            PropertyInfo param2 = new PropertyInfo();
+            param2.setType(String.class);
+            param2.setName("imgdata");
+            param2.setValue(strBase64);
+            request.addProperty(param2);
+
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call(NAMESPACE + METHOD_NAME, envelope);
+
+            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+
+            resstr = response.toString();
+
+            if (resstr.equalsIgnoreCase("#")) {
+                return 1;
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            errflag=true;fterr=resstr;
+        }
+
+        return 0;
     }
 
     public int OpenDTt(String sql) {
@@ -966,6 +1027,7 @@ public class ComWS extends PBase {
             }
 
             envioFirmas();
+            envioFotos();
 
             /*if (!envioRating()) {
                 dbld.savelog();
@@ -1158,7 +1220,7 @@ public class ComWS extends PBase {
         Cursor dt;
         File file;
         String trid,fname;
-        int tn=1,ft=0;
+        int tn=1,ft=0,ftt;
         boolean transflag;
 
         try {
@@ -1167,10 +1229,10 @@ public class ComWS extends PBase {
             dt = Con.OpenDT(sql);
             if (dt.getCount() == 0) return;
 
-            dt.moveToFirst();
+            dt.moveToFirst();ftt=dt.getCount();
             while (!dt.isAfterLast()) {
 
-                sprog = "Firmas : " + ft;wsStask.onProgressUpdate();
+                sprog = "Firmas : " + ft+" / "+ftt;wsStask.onProgressUpdate();
 
                 trid = dt.getString(0);
                 fname=rootdir+trid+".jpg";
@@ -1188,9 +1250,9 @@ public class ComWS extends PBase {
                     }
 
                     if (transflag) {
-                        //sql="DELETE FROM Firma WHERE TransHH='" + trid + "'";
-                        //db.execSQL(sql);
-                        //file.delete();
+                        sql="DELETE FROM Firma WHERE TransHH='" + trid + "'";
+                        db.execSQL(sql);
+                        file.delete();
                     }
 
                 } catch (Exception e) {
@@ -1199,14 +1261,68 @@ public class ComWS extends PBase {
 
                 dt.moveToNext();tn++;
 
-                sprog = "Firmas : " + ft;wsStask.onProgressUpdate();
+                sprog = "Firmas : " + ft+" / "+ftt;wsStask.onProgressUpdate();
 
             }
-       } catch (Exception e) {
+        } catch (Exception e) {
             fname=e.getMessage();
         }
 
-     }
+    }
+
+    public void envioFotos() {
+        Cursor dt;
+        File file;
+        String trid,fname;
+        int tn=1,ft=0,ftt;
+        boolean transflag;
+
+        try {
+
+            sql="SELECT TransHH,Imagen FROM Fotos";
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() == 0) return;
+
+            dt.moveToFirst();ftt=dt.getCount();
+            while (!dt.isAfterLast()) {
+
+                sprog = "Fotos : " + ft+" / "+ftt;wsStask.onProgressUpdate();
+
+                trid  = dt.getString(0);
+                fname = dt.getString(1);
+
+                try {
+                    file=new File(fname);
+                    if (file.exists()) {
+                        if (sendFoto(trid,fname)==1) {
+                            transflag=true;ft++;
+                        } else {
+                            transflag=false;
+                        }
+                    } else {
+                        transflag=true;
+                    }
+
+                    if (transflag) {
+                        sql="DELETE FROM Fotos WHERE ()TransHH='"+trid+"') AND (Imagen='"+fname+"')";
+                        db.execSQL(sql);
+                        file.delete();
+                    }
+
+                } catch (Exception e) {
+                    dbg = e.getMessage();
+                }
+
+                dt.moveToNext();tn++;
+
+                sprog = "Firmas : " + ft+" / "+ftt;wsStask.onProgressUpdate();
+
+            }
+        } catch (Exception e) {
+            fname=e.getMessage();
+        }
+
+    }
 
     public boolean envioRating() {
         Cursor DT;
@@ -1321,15 +1437,15 @@ public class ComWS extends PBase {
             Runnable mrunner = new Runnable() {
                 @Override
                 public void run() {
-                    //wsRtask = new AsyncCallRec();
-                    //wsRtask.execute();
+                    wsRtask = new AsyncCallRec();
+                    wsRtask.execute();
                 }
             };
             mtimer.postDelayed(mrunner, 1000);
         }
 
-        toast("Done");
-        finish();
+        //toast("Done");
+        //finish();
 
     }
 

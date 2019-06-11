@@ -106,7 +106,7 @@ public class BaseDatosScript {
 					"TransHH TEXT NOT NULL," +
 					"Imagen TEXT NOT NULL," +
 					"Bandera INTEGER NOT NULL," +
-					"PRIMARY KEY ([TransHH])" +
+					"PRIMARY KEY ([TransHH],[Imagen])" +
 					");";
 			db.execSQL(sql);
 

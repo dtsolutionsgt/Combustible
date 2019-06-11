@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -49,7 +50,7 @@ public class Firma extends PBase {
     private clsEmpleadosObj empleado;
     private clsFotosObj foto;
 
-    private String signfile,tl,txt;
+    private String signfile,tl,idfoto,txt;
     private int codCamera,check=0;
     private int TAKE_PHOTO_CODE = 0;
     private boolean signed;
@@ -103,6 +104,7 @@ public class Firma extends PBase {
             if (requestCode == TAKE_PHOTO_CODE) {
                 if (resultCode == RESULT_OK) {
                     toast("Foto OK.");
+                    resizeFoto();
                     codCamera =  2;
                     showCamera();
                 } else {
@@ -115,6 +117,29 @@ public class Firma extends PBase {
     }
 
     //region Events
+
+    public void camera(View view){
+        try{
+            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                msgbox("El dispositivo no soporta toma de foto");return;
+            }
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            idfoto=du.getCorelTimeStr();
+            callback=1;
+
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + idfoto + ".jpg");
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
+            startActivityForResult(cameraIntent,TAKE_PHOTO_CODE);
+
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            mu.msgbox("Error en camera: "+e.getMessage());
+        }
+    }
 
     public void clearView(View view) {
         try {
@@ -151,7 +176,7 @@ public class Firma extends PBase {
                     gl.nombreRecibio = txtNombre.getText().toString();
                     gl.validacionFirma = true;
 
-                    if(!saveFoto()) return;
+                    //if(!saveFoto()) return;
 
                     super.finish();
 
@@ -181,6 +206,29 @@ public class Firma extends PBase {
         });
     }
 
+    //endregion
+
+
+    //region Main
+
+    private void resizeFoto() {
+        try {
+
+            String fname = Environment.getExternalStorageDirectory() + "/ComFotos/" + idfoto + ".jpg";
+            File file = new File(fname);
+
+            Bitmap bitmap = BitmapFactory.decodeFile(fname);
+            bitmap=mu.scaleBitmap(bitmap,640,360);
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 75, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            msgbox("No se logro procesar la foto. Por favor tome la de nuevo.");
+        }
+
+    }
+
     public boolean saveFoto(){
         clsFotosObj foto = new clsFotosObj(this, Con, db);
         clsClasses.clsFotos item=clsCls.new clsFotos();
@@ -188,7 +236,7 @@ public class Firma extends PBase {
         try {
 
             item.transhh= gl.transhh;
-            item.imagen = signfile;
+            item.imagen = Environment.getExternalStorageDirectory() + "/ComFotos/" + idfoto + ".jpg";
             item.bandera = 0;
 
             foto.add(item);
@@ -250,28 +298,9 @@ public class Firma extends PBase {
         }
     }
 
-    public void camera(View view){
-        try{
-            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                msgbox("El dispositivo no soporta toma de foto");return;
-            }
-
-            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());
-
-
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + name + ".jpg");
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
-            startActivityForResult(cameraIntent,TAKE_PHOTO_CODE);
-
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            mu.msgbox("Error en camera: "+e.getMessage());
-        }
-    }
-
     //endregion
+
+    //region  Signature
 
     public class Signature extends View  {
 
@@ -311,7 +340,7 @@ public class Firma extends PBase {
 
                 v.draw(canvas);
                 //Bitmap bms=Bitmap.createScaledBitmap(bm,328,108,true);
-                Bitmap bms=Bitmap.createScaledBitmap(bm,654,214,true);
+                Bitmap bms=Bitmap.createScaledBitmap(bm,450,150,true);
                 //Bitmap bms=mu.scaleBitmap(bm,327,107);
                 bms.compress(Bitmap.CompressFormat.JPEG,50,mFileOutStream);
 
@@ -434,4 +463,22 @@ public class Firma extends PBase {
         }
     }
 
+    //endregion
+
+    //region Activity Events
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (callback==1) {
+            callback=0;
+            saveFoto();
+            return;
+
+        }
+
+    }
+
+    //endregion
 }
