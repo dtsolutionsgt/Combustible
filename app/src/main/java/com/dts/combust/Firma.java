@@ -310,8 +310,8 @@ public class Firma extends PBase {
                 FileOutputStream mFileOutStream = new FileOutputStream(sfile);
 
                 v.draw(canvas);
-                Bitmap bms=Bitmap.createScaledBitmap(bm,327,107,true);
-                //Bitmap bms=Bitmap.createScaledBitmap(bm,654,214,true);
+                //Bitmap bms=Bitmap.createScaledBitmap(bm,328,108,true);
+                Bitmap bms=Bitmap.createScaledBitmap(bm,654,214,true);
                 //Bitmap bms=mu.scaleBitmap(bm,327,107);
                 bms.compress(Bitmap.CompressFormat.JPEG,50,mFileOutStream);
 

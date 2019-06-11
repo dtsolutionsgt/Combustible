@@ -364,7 +364,7 @@ public class ComWS extends PBase {
         return 0;
     }
 
-    public int sendSignature(String transid,String fname) {
+    public int sendSignature3(String transid,String fname) {
         int rc;
         String s, ss,resstr;
         byte bb,ub,lb;
@@ -507,13 +507,13 @@ public class ComWS extends PBase {
         return 0;
     }
 
-    public int sendSignatureOLD(String transid,String firmaid) {
+    public int sendSignature(String transid,String firmaid) {
         int rc;
         String fname,s, ss,resstr;
 
-        fname=rootdir+firmaid;
+        fname=firmaid;
 
-        METHOD_NAME = "saveImageF";
+        METHOD_NAME = "saveImageFE";
         sstr = "OK";
 
         try {
