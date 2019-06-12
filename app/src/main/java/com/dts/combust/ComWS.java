@@ -1029,10 +1029,11 @@ public class ComWS extends PBase {
             envioFirmas();
             envioFotos();
 
-            /*if (!envioRating()) {
+            /*
+            if (!envioRating()) {
                 dbld.savelog();
                 return false;
-            }*/
+            } */
 
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
