@@ -370,6 +370,11 @@ public class MenuPrincipal extends PBase {
             }
         }
 
+        if (callback == 4) {
+            callback = 0;
+            //lblIdent.setText(gl.pipaNom);
+            startTrasladoTanque();
+        }
     }
 
     //endregion

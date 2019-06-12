@@ -93,8 +93,8 @@ public class BusquedaV extends PBase {
 
                 if(gl.vehOrder.isEmpty()){
                     equipo.fill();
-                }else {
-                    equipo.fill(" WHERE Placa LIKE '%\" + vF + \"%' ORDER BY Placa DESC");
+                }else if(!gl.vehOrder.isEmpty()){
+                    equipo.fill(" WHERE Placa LIKE '%" + gl.vehOrder + "%'");
                 }
 
                 adapter=new LA_BusquedaV(this,this, equipo.items);

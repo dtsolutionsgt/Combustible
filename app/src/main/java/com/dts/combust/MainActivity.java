@@ -32,6 +32,7 @@ public class MainActivity extends PBase {
 
     private int rolid;
     private int cod = 1;
+    private boolean granted=false;
 
     private Bundle instanceState;
 
@@ -45,9 +46,12 @@ public class MainActivity extends PBase {
         instanceState=savedInstanceState;
 
         //startApplication();
-        grantPermissions();
-        folder();
-        addlog("MainActivity",""+du.getActDateTime(),gl.nombreusuario);
+        try {
+            grantPermissions();
+            folder();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Manejo de permisos de la aplicacion - solo en MainActivity
@@ -67,8 +71,8 @@ public class MainActivity extends PBase {
             setHandlers();
 
         } catch (Exception e) {
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
+            //addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            //msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
 
     }
@@ -78,15 +82,17 @@ public class MainActivity extends PBase {
             if (Build.VERSION.SDK_INT >= 23) {
 
                 if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ) {
+                    granted=true;
                     startApplication();
                 } else {
+                    granted=false;
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
 
         } catch (Exception e) {
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
+            //addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            //msgbox(new Object() {}.getClass().getEnclosingMethod().getName() + " . " + e.getMessage());
         }
     }
 
@@ -148,6 +154,28 @@ public class MainActivity extends PBase {
             }
         });
 
+    }
+
+    public void camera(View view){
+        int codResult = 1;
+        try{
+            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                msgbox("El dispositivo no soporta toma de foto");return;
+            }
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            Intent intento1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + cod + ".jpg");
+            intento1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
+            startActivityForResult(intento1,codResult);
+
+            cod++;
+        }catch (Exception e){
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            mu.msgbox("Error en camera: "+e.getMessage());
+        }
     }
 
     //endregion
@@ -320,7 +348,7 @@ public class MainActivity extends PBase {
         mMenuDlg.setItems(selitems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 try {
-                    msgbox("Código : " + log.items.get(item).operid + "\nNombre : " + log.items.get(item).nombre);
+                    //msgbox("Código : " + log.items.get(item).operid + "\nNombre : " + log.items.get(item).nombre);
                 } catch (Exception e) {
                 }
             }
@@ -341,49 +369,6 @@ public class MainActivity extends PBase {
 
     //region Aux
 
-
-    //endregion
-
-    //region Activity Events
-
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            if (callback == 1) {
-                callback = 0;
-                if (gl.exitapp) finish();
-            }
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-        }
-
-    }
-
-    //endregion
-
-    public void camera(View view){
-        int codResult = 1;
-        try{
-            if (!this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                msgbox("El dispositivo no soporta toma de foto");return;
-            }
-
-            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());
-
-            Intent intento1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + cod + ".jpg");
-            intento1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
-            startActivityForResult(intento1,codResult);
-
-            cod++;
-        }catch (Exception e){
-            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            mu.msgbox("Error en camera: "+e.getMessage());
-        }
-    }
-
     public void folder(){
         try {
             File directory = new File(Environment.getExternalStorageDirectory() + "/ComFotos");
@@ -392,4 +377,32 @@ public class MainActivity extends PBase {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
     }
+
+    //endregion
+
+    //region Activity Events
+
+
+    @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            if (granted) {
+
+                if (callback == 1) {
+                    callback = 0;
+                    if (gl.exitapp) finish();
+                }
+            }
+        } catch (Exception e) {
+            //addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+        }
+    }
+
+
+    //endregion
+
+
+
+
 }

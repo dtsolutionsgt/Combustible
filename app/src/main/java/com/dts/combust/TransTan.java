@@ -39,6 +39,8 @@ public class TransTan extends PBase {
         lbl4 = (TextView) findViewById(R.id.textView27);
         txt1 = (EditText) findViewById(R.id.editText4);
 
+        gl.transhh = gl.HH+"_"+du.getCorelTimeLongStr();
+
         iniciaTrans();
 
     }
@@ -71,7 +73,7 @@ public class TransTan extends PBase {
         clsMovObj mov = new clsMovObj(this, Con, db);
         clsClasses.clsMov item;
 
-        String ss,sfecha,vCant1, vCant2, gTransHH2;
+        String ss,sfecha,vCant1, vCant2;
         int vCombEst,gDepos,gDest;
         boolean gUsrPipa=false,gUsrEst=false;
 
@@ -92,7 +94,6 @@ public class TransTan extends PBase {
             disp.fill("WHERE ID="+gDepos+" "+ss);
             vCombEst=disp.first().combid;
 
-            gTransHH2=gl.HH+"_"+du.getCorelTimeLongStr();
             sfecha=du.univfechaextlong();
 
             db.beginTransaction();
@@ -128,7 +129,7 @@ public class TransTan extends PBase {
             item.equid=0;
             item.kilometraje=0;
             item.nota="";
-            item.transhh=gTransHH2;
+            item.transhh=gl.transhh;
             item.coorx=0;
             item.coory=0;
             item.origen=0;
@@ -173,7 +174,7 @@ public class TransTan extends PBase {
             item.equid=0;
             item.kilometraje=0;
             item.nota="";
-            item.transhh=gTransHH2+"0";
+            item.transhh=gl.transhh+"0";
             item.coorx=0;
             item.coory=0;
             item.origen=0;

@@ -161,26 +161,31 @@ public class Firma extends PBase {
 
     public void saveSignature(View view) {
 
+        String noCedula, Nombre;
         try {
-            cedula.getText();
+            noCedula = cedula.getText().toString();
+            Nombre = txtNombre.getText().toString();
 
-            if(!signed || cedula.equals("") || codCamera ==1 || txtNombre.equals("")){
+            if(!signed || noCedula.isEmpty() || codCamera ==1){
                 msgbox("Debe llenar todos los campos");
                 return;
+            }else if(Nombre.isEmpty()) {
+                msgbox("Debe ingresar una cedula valida");
             }else {
                 surface.setDrawingCacheEnabled(true);
 
                 if (sign.save(surface)){
 
-                    gl.recibio = cedula.getText().toString();
-                    gl.nombreRecibio = txtNombre.getText().toString();
-                    gl.validacionFirma = true;
+                   gl.recibio = cedula.getText().toString();
+                   gl.nombreRecibio = txtNombre.getText().toString();
+                   gl.validacionFirma = true;
 
-                    //if(!saveFoto()) return;
+                   if(!saveFoto()) return;
 
-                    super.finish();
+                   super.finish();
 
                 }
+
             }
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);

@@ -229,7 +229,9 @@ public class PBase extends Activity {
 
     @Override
     protected void onResume() {
-        opendb();
+        try{
+            opendb();
+        }catch (Exception ex){}
         super.onResume();
     }
 

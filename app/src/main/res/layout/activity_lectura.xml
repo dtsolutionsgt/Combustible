@@ -62,19 +62,20 @@
         android:id="@+id/txtFPulgadas"
         android:layout_width="74dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="4dp"
         android:ems="10"
         android:inputType="number"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView27"
         app:layout_constraintStart_toEndOf="@+id/textView27"
-        app:layout_constraintTop_toTopOf="@+id/textView27" />
+        app:layout_constraintTop_toTopOf="@+id/textView27"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/txtIPulgadas"
         android:layout_width="74dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="4dp"
         android:ems="10"
         android:inputType="number"
         android:textStyle="bold"
@@ -85,12 +86,14 @@
         android:id="@+id/txtFOctavos"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:ems="10"
         android:inputType="number"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/txtFPulgadas"
         app:layout_constraintStart_toStartOf="@+id/txtIOctavos"
-        app:layout_constraintTop_toTopOf="@+id/textView27" />
+        app:layout_constraintTop_toTopOf="@+id/textView27"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView33"
@@ -162,7 +165,6 @@
         android:layout_width="75dp"
         android:layout_height="35dp"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:text="Final"
         android:textColor="#FFBD372D"
@@ -189,8 +191,8 @@
         android:id="@+id/textView30"
         android:layout_width="123dp"
         android:layout_height="22dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="116dp"
         android:text="Regla"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -206,7 +208,8 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView30"
         app:layout_constraintStart_toStartOf="@+id/txtFinal"
-        app:layout_constraintTop_toTopOf="@+id/textView30" />
+        app:layout_constraintTop_toTopOf="@+id/textView30"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView36"
@@ -221,13 +224,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/txtIOctavos"
         app:layout_constraintTop_toTopOf="@+id/textView30"
-        app:layout_constraintVertical_bias="0.833" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/txtIOctavos"
         android:layout_width="71dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
+        android:layout_marginStart="52dp"
         android:ems="10"
         android:inputType="number"
         android:textStyle="bold"
@@ -255,6 +258,7 @@
         android:textColor="#2196F3"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/txtIPulgadas"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/txtIPulgadas"
         app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
@@ -262,11 +266,12 @@
         android:id="@+id/textView39"
         android:layout_width="67dp"
         android:layout_height="23dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="0"
         android:textColor="#2196F3"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/txtIOctavos"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/txtIOctavos"
         app:layout_constraintTop_toBottomOf="@+id/textView36" />
 

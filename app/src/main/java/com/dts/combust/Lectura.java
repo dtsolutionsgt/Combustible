@@ -141,8 +141,8 @@ public class Lectura extends PBase {
                 IniOctavos = Integer.parseInt(textIniOctavos);
                 if(textFinOctavos.isEmpty()) ; else FinOctavos = Integer.parseInt(textFinOctavos);
 
-                if(IniOctavos <=0) {msgbox("El inicial no puede ser 0"); return;}
-                //if(FinOctavos <=0) return;
+                if(IniOctavos <0) {msgbox("El inicial no puede ser menor a 0"); return;}
+                if(FinOctavos <0) {msgbox("El inicial no puede ser menor a 0"); return;}
                 if(IniOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
                 if(FinOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
 
