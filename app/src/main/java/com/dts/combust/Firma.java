@@ -66,7 +66,6 @@ public class Firma extends PBase {
         addlog("Firma",""+du.getActDateTime(),gl.nombreusuario);
 
         appGlobals gl=((appGlobals) this.getApplication());
-        signfile= Environment.getExternalStorageDirectory()+"/ComFotos/"+gl.transhh+".jpg";
         this.setTitle("Firma digital");
 
         Content = (LinearLayout) findViewById(R.id.linFirmaCanvas);
@@ -128,6 +127,7 @@ public class Firma extends PBase {
             StrictMode.setVmPolicy(builder.build());
 
             idfoto=du.getCorelTimeStr();
+            signfile= Environment.getExternalStorageDirectory()+"/ComFotos/"+idfoto+".jpg";
             callback=1;
 
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -180,7 +180,7 @@ public class Firma extends PBase {
                    gl.nombreRecibio = txtNombre.getText().toString();
                    gl.validacionFirma = true;
 
-                   if(!saveFoto()) return;
+                   //if(!saveFoto()) return;
 
                    super.finish();
 

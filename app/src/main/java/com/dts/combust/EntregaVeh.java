@@ -417,13 +417,18 @@ public class EntregaVeh extends PBase {
 
         try {
             vval=Double.parseDouble(txt2.getText().toString());
-            if (vval<0 || vval>vCap) throw new Exception();
+            if (vval<=0 || vval>vCap) {
+                msgbox("¡La cantidad ingresada es incorrecta!");
+                if(vval<=0) toast("La cantidad debe ser mayor a 0");
+                if(vval>vCap) toast("La cantidad no puede ser mayor a "+vCap);
+                return false;
+            }
 
             vCant=vval;
             return true;
         } catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
-            toast("¡Cantidad incorrecta!");return false;
+            return false;
         }
     }
 
@@ -434,6 +439,7 @@ public class EntregaVeh extends PBase {
         try {
             vval=Double.parseDouble(txt3.getText().toString());
             if (vval<0) throw new Exception();
+            //if(vval==0) msgbox("El auto ha recorrido 0 kms?");
 
             vKilo = (int) vval;
 

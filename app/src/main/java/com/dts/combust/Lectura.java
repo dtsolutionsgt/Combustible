@@ -130,8 +130,16 @@ public class Lectura extends PBase {
             textIniOctavos = IOctavos.getText().toString();
             textFinOctavos = FOctavos.getText().toString();
 
-            if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty()) {
-                msgbox("Debe llenar todos los campos (Inicial y Final)");return;
+            if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty() && gl.rolid==3) {
+
+                msgbox("Debe llenar todos los campos Iniciales (y finales si desea)");
+                return;
+
+            }else if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty() && gl.rolid!=3) {
+
+                msgbox("Los campos iniciales están vacíos, solicitar al administrador ingresar los valores");
+                return;
+
             } else {
 
                 LInicial = Integer.parseInt(textInicial);

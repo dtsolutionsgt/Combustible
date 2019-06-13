@@ -86,7 +86,6 @@
         android:id="@+id/txtFOctavos"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:ems="10"
         android:inputType="number"
         android:textStyle="bold"

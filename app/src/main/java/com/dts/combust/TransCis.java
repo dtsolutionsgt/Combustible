@@ -38,6 +38,10 @@ public class TransCis extends PBase {
         lbl4 = (TextView) findViewById(R.id.textView27);
         txt1 = (EditText) findViewById(R.id.editText4);
 
+        clsParamObj param =new clsParamObj(this,Con,db);
+
+        param.fill();
+        gl.HH=param.first().id;
         gl.transhh = gl.HH+"_"+du.getCorelTimeLongStr();
         iniciaTrans();
     }
