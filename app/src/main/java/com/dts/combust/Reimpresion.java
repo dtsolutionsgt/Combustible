@@ -54,6 +54,10 @@ public class Reimpresion extends PBase {
 
     //region Events
 
+    public void doExit(View view) {
+        finish();
+    }
+
     private void setHandlers() {
 
         listView.setOnItemClickListener(new OnItemClickListener() {
