@@ -457,7 +457,7 @@ public class DateUtils {
 		cs=c.get(Calendar.SECOND);
 
 		vd=cyear*384+cmonth*32+cday;
-		vh=ch*3600+cm*60+cs;
+		vh=ch*3600+cm*60+cs+1;
 
 		f=vd*100000+vh;
 

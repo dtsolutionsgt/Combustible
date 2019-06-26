@@ -36,7 +36,7 @@ public class MainActivity extends PBase {
 
     private Bundle instanceState;
 
-    private String ver="2.1.1",verf="10/06/2019";
+    private String ver="2.1.3",verf="21/06/2019";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,8 @@ public class MainActivity extends PBase {
             txtUser.setText("2");txtPass.setText("2");
 
             setHandlers();
+
+            gl.fecha=stamp;
 
         } catch (Exception e) {
             //addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);

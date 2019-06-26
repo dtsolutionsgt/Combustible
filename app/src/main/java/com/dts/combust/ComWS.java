@@ -50,7 +50,7 @@ public class ComWS extends PBase {
     private RelativeLayout relTab;
 
     private int isbusy;
-    private String sp,rootdir,jsonWS,trid;
+    private String sp,rootdir,jsonWS,trid,paso;
     private boolean errflag;
 
     private SQLiteDatabase dbT;
@@ -157,11 +157,12 @@ public class ComWS extends PBase {
 
             if(radOficina.isChecked()){
                 getURL(1);
-            }else if (radOutOff.isChecked()){
+            } else if (radOutOff.isChecked()){
                 getURL(2);
             }
 
-            startActivity(new Intent(this,Rating.class));
+            msgSend();
+            //startActivity(new Intent(this,Rating.class));
 
         }catch (Exception e) {
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
@@ -557,7 +558,7 @@ public class ComWS extends PBase {
                 throw new Exception();
             }
         } catch (Exception e) {
-            errflag=true;fterr=resstr;
+            errflag=true;fterr=resstr;sstr=resstr;
         }
 
         return 0;
@@ -613,7 +614,7 @@ public class ComWS extends PBase {
                 throw new Exception();
             }
         } catch (Exception e) {
-            errflag=true;fterr=resstr;
+            errflag=true;fterr=resstr;sstr=resstr;
         }
 
         return 0;
@@ -929,6 +930,8 @@ public class ComWS extends PBase {
         wsRtask.onProgressUpdate();
         fstr="No connect";scon=0;errflag=false;
 
+        paso="1";
+
         try {
             if (getTest()==1) scon=1;
             idbg=idbg + sstr;
@@ -936,6 +939,7 @@ public class ComWS extends PBase {
                 if (!getData()) fstr="Recepcion incompleta : "+fstr;
             } else {
                 fstr="No se puede conectar al web service : "+sstr;
+                errflag=true;
             }
         } catch (Exception e) {
             scon=0;
@@ -945,13 +949,15 @@ public class ComWS extends PBase {
     }
 
     public void wsFinished(){
+
         try {
             if (!errflag) {
                 msgAskExit("Recepción completa.");
                 lbl1.setText("");
             } else {
-                mu.msgbox("Ocurrió error : \n"+fstr+" ("+reccnt+") " + ferr);
-                lbl1.setText(fstr);
+                //mu.msgbox("Ocurrió error : \n"+fstr+" ("+reccnt+") " + ferr);
+                mu.msgbox("No su pudo comunicar con el servidor : \n"+URL);
+                lbl1.setText("");
                 isbusy=0;
                 return;
             }
@@ -1026,8 +1032,8 @@ public class ComWS extends PBase {
                 return false;
             }
 
-            envioFirmas();
-            envioFotos();
+            if (!envioFirmas()) scon=0;
+            if (!envioFotos()) scon=0;
 
             /*
             if (!envioRating()) {
@@ -1217,7 +1223,7 @@ public class ComWS extends PBase {
         return true;
     }
 
-    public void envioFirmas() {
+    public boolean envioFirmas() {
         Cursor dt;
         File file;
         String trid,fname;
@@ -1228,7 +1234,7 @@ public class ComWS extends PBase {
 
             sql="SELECT TransHH FROM Firma";
             dt = Con.OpenDT(sql);
-            if (dt.getCount() == 0) return;
+            if (dt.getCount() == 0) return true;
 
             dt.moveToFirst();ftt=dt.getCount();
             while (!dt.isAfterLast()) {
@@ -1243,8 +1249,9 @@ public class ComWS extends PBase {
                     if (file.exists()) {
                         if (sendSignature(trid,fname)==1) {
                             transflag=true;ft++;
+                            sprog = "Firmas : " + ft+" / "+ftt;wsStask.onProgressUpdate();
                         } else {
-                            transflag=false;
+                            transflag=false;return false;
                          }
                     } else {
                         transflag=true;
@@ -1265,13 +1272,16 @@ public class ComWS extends PBase {
                 sprog = "Firmas : " + ft+" / "+ftt;wsStask.onProgressUpdate();
 
             }
+
+            return true;
         } catch (Exception e) {
-            fname=e.getMessage();
+            fname=e.getMessage();sstr=e.getMessage();
+            return false;
         }
 
     }
 
-    public void envioFotos() {
+    public boolean envioFotos() {
         Cursor dt;
         File file;
         String trid,fname;
@@ -1282,7 +1292,7 @@ public class ComWS extends PBase {
 
             sql="SELECT TransHH,Imagen FROM Fotos";
             dt = Con.OpenDT(sql);
-            if (dt.getCount() == 0) return;
+            if (dt.getCount() == 0) return true;
 
             dt.moveToFirst();ftt=dt.getCount();
             while (!dt.isAfterLast()) {
@@ -1297,8 +1307,9 @@ public class ComWS extends PBase {
                     if (file.exists()) {
                         if (sendFoto(trid,fname)==1) {
                             transflag=true;ft++;
+                            sprog = "Fotos : " + ft+" / "+ftt;wsStask.onProgressUpdate();
                         } else {
-                            transflag=false;
+                            transflag=false;return false;
                         }
                     } else {
                         transflag=true;
@@ -1319,10 +1330,13 @@ public class ComWS extends PBase {
                 sprog = "Firmas : " + ft+" / "+ftt;wsStask.onProgressUpdate();
 
             }
+
+            return true;
         } catch (Exception e) {
-            fname=e.getMessage();
+            fname=e.getMessage();sstr=e.getMessage();
         }
 
+        return false;
     }
 
     public boolean envioRating() {
@@ -1413,10 +1427,9 @@ public class ComWS extends PBase {
 
                 if (!sendData()) {
                     fstr="Envio incompleto : "+sstr;
-                } else {
                 }
             } else {
-                fstr="No se puede conectar al web service : "+sstr;
+                fstr="Error de comunicacion : "+sstr;
             }
 
         } catch (Exception e) {
@@ -1432,7 +1445,7 @@ public class ComWS extends PBase {
             isbusy=0;
         } else {
 
-            lbl1.setText("Recibiendo ... ");
+            lbl1.setText("Conectando para recibir  ... ");
 
             Handler mtimer = new Handler();
             Runnable mrunner = new Runnable() {
@@ -1588,4 +1601,5 @@ public class ComWS extends PBase {
      }
 
     //endregion
+
 }

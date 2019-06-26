@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -145,10 +146,10 @@ public class Firma extends PBase {
         try {
             sign.clear();
             signed=false;
-            codCamera = 1;
-            cedula.setText("");
-            txtNombre.setText("");
-            showCamera();
+            //codCamera = 1;
+            //cedula.setText("");
+            //txtNombre.setText("");
+            //showCamera();
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
@@ -160,8 +161,8 @@ public class Firma extends PBase {
     }
 
     public void saveSignature(View view) {
-
         String noCedula, Nombre;
+
         try {
             noCedula = cedula.getText().toString();
             Nombre = txtNombre.getText().toString();
@@ -225,7 +226,8 @@ public class Firma extends PBase {
             Bitmap bitmap = BitmapFactory.decodeFile(fname);
             bitmap=mu.scaleBitmap(bitmap,640,360);
             FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 75, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,80,out);
+
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -270,9 +272,7 @@ public class Firma extends PBase {
                 empleado.fill(" WHERE Barra ='" + tl + "'");
 
                 if(empleado.items.isEmpty()){
-
-                    txtNombre.setText("");
-                    return;
+                    txtNombre.setText("");return;
                 } else {
                     txtNombre.setText(empleado.first().nombre);
                 }
@@ -340,14 +340,17 @@ public class Firma extends PBase {
             Canvas canvas = new Canvas(bm);
 
             try {
-                File sfile= new File(signfile);
+
+                String firmafile= Environment.getExternalStorageDirectory()+"/ComFotos/"+gl.transhh+".jpg";
+
+                File sfile= new File(firmafile);
                 FileOutputStream mFileOutStream = new FileOutputStream(sfile);
 
                 v.draw(canvas);
                 //Bitmap bms=Bitmap.createScaledBitmap(bm,328,108,true);
                 Bitmap bms=Bitmap.createScaledBitmap(bm,450,150,true);
                 //Bitmap bms=mu.scaleBitmap(bm,327,107);
-                bms.compress(Bitmap.CompressFormat.JPEG,50,mFileOutStream);
+                bms.compress(Bitmap.CompressFormat.JPEG,65,mFileOutStream);
 
                 mFileOutStream.flush();mFileOutStream.close();
 

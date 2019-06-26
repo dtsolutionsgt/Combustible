@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class MenuPrincipal extends PBase {
 
-    private TextView lblIdent,lblUser;
+    private TextView lblIdent,lblUser,lblFecha;
 
     private ArrayList<clsClasses.clsMenu> menuitems = new ArrayList<clsClasses.clsMenu>();
     private clsClasses.clsEstacion eitems=clsCls.new clsEstacion();
@@ -42,6 +42,7 @@ public class MenuPrincipal extends PBase {
         listView = (ListView) findViewById(R.id.listView1);
         lblIdent = (TextView) findViewById(R.id.textView3);
         lblUser = (TextView) findViewById(R.id.textView2);
+        lblFecha = (TextView) findViewById(R.id.textView41);lblFecha.setText(du.sfechalocal(gl.fecha));
 
         rolid=gl.rolid;
         setTanque();

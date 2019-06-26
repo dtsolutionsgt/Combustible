@@ -16,6 +16,7 @@ public class appGlobals extends Application {
 	public String HH, user, userNom, pipaNom,vehNom, trans, WSUrl, WSUrlR, fase, recibio, empl, placa, equipoNombre, vehOrder, transhh, nombreRecibio;
 	public int suc, proyID, faseID, pipa,tanque, est, depos, dest, com, puerto,validacionRating;
 	public int turno, turnID, turnStamp, fotoTp,valida;
+	public long fecha;
 	public double pipacap;
 
 	public String nombreusuario,nomtanque;
