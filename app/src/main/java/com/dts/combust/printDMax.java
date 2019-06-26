@@ -22,13 +22,15 @@ import datamaxoneil.connection.Connection_Bluetooth;
 // 00:17:AC:15:EC:C3
 
 public class printDMax extends printBase {
-	
+
 	private String ss,ess;
 	private appGlobals appG;
-	private boolean validprint;
+	private boolean validprint,printerr;
 	
 	public printDMax(Context context,String printerMAC,boolean validprinter) {
 		super(context,printerMAC);
+
+		//cont=context;
 		validprint=true;
 		appG = new appGlobals();
 	}
@@ -163,11 +165,14 @@ public class printDMax extends printBase {
 	
 	private void doStartPrint() {
 		if (!validprint) {
-			showmsg("¡La impresora no está autorizada!");return;
+			//showmsg("¡La impresora no está autorizada!");return;
 		}
 
 		appG.endPrint = true;
+
 		showmsg("Imprimiendo ..." );
+		printerr=false;
+
 		AsyncPrintCall wsRtask = new AsyncPrintCall();
 		wsRtask.execute();
 	}
@@ -201,6 +206,8 @@ public class printDMax extends printBase {
     }	
 	
 	private void doCallBack() {
+
+		if (printerr) showmsg("Error de impresión");
 
 		if (!hasCallback) return;
 
@@ -244,15 +251,18 @@ public class printDMax extends printBase {
 
 		} catch (Exception e) {
 			ss = ss + "Error : " + e.getMessage();
-			Log.d("processPrint_ERR: ", ss);
 
 			try {
 				if (prconn != null) prconn.close();
 			} catch (Exception ee) {
 			}
+
+			printerr=true;
 		}	
 		
 	}
+
+	//Aux
 
 	private void msgAskRePrint() {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(cont);
@@ -289,8 +299,6 @@ public class printDMax extends printBase {
 
 	}
 
-	// Aux
-	
 	private void msgAskPrint() {
 
 		AlertDialog.Builder dialog = new AlertDialog.Builder(cont);

@@ -13,14 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView5"
         android:layout_alignStart="@+id/imageView4"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:imeOptions="actionNext"
         android:inputType="textPersonName"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintStart_toStartOf="@+id/txtHH"
         app:layout_constraintTop_toBottomOf="@+id/txtHH" />
 
     <EditText
@@ -172,5 +171,14 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtWSLocal" />
+
+    <TextView
+        android:id="@+id/textView42"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="00:00:00:00:00:00"
+        app:layout_constraintStart_toStartOf="@+id/txtMAC"
+        app:layout_constraintTop_toBottomOf="@+id/txtMAC" />
 
 </android.support.constraint.ConstraintLayout>

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/color_light"
-    tools:context=".MenuPrincipal">
+    tools:context=".Reimpresion">
 
     <RelativeLayout
         android:id="@+id/relBottom"
@@ -19,21 +18,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1">
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentRight="false"
-            android:layout_centerVertical="true"
             android:clickable="true"
-            android:ellipsize="marquee"
-            android:gravity="center_horizontal"
-            android:paddingLeft="10dp"
-            android:text="nombre usuario"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:onClick="doExit"
+            android:padding="5dp"
+            android:src="@drawable/arr_prev" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -53,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Menú principal"
+            android:text="Reimpresión"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -63,34 +55,16 @@
     <ListView
         android:id="@+id/listView1"
         android:layout_width="0dp"
-        android:layout_height="461dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         app:layout_constraintBottom_toTopOf="@+id/relBottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView41" />
-
-    <TextView
-        android:id="@+id/textView41"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/frame_round_gray"
-        android:clickable="true"
-        android:onClick="showDateDialog"
-        android:paddingLeft="20dp"
-        android:paddingTop="5dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="5dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relTop" />
+
 </android.support.constraint.ConstraintLayout>

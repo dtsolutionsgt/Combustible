@@ -36,7 +36,7 @@ public class MainActivity extends PBase {
 
     private Bundle instanceState;
 
-    private String ver="2.1.3",verf="21/06/2019";
+    private String ver="2.1.4",verf="26/06/2019";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class MainActivity extends PBase {
             lblTitle = (TextView) findViewById(R.id.textView2);
             lblVer = (TextView) findViewById(R.id.textView3);lblVer.setText("Ver. "+ver+" - "+verf);
 
-            txtUser.setText("2");txtPass.setText("2");
+            //txtUser.setText("2");txtPass.setText("2");
 
             setHandlers();
 

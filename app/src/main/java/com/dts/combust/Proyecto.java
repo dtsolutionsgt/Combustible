@@ -37,7 +37,7 @@ public class Proyecto extends PBase {
         lbl1 = (TextView) findViewById(R.id.textView23);
         txt1 = (EditText) findViewById(R.id.editText11);
 
-        lbl1.setText(du.dayweek(fecha)+" "+du.sfechalocal(fecha));
+        lbl1.setText(du.sfechalocal(gl.fecha));
 
         proy =new clsProyectoObj(this,Con,db);
         proyfind =new clsProyectoObj(this,Con,db);

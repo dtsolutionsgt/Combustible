@@ -1,12 +1,14 @@
 package com.dts.combust;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.dts.classes.clsEstacionObj;
@@ -15,6 +17,7 @@ import com.dts.base.clsClasses;
 import com.dts.listadapt.LA_Menu;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MenuPrincipal extends PBase {
 
@@ -26,7 +29,7 @@ public class MenuPrincipal extends PBase {
     private LA_Menu adapter;
     private clsEstacionObj estacion;
 
-    private int rolid;
+    private int rolid,cyear,cmonth,cday;
     private boolean emptydb;
 
     @Override
@@ -42,7 +45,7 @@ public class MenuPrincipal extends PBase {
         listView = (ListView) findViewById(R.id.listView1);
         lblIdent = (TextView) findViewById(R.id.textView3);
         lblUser = (TextView) findViewById(R.id.textView2);
-        lblFecha = (TextView) findViewById(R.id.textView41);lblFecha.setText(du.sfechalocal(gl.fecha));
+        lblFecha = (TextView) findViewById(R.id.textView41);
 
         rolid=gl.rolid;
         setTanque();
@@ -60,6 +63,8 @@ public class MenuPrincipal extends PBase {
         callback=-1;
 
         setHandlers();
+
+        lblFecha.setText(du.sfechalocal(gl.fecha));
 
         buildMenuItems();
 
@@ -137,6 +142,34 @@ public class MenuPrincipal extends PBase {
                 } else { // cisterna
                     startActivity(new Intent(this,TransTan.class));break;
                 }
+            case 7:
+                startActivity(new Intent(this,Reimpresion.class));break;
+        }
+
+    }
+
+    //endregion
+
+    //region Date
+
+    public void showDateDialog(View view) {
+        try{
+
+            cyear = du.getyear(gl.fecha);
+            cmonth = du.getmonth(gl.fecha)-1;
+            cday = du.getday(gl.fecha);
+
+            DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    gl.fecha=du.cfecha(year,month+1,dayOfMonth);
+                    lblFecha.setText(du.sfechalocal(gl.fecha));
+                }
+            },cyear, cmonth, cday);
+
+            recogerFecha.show();
+        }catch (Exception e){
+            addlog(new Object(){}.getClass().getEnclosingMethod().getName(),e.getMessage(),"");
         }
 
     }
@@ -236,6 +269,11 @@ public class MenuPrincipal extends PBase {
                 item.nombre = "Inventario";
                 menuitems.add(item);
             }
+
+            item = clsCls.new clsMenu();
+            item.id = 7;
+            item.nombre = "Reimpresión";
+            menuitems.add(item);
 
             item = clsCls.new clsMenu();
             item.id = 2;

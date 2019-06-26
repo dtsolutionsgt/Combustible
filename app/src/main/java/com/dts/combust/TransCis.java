@@ -90,7 +90,7 @@ public class TransCis extends PBase {
             disp.fill("WHERE ID="+gDepos+" "+ss);
             vCombEst=disp.first().combid;
 
-            sfecha=du.univfechaextlong();
+            sfecha=du.univfechaextlong(gl.fecha);
 
             db.beginTransaction();
 
@@ -100,7 +100,8 @@ public class TransCis extends PBase {
             item=clsCls.new clsMov();
 
             item.hhid=gl.HH;
-            item.fecha=du.getActDateTimeSec();
+            //item.fecha=gl.fecha;
+            item.fecha=du.getActDateTimeSec(gl.fecha);
 
             if (gUsrPipa) {
                 item.depid=pipaid;
@@ -119,7 +120,7 @@ public class TransCis extends PBase {
             item.clasetransid=0;
             item.combid=vCombEst;
             if (gUsrPipa) item.cant=cant;else item.cant=-cant;
-            item.total=du.nfechaflat(fecha)*10+1;
+            item.total=du.nfechaflat(gl.fecha)*10+1;
             item.tanorigid=pipaid;
             item.recibio=gl.recibio;
             item.equid=0;
@@ -149,12 +150,13 @@ public class TransCis extends PBase {
 
             // Estacion
             SystemClock.sleep(2000);
-            sfecha=du.univfechaextlong();
+            sfecha=du.univfechaextlong(gl.fecha);
 
             item=clsCls.new clsMov();
 
             item.hhid=gl.HH;
-            item.fecha=du.getActDateTimeSec();
+            //item.fecha=du.getActDateTimeSec();
+            item.fecha=du.getActDateTimeSec(gl.fecha);
             item.depid=0;
             item.tipodep=0;
             item.transid=" ";
@@ -164,7 +166,7 @@ public class TransCis extends PBase {
             item.combid=vCombEst;
             item.clasetransid=0;
             item.cant=-cant;
-            item.total=du.nfechaflat(fecha)*10+1;
+            item.total=du.nfechaflat(gl.fecha)*10+1;
             item.tanorigid=pipaid;
             item.recibio=gl.recibio;
             item.equid=0;
@@ -201,7 +203,7 @@ public class TransCis extends PBase {
         clsParamObj param =new clsParamObj(this,Con,db);
 
         try {
-            lbl1.setText(du.dayweek(fecha)+" "+du.sfechalocal(fecha));
+            lbl1.setText(du.sfechalocal(gl.fecha));
 
             pipaid=gl.pipa;
             cap=gl.pipacap;

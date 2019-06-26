@@ -84,7 +84,6 @@ public class EntregaVeh extends PBase {
         param.fill();
         gl.HH=param.first().id;
         gl.transhh = gl.HH+"_"+du.getCorelTimeLongStr();
-        //****************************
 
         vEqu=0;vKilo=-1;vCant=-1;
         if (gl.rolid==0) {  // Cisterna
@@ -229,10 +228,11 @@ public class EntregaVeh extends PBase {
 
         try {
 
-            sfecha=du.univfechaextlong();
+            sfecha=du.univfechaextlong(gl.fecha);
 
             item.hhid=gl.HH;
-            item.fecha=du.getActDateTimeSec();
+            //item.fecha=du.getActDateTimeSec();
+            item.fecha=du.getActDateTimeSec(gl.fecha);
             item.depid=vEst;
 
             if (gl.rolid==0) {  // Cisterna
@@ -247,7 +247,7 @@ public class EntregaVeh extends PBase {
             item.tipotransid=1;
             item.combid=vCombEst;
             item.cant=-vCant;
-            item.total=du.nfechaflat(fecha)*10+1;
+            item.total=du.nfechaflat(gl.fecha)*10+1;
             item.tanorigid=0;
             item.recibio=gl.recibio;
             item.equid=vEqu;
@@ -276,8 +276,6 @@ public class EntregaVeh extends PBase {
             }
 
             db.execSQL(sql);
-
-
 
             return true;
 
@@ -370,7 +368,7 @@ public class EntregaVeh extends PBase {
                 //msgbox("impresora: no Enabled");
             }
 
-        }catch (Exception e){
+        } catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox("Error en imprimeTicket: "+e);
         }

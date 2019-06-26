@@ -53,6 +53,12 @@ public class Configuracion extends PBase {
             if(HH.isEmpty() || MAC.isEmpty() || WSL.isEmpty() || WSR.isEmpty()){
                 msgbox("Debe llenar todos los campos");
             }else{
+
+                int pd=MAC.indexOf(":");
+                if (pd<0) {
+                    msgbox("El MAC debe separar por :");return;
+                }
+
                 try{
 
                     item.id=HH;
