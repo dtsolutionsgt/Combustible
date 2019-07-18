@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -33,11 +34,11 @@ public class EntregaVeh extends PBase {
     private EditText txt1,txt2,txt3;
 
     private String fname;
-    private int vEqu,vOrigen,vKilo,vEst,vCombEst,placa;
+    private int vEqu,vOrigen,vKilo,vEst,vCombEst,impres;
     private double vCap,vCant;
 
     private printer prn;
-    private Runnable printclose;
+    private Runnable printclose,printcallback;
 
     private BufferedWriter writer = null;
     private FileWriter wfile;
@@ -78,6 +79,13 @@ public class EntregaVeh extends PBase {
                 EntregaVeh.super.finish();
             }
         };
+
+        printcallback= new Runnable() {
+            public void run() {
+                askPrint();
+            }
+        };
+
 
         prn=new printer(this,printclose);
 
@@ -192,7 +200,7 @@ public class EntregaVeh extends PBase {
 
     //endregion
 
-    //regionMain
+    //region Main
 
     private void saveTrans() {
         String ss;
@@ -212,7 +220,7 @@ public class EntregaVeh extends PBase {
 
             imprimeTicket();
 
-            toast("Transacción completa");
+            //toast("Transacción completa");
 
             //finish();
         } catch (Exception e) {
@@ -363,7 +371,8 @@ public class EntregaVeh extends PBase {
             writer.close();
 
             if(prn.isEnabled()){
-                prn.printask(printclose,"print.txt");
+                impres=0;
+                prn.printask(printcallback,"print.txt");
             }else {
                 //msgbox("impresora: no Enabled");
             }
@@ -484,6 +493,36 @@ public class EntregaVeh extends PBase {
 
     //region Dialogs
 
+    private void askPrint() {
+        try{
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+            dialog.setTitle("Road");
+            dialog.setMessage("¿Impresión correcta?");
+
+            dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (impres>0) {
+                        EntregaVeh.super.finish();
+                    } else {
+                        impres++;
+                        prn.printask(printcallback);
+                    }
+                }
+            });
+
+            dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                     prn.printask(printcallback);
+                }
+            });
+
+            dialog.show();
+        } catch (Exception e){
+            addlog(new Object(){}.getClass().getEnclosingMethod().getName(),e.getMessage(),"");
+        }
+
+    }
 
     private void msgAsk1(String msg) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
