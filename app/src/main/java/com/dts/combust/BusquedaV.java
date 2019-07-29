@@ -37,6 +37,8 @@ public class BusquedaV extends PBase {
         listItems();
 
         gl.exitapp=false;
+
+        txtSearch.requestFocus();
     }
 
 
@@ -64,11 +66,9 @@ public class BusquedaV extends PBase {
 
         txtSearch.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int tl;
@@ -86,7 +86,6 @@ public class BusquedaV extends PBase {
     private void listItems() {
         selid = 0;
 
-
         vF=txtSearch.getText().toString().replace("'","");
         try {
             if(vF.isEmpty()){
@@ -94,7 +93,7 @@ public class BusquedaV extends PBase {
                 if(gl.vehOrder.isEmpty()){
                     equipo.fill();
                 }else if(!gl.vehOrder.isEmpty()){
-                    equipo.fill(" WHERE Placa LIKE '%" + gl.vehOrder + "%'");
+                    equipo.fill(" WHERE Placa LIKE '%" + gl.vehOrder + "%' COLLATE NOCASE");
                 }
 
                 adapter=new LA_BusquedaV(this,this, equipo.items);
@@ -123,7 +122,6 @@ public class BusquedaV extends PBase {
     public void doSearch(View view) {
         listItems();
     }
-
 
     @Override
     public void onBackPressed() {

@@ -2,7 +2,6 @@ package com.dts.combust;
 
 import java.io.File;
 import java.io.FileOutputStream;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -26,13 +24,10 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.dts.base.DateUtils;
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.dts.base.appGlobals;
 import com.dts.base.clsClasses;
 import com.dts.classes.clsEmpleadosObj;
@@ -135,6 +130,7 @@ public class Firma extends PBase {
             File URLfoto = new File(Environment.getExternalStorageDirectory() + "/ComFotos/" + idfoto + ".jpg");
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(URLfoto));
             startActivityForResult(cameraIntent,TAKE_PHOTO_CODE);
+
 
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);

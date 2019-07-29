@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -14,16 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dts.base.clsClasses;
-import com.dts.classes.clsCombustibleObj;
 import com.dts.classes.clsDisponibleObj;
 import com.dts.classes.clsEquipoObj;
 import com.dts.classes.clsMovObj;
 import com.dts.classes.clsParamObj;
-import com.dts.classes.clsPipaObj;
 import com.dts.classes.clsProyectoequipoObj;
-import com.dts.classes.clsUsuarioObj;
-import com.dts.combust.PBase;
-import com.dts.combust.R;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -329,7 +323,7 @@ public class EntregaVeh extends PBase {
 
             writer.write("Transaccion:" + item.transhh);
             writer.write("\r\n");
-            writer.write("Fecha: " + du.univfechaextlong(item.fecha));
+            writer.write("Fecha: " + du.univfechapanama(item.fecha));
             writer.write("\r\n");
             writer.write("Operador: " + gl.nombreusuario);
             writer.write("\r\n");

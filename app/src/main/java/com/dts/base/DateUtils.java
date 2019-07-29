@@ -204,6 +204,56 @@ public class DateUtils {
 
 	}
 
+	public int getyearlong(long f) {
+		long vy;
+
+		f=f % 1000000;
+		vy=(long) f/1000000;
+		vy=vy+2000;
+
+		return (int) vy;
+	}
+
+
+	public String univfechapanama(long ff) {
+		long fd,fh;
+		int cyear, cmonth, cday, ch, cm, cs, vd, vh;
+		String s;
+
+		fd=(long) ff/1000000;
+		fh=(long) ff % 1000000;
+
+		cyear =2000+(int) fd/10000;fd=fd % 10000;
+		cmonth = (int) fd/100;
+		cday =(int) fd % 100;
+
+		ch =(int) fh/10000;fh=fh % 10000;
+		cm = (int) fh/100;
+		cs =(int) fh % 100;
+
+		s = "";
+		if (cday > 9) s = s + String.valueOf(cday);
+		else s = s + "0" + String.valueOf(cday);
+		s=s+"/";
+		if (cmonth > 9) s = s + String.valueOf(cmonth);
+		else s = s + "0" + String.valueOf(cmonth);
+		s=s+"/";
+		s =s+cyear + " ";
+		if (ch > 9) s = s + String.valueOf(ch);
+		else s = s + "0" + String.valueOf(ch);
+		s = s + ":";
+		if (cm > 9) s = s + String.valueOf(cm);
+		else s = s + "0" + String.valueOf(cm);
+		s = s + ":";
+		if (cs > 9) s = s + String.valueOf(cs);
+		else s = s + "0" + String.valueOf(cs);
+
+		return s;
+
+	}
+
+
+
 	public long fechames(long f) {
 		f=(int) f/1000000;
 		f=f*1000000;
@@ -236,12 +286,12 @@ public class DateUtils {
 	}
 
 	public int getyear(long f) {
-		int vy;
+		long vy;
 
-		vy=(int) f/100000000;f=f % 100000000;
+		vy=(long) f/100000000;f=f % 100000000;
 		vy=vy+2000;
 
-		return vy;
+		return (int) vy;
 	}
 
 	public int getmonth(long f) {

@@ -13,7 +13,8 @@ public class appGlobals extends Application {
 	// Variables publicas
 
 	public boolean usrPipa, usrEst, usrSup, usrDTS, comUpd,  validacionFirma=false;
-	public String HH, user, userNom, pipaNom,vehNom, trans, WSUrl, WSUrlR, fase, recibio, empl, placa, equipoNombre, vehOrder, transhh, nombreRecibio;
+	public String HH, user, userNom, pipaNom,vehNom, trans, WSUrl, WSUrlR, sdpath;
+	public String fase, recibio, empl, placa, equipoNombre, vehOrder, transhh, nombreRecibio;
 	public int suc, proyID, faseID, pipa,tanque, est, depos, dest, com, puerto,validacionRating;
 	public int turno, turnID, turnStamp, fotoTp,valida;
 	public long fecha;

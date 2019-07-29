@@ -21,7 +21,12 @@ import android.widget.Toast;
 
 import com.dts.classes.clsOperadorObj;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends PBase {
 
@@ -36,7 +41,7 @@ public class MainActivity extends PBase {
 
     private Bundle instanceState;
 
-    private String ver="2.1.5",verf="10/07/2019";
+    private String ver="2.1.6",verf="18/07/2019";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,7 @@ public class MainActivity extends PBase {
             setHandlers();
 
             gl.fecha=stamp;
+            sdcardfolder();
 
         } catch (Exception e) {
             //addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
@@ -114,7 +120,6 @@ public class MainActivity extends PBase {
         }
 
     }
-
 
     //region Events
 
@@ -380,6 +385,24 @@ public class MainActivity extends PBase {
         }
     }
 
+    public void sdcardfolder() {
+        try {
+
+            File file = new File(Environment.getExternalStorageDirectory(), "/sdcard.txt");
+            File myFile = new File(file.getPath());
+            FileInputStream fIn = new FileInputStream(myFile);
+            BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
+            String aDataRow = myReader.readLine();
+            myReader.close();
+
+            gl.sdpath = aDataRow;
+            gl.sdpath += "/Android/data/com.dts.combust";
+        } catch (Exception e) {
+            gl.sdpath = Environment.getExternalStorageDirectory() + "";
+            msgbox("No se logro detectar tarjeta SD, el respaldo se ubicara en la raiz. Se necesita revisar archivo sdcard.txt");
+        }
+    }
+
     //endregion
 
     //region Activity Events
@@ -403,8 +426,5 @@ public class MainActivity extends PBase {
 
 
     //endregion
-
-
-
 
 }

@@ -133,7 +133,7 @@ public class Reimpresion extends PBase {
 
             writer.write("Transaccion:" + item.transhh);
             writer.write("\r\n");
-            writer.write("Fecha: " + du.univfechaextlong(item.fecha));
+            writer.write("Fecha: " + du.univfechapanama(item.fecha));
             writer.write("\r\n");
             writer.write("Operador: " + gl.nombreusuario);
             writer.write("\r\n");
