@@ -136,6 +136,7 @@ public class clsProyectofaseObj {
             dt.moveToNext();
         }
 
+        if(dt!=null) dt.close();
     }
 
     public int newID(String idsql) {

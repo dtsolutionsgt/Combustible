@@ -136,6 +136,8 @@ public class clsEmpleadosObj {
             dt.moveToNext();
         }
 
+        if(dt!=null) dt.close();
+
     }
 
     public int newID(String idsql) {

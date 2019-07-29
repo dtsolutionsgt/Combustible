@@ -448,6 +448,9 @@ public class EntregaVeh extends PBase {
             if (dt.getCount() > 0) {
                 dt.moveToFirst();
                 klim = dt.getDouble(0);
+
+                if(dt!=null) dt.close();
+
                 if (vKilo < klim) {
                     //msgbox("Kilometraje menor que anterior") Else msgbox("Valor de horas menor que anterior")
                     msgbox("Kilometraje menor que anterior");return false;

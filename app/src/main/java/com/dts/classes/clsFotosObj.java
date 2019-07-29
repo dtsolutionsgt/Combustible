@@ -131,6 +131,8 @@ public class clsFotosObj {
 
             dt.moveToNext();
         }
+        if(dt!=null) dt.close();
+
 
     }
 
