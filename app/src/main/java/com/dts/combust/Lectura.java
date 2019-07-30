@@ -246,9 +246,13 @@ public class Lectura extends PBase {
             resFinP = item.rfin - (item.rfin % 1);FinPulgadas = (int) resFinP;
             LFinal = (int) item.tfin;
 
-            lbl3.setText(""+LFinal);
-            lbl1.setText(""+FinPulgadas);
-            lbl2.setText(""+FinOctavos);
+            Inicial.setText(""+LFinal);
+            IPulgadas.setText(""+FinPulgadas);
+            IOctavos.setText(""+FinOctavos);
+
+            lbl3.setText("");
+            lbl1.setText("");
+            lbl2.setText("");
 
         } catch (Exception e){
             String ss=e.getMessage();

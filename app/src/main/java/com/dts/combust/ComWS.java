@@ -212,8 +212,9 @@ public class ComWS extends PBase {
                 File f2 = new File(gl.sdpath + "/comb"+dia+".db");
                 FileUtils.copyFile(f1, f2);
                 bckflag=true;
-            } catch (Exception e) {
+             } catch (Exception e) {
                 adderrlog(new Object(){}.getClass().getEnclosingMethod().getName(),e.getMessage(),"");
+                msgbox(e.getMessage());
                 bckflag=false;
             }
 
@@ -832,8 +833,8 @@ public class ComWS extends PBase {
             sql="DELETE FROM Mov WHERE Bandera=1";
             db.execSQL(sql);
 
-            sql="DELETE FROM Deposito WHERE Stamp<"+dstamp+"";
-            db.execSQL(sql);
+            //sql="DELETE FROM Deposito WHERE Stamp<"+dstamp+"";
+            //db.execSQL(sql);
 
             db.setTransactionSuccessful();
             db.endTransaction();

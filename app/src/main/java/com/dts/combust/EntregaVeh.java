@@ -184,8 +184,6 @@ public class EntregaVeh extends PBase {
         };
         txt3.setOnEditorActionListener(listener3);
 
-
-
     }
 
     private void firma(){
@@ -390,7 +388,7 @@ public class EntregaVeh extends PBase {
         }
 
         try {
-            veh.fill("WHERE (Barra='"+sp+"') OR (Placa='"+sp+"') ");
+            veh.fill("WHERE (Barra='"+sp+"') OR (Placa='"+sp.toUpperCase()+"')  COLLATE NOCASE");
             if (veh.count==0) {
                 toast("Vehículo no existe");return 0;
             }
