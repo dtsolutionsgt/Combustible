@@ -14,12 +14,14 @@ import android.widget.TextView;
 
 import com.dts.base.clsClasses;
 import com.dts.classes.clsDisponibleObj;
+import com.dts.classes.clsEmpleadosObj;
 import com.dts.classes.clsEquipoObj;
 import com.dts.classes.clsMovObj;
 import com.dts.classes.clsParamObj;
 import com.dts.classes.clsProyectoequipoObj;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 
 public class EntregaVeh extends PBase {
@@ -34,8 +36,8 @@ public class EntregaVeh extends PBase {
     private printer prn;
     private Runnable printclose,printcallback;
 
-    private BufferedWriter writer = null;
-    private FileWriter wfile;
+    private BufferedWriter writer = null,writerb = null;
+    private FileWriter wfile,wfileb;
 
 
     @Override
@@ -344,7 +346,7 @@ public class EntregaVeh extends PBase {
             writer.write("\r\n");
             writer.write("Kilometraje: " + (int)item.kilometraje);
             writer.write("\r\n");
-            writer.write("Responsable:" + gl.recibio);
+            writer.write("Responsable:" + nombreRecibio(item.recibio));
             writer.write("\r\n");
             writer.write("\r\n");
             writer.write("\r\n");
@@ -361,6 +363,31 @@ public class EntregaVeh extends PBase {
             writer.write("\r\n");
 
             writer.close();
+
+            try {
+                long ff=du.getActDateTime();
+                String bname=gl.sdpath + "/"+du.getyear(ff)+"_"+du.getmonth(ff)+"_"+du.getday(ff)+"_"+item.transhh+".txt";
+
+                wfileb=new FileWriter(bname);
+                writerb = new BufferedWriter(wfileb);
+
+                writerb.write("Fecha : "+du.sfecha(ff)+" "+du.shora(ff));
+                writerb.write("\r\n");
+                writerb.write("Vehiculo : "+vEqu);
+                writerb.write("\r\n");
+                writerb.write("Cantidad : "+(-item.cant));
+                writerb.write("\r\n");
+                writerb.write("Kilometraje : "+((int) item.kilometraje));
+                writerb.write("\r\n");
+                writerb.write("Cedula : "+gl.recibio);
+                writerb.write("\r\n");
+                writerb.write("Proyecto : "+gl.proyID);
+                writerb.write("\r\n");
+                writerb.write("\r\n");
+
+                writerb.close();
+            } catch (Exception e) {
+            }
 
             if(prn.isEnabled()){
                 impres=0;
@@ -483,6 +510,17 @@ public class EntregaVeh extends PBase {
         }
     }
 
+    private String nombreRecibio(String recibio) {
+        clsEmpleadosObj emp=new clsEmpleadosObj(this,Con,db);
+
+        try {
+            emp.fill("WHERE Barra ='" + recibio + "'");
+            return emp.first().nombre;
+        } catch (Exception e) {
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . empleado no existe : "+e.getMessage());
+            return recibio;
+        }
+    }
 
     //endregion
 

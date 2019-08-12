@@ -40,8 +40,7 @@ public class SwipeListener implements View.OnTouchListener {
                         if (diffX > 0) onSwipeRight(); else onSwipeLeft();
                         result = true;
                     }
-                }
-                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                }  else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     //if (diffY > 0) onSwipeBottom(); else onSwipeTop();
                     result = true;
                 }

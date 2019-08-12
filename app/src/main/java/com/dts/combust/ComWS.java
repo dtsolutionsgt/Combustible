@@ -165,13 +165,10 @@ public class ComWS extends PBase {
             } else if (radOutOff.isChecked()){
                 getURL(2);
             }
-
             msgSend();
         } catch (Exception e) {
             adderrlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
-
-
     }
 
      public void doTables(View view) {
@@ -823,10 +820,11 @@ public class ComWS extends PBase {
                 return false;
             } */
 
-        }catch (Exception e){
+        } catch (Exception e){
             adderrlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
 
+       /*
         try {
             db.beginTransaction();
 
@@ -841,6 +839,7 @@ public class ComWS extends PBase {
         } catch (Exception e) {
             db.endTransaction();
         }
+        */
 
         return true;
     }

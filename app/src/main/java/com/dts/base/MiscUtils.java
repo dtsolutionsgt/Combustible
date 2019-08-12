@@ -242,22 +242,7 @@ public class MiscUtils {
 			return null;
 		}
 
-		//bms=Bitmap.createScaledBitmap(bm,imw,imh,true);
 
-		/*
-		try {
-			matrix = new Matrix();
-			matrix.postScale(imw,imh);
-			bms = Bitmap.createBitmap(bm,0,0,(int) bmw,(int) bmh,matrix,false);
-
-			return bms;
-		} catch (Exception e) {
-			String ee=e.getMessage();
-			return null;
-		}
-		*/
-
-		//return bms;
 	}
 
 }

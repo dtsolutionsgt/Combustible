@@ -9,17 +9,21 @@
 
     <EditText
         android:id="@+id/txtMAC"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
+        android:layout_width="302dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/textView5"
         android:layout_alignStart="@+id/imageView4"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:imeOptions="actionNext"
         android:inputType="textPersonName"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/txtHH"
+        app:layout_constraintEnd_toEndOf="@+id/txtHH"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintTop_toBottomOf="@+id/txtHH" />
 
     <EditText
@@ -146,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="28dp"
-        android:text="MAC Address:"
+        android:text="MAC:"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView16" />

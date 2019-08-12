@@ -89,8 +89,8 @@ public class Lectura extends PBase {
             deposito.fill(" WHERE DepID = " + gl.pipa + " AND Stamp = " + stamp + " AND TipoDep = " + gl.tipoDepos + "");
 
             if (deposito.count == 0) {
-                existencia = 0;
-                return;
+                 existencia = 0;
+                 return;
             } else existencia = 1;
 
             item = deposito.first();
@@ -158,10 +158,12 @@ public class Lectura extends PBase {
                 if (LFinal==0){
                     msgAskLFinal("El final del totalizador va vacio, Desea Continuar");
                 }else {
-                    if(LFinal<LInicial){
-                        msgbox("El valor de Final no puede ser menor al Inicial");
+                    /*
+                    if(LFinal>LInicial){
+                        msgbox("El valor Final no puede ser mayor al Inicial");
                         return;
                     }
+                    */
                     saveData();
                 }
             }
@@ -235,10 +237,13 @@ public class Lectura extends PBase {
 
         try {
             sql=" WHERE (DepID="+gl.pipa+") AND " +
-                    " (Stamp<"+stamp+") AND (TipoDep="+gl.tipoDepos+") ORDER BY Stamp DESC";
+                    " (Stamp<"+stamp+") AND (TipoDep="+gl.tipoDepos+") AND (Tfin>0) ORDER BY Stamp DESC";
 
             deposito.fill(sql);
-            if (deposito.count == 0) return;
+            if (deposito.count == 0) {
+                msgbox("No existe ninguna lectura final anterior");
+                return;
+            }
 
             item = deposito.first();
 

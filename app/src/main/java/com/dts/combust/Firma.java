@@ -163,27 +163,24 @@ public class Firma extends PBase {
             noCedula = cedula.getText().toString();
             Nombre = txtNombre.getText().toString();
 
+            if(Nombre.isEmpty()) {
+                msgbox("Debe ingresar una cedula valida"); return;
+            }
+
             if(!signed || noCedula.isEmpty() || codCamera ==1){
                 msgbox("Debe llenar todos los campos");
                 return;
-            }else if(Nombre.isEmpty()) {
-                msgbox("Debe ingresar una cedula valida");
-            }else {
-                surface.setDrawingCacheEnabled(true);
-
-                if (sign.save(surface)){
-
-                   gl.recibio = cedula.getText().toString();
-                   gl.nombreRecibio = txtNombre.getText().toString();
-                   gl.validacionFirma = true;
-
-                   //if(!saveFoto()) return;
-
-                   super.finish();
-
-                }
-
             }
+
+            surface.setDrawingCacheEnabled(true);
+            if (sign.save(surface)) {
+                gl.recibio = cedula.getText().toString();
+                gl.nombreRecibio = txtNombre.getText().toString();
+                gl.validacionFirma = true;
+                //if(!saveFoto()) return;
+                super.finish();
+            }
+
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
@@ -194,9 +191,7 @@ public class Firma extends PBase {
         cedula.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-
                 tl = cedula.getText().toString();
-
                 consultaNombre();
             }
 
@@ -209,7 +204,6 @@ public class Firma extends PBase {
     }
 
     //endregion
-
 
     //region Main
 
@@ -229,7 +223,6 @@ public class Firma extends PBase {
         } catch (Exception e) {
             msgbox("No se logro procesar la foto. Por favor tome la de nuevo.");
         }
-
     }
 
     public boolean saveFoto(){

@@ -8,6 +8,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.dts.base.clsClasses;
+import com.dts.classes.clsEmpleadosObj;
 import com.dts.classes.clsMovObj;
 import com.dts.classes.clsViewObj;
 import com.dts.listadapt.LA_Mov;
@@ -156,7 +157,7 @@ public class Reimpresion extends PBase {
             writer.write("\r\n");
             writer.write("Kilometraje: " + (int)item.kilometraje);
             writer.write("\r\n");
-            writer.write("Responsable:" + gl.recibio);
+            writer.write("Responsable:" + nombreRecibio(item.recibio));
             writer.write("\r\n");
             writer.write("\r\n");
             writer.write("\r\n");
@@ -190,6 +191,17 @@ public class Reimpresion extends PBase {
 
     //region Aux
 
+    private String nombreRecibio(String recibio) {
+        clsEmpleadosObj emp=new clsEmpleadosObj(this,Con,db);
+
+        try {
+            emp.fill("WHERE Barra ='" + recibio + "'");
+            return emp.first().nombre;
+        } catch (Exception e) {
+            msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . empleado no existe : "+e.getMessage());
+            return recibio;
+        }
+    }
 
     //endregion
 

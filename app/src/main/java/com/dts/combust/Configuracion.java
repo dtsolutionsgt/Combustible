@@ -58,6 +58,9 @@ public class Configuracion extends PBase {
                 if (pd<0) {
                     msgbox("El MAC debe separar por :");return;
                 }
+                if (MAC.length()!=17) {
+                    msgbox("El MAC es incorrecto");return;
+                }
 
                 try{
 
