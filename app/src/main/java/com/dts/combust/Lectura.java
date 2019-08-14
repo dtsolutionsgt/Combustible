@@ -14,21 +14,13 @@ public class Lectura extends PBase {
 
     private TextView Inicial,Final,IPulgadas,FPulgadas,IOctavos,FOctavos,Pipa,lbl1,lbl2,lbl3;
 
-
-    private int LInicial, LFinal, IniPulgadas, FinPulgadas, IniOctavos, FinOctavos,stamp, existencia;
-    private double rini, rfin, resIniP, resFinP, resIniO, resFinO;
-
-    private String textInicial;
-    private String textLFinal;
-    private String textIniPulgadas;
-    private String textFinPulgadas;
-    private String textIniOctavos;
-    private String textFinOctavos;
-    private String fechaD;
-
     private clsDepositoObj deposito;
-
     private clsClasses.clsDeposito item=clsCls.new clsDeposito();
+
+    private int  IniPulgadas, FinPulgadas, IniOctavos, FinOctavos,stamp, existencia;
+    private double rini, rfin, LInicial, LFinal, resIniP, resFinP, resIniO, resFinO;
+    private String textInicial,textLFinal,textIniPulgadas,textFinPulgadas,textIniOctavos,textFinOctavos;
+    private String fechaD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,19 +92,19 @@ public class Lectura extends PBase {
             resIniP = item.rini - (item.rini % 1);
             resFinP = item.rfin - (item.rfin % 1);
 
-            LInicial = (int) item.tini;
-            LFinal = (int) item.tfin;
+            LInicial =  item.tini;
+            LFinal =  item.tfin;
             IniPulgadas = (int) resIniP;
             FinPulgadas = (int) resFinP;
             IniOctavos = (int) resIniO;
             FinOctavos = (int) resFinO;
 
-            Inicial.setText(Integer.toString(LInicial));
-            Final.setText(Integer.toString(LFinal));
-            IPulgadas.setText(Integer.toString(IniPulgadas));
-            FPulgadas.setText(Integer.toString(FinPulgadas));
-            IOctavos.setText(Integer.toString(IniOctavos));
-            FOctavos.setText(Integer.toString(FinOctavos));
+            Inicial.setText(""+LInicial);
+            Final.setText(""+LFinal);
+            IPulgadas.setText(""+IniPulgadas);
+            FPulgadas.setText(""+FinPulgadas);
+            IOctavos.setText(""+IniOctavos);
+            FOctavos.setText(""+FinOctavos);
         }catch (Exception e){
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
             msgbox(""+e);
@@ -131,47 +123,36 @@ public class Lectura extends PBase {
             textFinOctavos = FOctavos.getText().toString();
 
             if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty() && gl.rolid==3) {
-
-                msgbox("Debe llenar todos los campos Iniciales (y finales si desea)");
-                return;
-
-            }else if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty() && gl.rolid!=3) {
-
-                msgbox("Los campos iniciales están vacíos, solicitar al administrador ingresar los valores");
-                return;
-
+                msgbox("Debe llenar todos los campos Iniciales (y finales si desea)");return;
+            } else if (textInicial.isEmpty() || textIniPulgadas.isEmpty() || textIniOctavos.isEmpty() && gl.rolid!=3) {
+                msgbox("Los campos iniciales están vacíos, solicitar al supervisor ingresar los valores");return;
             } else {
 
-                LInicial = Integer.parseInt(textInicial);
-                if(textLFinal.isEmpty()) ; else LFinal = Integer.parseInt(textLFinal);
-                IniPulgadas = Integer.parseInt(textIniPulgadas);
-                if(textFinPulgadas.isEmpty()) ; else FinPulgadas = Integer.parseInt(textFinPulgadas);
-                IniOctavos = Integer.parseInt(textIniOctavos);
-                if(textFinOctavos.isEmpty()) ; else FinOctavos = Integer.parseInt(textFinOctavos);
+                if(textInicial.isEmpty())LInicial=0; LInicial = Double.parseDouble(textInicial);
+                if(textLFinal.isEmpty()) LFinal=0; else LFinal = Double.parseDouble(textLFinal);
+                if(textIniPulgadas.isEmpty()) IniPulgadas=0;else IniPulgadas = Integer.parseInt(textIniPulgadas);
+                if(textFinPulgadas.isEmpty()) FinPulgadas=0;else FinPulgadas = Integer.parseInt(textFinPulgadas);
+                if(textIniOctavos.isEmpty()) IniOctavos=0;else IniOctavos = Integer.parseInt(textIniOctavos);
+                if(textFinOctavos.isEmpty()) FinOctavos=0; else FinOctavos = Integer.parseInt(textFinOctavos);
+
+                LInicial=mu.round2(LInicial);
+                LFinal=mu.round2(LFinal);
 
                 if(IniOctavos <0) {msgbox("El inicial no puede ser menor a 0"); return;}
                 if(FinOctavos <0) {msgbox("El inicial no puede ser menor a 0"); return;}
                 if(IniOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
                 if(FinOctavos >=8) {msgbox("Los octavos no pueden ser mayores a 7"); return;}
 
-
                 if (LFinal==0){
                     msgAskLFinal("El final del totalizador va vacio, Desea Continuar");
-                }else {
-                    /*
-                    if(LFinal>LInicial){
-                        msgbox("El valor Final no puede ser mayor al Inicial");
-                        return;
-                    }
-                    */
+                } else {
                     saveData();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
+            msgbox(e.getMessage());
             addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
         }
-
-
     }
 
     public void saveData(){

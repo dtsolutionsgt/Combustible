@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/textView34"
         app:layout_constraintTop_toTopOf="@+id/textView34" />
@@ -242,7 +242,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/textView28"

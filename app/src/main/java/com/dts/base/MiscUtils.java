@@ -201,6 +201,19 @@ public class MiscUtils {
 		}	
 	}
 
+	public double round2(double val){
+		int ival;
+
+		val=(double) (100*val);
+		double rslt=Math.round(val);
+		rslt=Math.floor(rslt);
+
+		ival=(int) rslt;
+		rslt=(double) ival;
+
+		return (double) (rslt/100);
+	}
+
 	public Bitmap scaleBitmap(Bitmap bm, int size1, int size2) {
 		Bitmap bms;
 		Matrix matrix;
@@ -241,7 +254,6 @@ public class MiscUtils {
 			String ee=e.getMessage();
 			return null;
 		}
-
 
 	}
 
