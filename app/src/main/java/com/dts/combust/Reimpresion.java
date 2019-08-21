@@ -153,7 +153,7 @@ public class Reimpresion extends PBase {
             writer.write("\r\n");
             writer.write("\r\n");
 
-            writer.write("Vehiculo:" + gl.placa);
+            writer.write("Vehiculo:" + item.transid);
             writer.write("\r\n");
             writer.write("Kilometraje: " + (int)item.kilometraje);
             writer.write("\r\n");

@@ -322,6 +322,72 @@ public class ComWS extends PBase {
         }
     }
 
+    public int fillTableEx(String value,String delcmd,String retname) {
+        int rc;
+
+        METHOD_NAME = "getInsExt";
+
+        try {
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            PropertyInfo param = new PropertyInfo();
+            param.setType(String.class);
+            param.setName("SQL");param.setValue(value);
+            request.addProperty(param);
+
+            PropertyInfo param2 = new PropertyInfo();
+            param2.setType(String.class);
+            param2.setName("retname");param2.setValue(retname);
+            request.addProperty(param2);
+
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call(NAMESPACE+METHOD_NAME, envelope);
+
+            SoapObject resSoap =(SoapObject) envelope.getResponse();
+            SoapObject result = (SoapObject) envelope.bodyIn;
+
+            rc=resSoap.getPropertyCount()-1;
+
+            s="";
+
+            for (int i = 0; i < rc; i++) {
+                String str = "";
+                try {
+                    str = ((SoapObject) result.getProperty(0)).getPropertyAsString(i);
+                }catch (Exception e){
+                    adderrlog("fillTable",e.getMessage());
+                }
+
+                if (i==0) {
+                    if (str.equalsIgnoreCase("#")) {
+                        listItems.add(delcmd);
+                    } else {
+                        adderrlog("fillTable : Return ",str);ftflag=true;
+                        return 0;
+                    }
+                } else {
+                    try {
+                        sql=str;
+                        listItems.add(sql);
+                    } catch (Exception e) {
+                        adderrlog("fillTable : ",e.getMessage());
+                    }
+                }
+            }
+
+            return 1;
+        } catch (Exception e) {
+            adderrlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            return 0;
+        }
+    }
+
+
     public int commitSQL() {
         String s,ss;
 
@@ -557,6 +623,7 @@ public class ComWS extends PBase {
             if (!AddTable("Proyecto")) return false;
             if (!AddTable("ProyectoEquipo")) return false;
             if (!AddTable("ProyectoFase")) return false;
+            if (!AddTable("Movodo","Movodo")) return false;
             //if (!AddTable("TransError")) return false;
         } catch (Exception e) {
             adderrlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -578,7 +645,7 @@ public class ComWS extends PBase {
             for (int i = 0; i < rc; i++) {
                 try {
                     sql = listItems.get(i);
-                    sql=sql.replace("MOV","DISPONIBLE");
+                    sql=sql.replace(" MOV VALUES"," DISPONIBLE VALUES");
 
                     try {
                         writer.write(sql);writer.write("\r\n");
@@ -628,6 +695,27 @@ public class ComWS extends PBase {
             sprog = TN;wsRtask.onProgressUpdate();
 
             if (fillTable(SQL,"DELETE FROM "+TN)==1) {
+                return true;
+            } else {
+                errstat=true;return false;
+            }
+
+        } catch (Exception e) {
+            adderrlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            errstat=true;return false;
+        }
+    }
+
+    private boolean AddTable(String TN,String retname) {
+        String SQL;
+
+        try {
+
+            SQL=getTableSQL(TN);
+
+            sprog = TN;wsRtask.onProgressUpdate();
+
+            if (fillTableEx(SQL,"DELETE FROM "+TN,retname)==1) {
                 return true;
             } else {
                 errstat=true;return false;
@@ -698,11 +786,15 @@ public class ComWS extends PBase {
                 return SQL;
             }
 
+            if (TN.equalsIgnoreCase("Movodo")) {
+                SQL = "SELECT EquID, MAX(Kilometraje) AS Expr1 FROM Mov WHERE (EquID > 0)GROUP BY EquID";
+                return SQL;
+            }
+
             if (TN.equalsIgnoreCase("TransError")) {
                 SQL = " SELECT IDTRANSERROR, TRANSERROR FROM TransError";
                 return SQL;
             }
-
 
         }catch (Exception e){
             adderrlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);

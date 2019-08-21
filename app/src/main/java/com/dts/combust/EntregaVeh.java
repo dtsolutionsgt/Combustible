@@ -26,11 +26,11 @@ import java.io.FileWriter;
 
 public class EntregaVeh extends PBase {
 
-    private TextView lbl1,lbl3,lbl4;
+    private TextView lbl1,lbl2,lbl3,lbl4;
     private EditText txt1,txt2,txt3;
 
     private String fname;
-    private int vEqu,vOrigen,vKilo,vEst,vCombEst,impres;
+    private int vEqu,vOrigen,vKilo,vEst,vCombEst,impres,odo;
     private double vCap,vCant;
 
     private printer prn;
@@ -48,7 +48,8 @@ public class EntregaVeh extends PBase {
         super.InitBase(savedInstanceState);
         addlog("EntregaVeh",""+du.getActDateTime(),gl.nombreusuario);
 
-        lbl1 = (TextView) findViewById(R.id.textView6);;
+        lbl1 = (TextView) findViewById(R.id.textView6);
+        lbl2 = (TextView) findViewById(R.id.textView44);lbl2.setText("");
         lbl3 = (TextView) findViewById(R.id.textView26);lbl3.setText("");
         lbl4 = (TextView) findViewById(R.id.textView27);lbl4.setText("");
         txt1 = (EditText) findViewById(R.id.txtVeh);
@@ -145,6 +146,7 @@ public class EntregaVeh extends PBase {
                 if (event == null) {
                     if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
                         if (validaPlaca()==1) {
+
                             if (!validaProyecto()) {
                                 msgAsk1("El equipo no está asignado al proyecto. ¿Continuar?");
                                 return true;
@@ -421,13 +423,15 @@ public class EntregaVeh extends PBase {
             }
 
             vCap =veh.first().cantcomb;
-            vEqu = veh.first().vehid;
+            vEqu = veh.first().vehid;setOdo();
             gl.placa = veh.first().placa;
             gl.vehNom=veh.first().nombre;
             vOrigen = 0;
 
             lbl3.setText(gl.vehNom);
             lbl4.setText(""+mu.trunc(vCap,1));
+
+            setOdo();
 
             return 1;
         } catch (Exception e) {
@@ -459,7 +463,7 @@ public class EntregaVeh extends PBase {
 
     private boolean validaKilometraje() {
         Cursor dt;
-        double vval,klim;
+        double vval,kilo1=0,kilo2=0,klim=0;
 
         try {
             vval=Double.parseDouble(txt3.getText().toString());
@@ -472,14 +476,23 @@ public class EntregaVeh extends PBase {
             dt = Con.OpenDT(sql);
             if (dt.getCount() > 0) {
                 dt.moveToFirst();
-                klim = dt.getDouble(0);
+                kilo1 = dt.getDouble(0);
+            }
 
-                if(dt!=null) dt.close();
+            sql = "SELECT Odo FROM Movodo WHERE VehID=" + vEqu;
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() > 0) {
+                dt.moveToFirst();
+                kilo2 = dt.getDouble(0);
+            }
 
-                if (vKilo < klim) {
-                    //msgbox("Kilometraje menor que anterior") Else msgbox("Valor de horas menor que anterior")
-                    msgbox("Kilometraje menor que anterior");return false;
-                }
+            if(dt!=null) dt.close();
+
+            if (kilo2>kilo1) klim=kilo2;else klim=kilo1;
+
+            if (vKilo < klim) {
+                //msgbox("Kilometraje menor que anterior") Else msgbox("Valor de horas menor que anterior")
+                msgbox("Kilometraje menor que anterior");return false;
             }
 
             return true;
@@ -520,6 +533,38 @@ public class EntregaVeh extends PBase {
             msgbox(new Object(){}.getClass().getEnclosingMethod().getName()+" . empleado no existe : "+e.getMessage());
             return recibio;
         }
+    }
+
+    private void setOdo() {
+        Cursor dt;
+        double kilo1=0,kilo2=0;
+
+        try {
+
+            sql = "SELECT MAX(Kilometraje) FROM Mov WHERE EquID=" + vEqu;
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() > 0) {
+                dt.moveToFirst();
+                kilo1 = dt.getDouble(0);
+            }
+
+            sql = "SELECT Odo FROM Movodo WHERE VehID=" + vEqu;
+            dt = Con.OpenDT(sql);
+            if (dt.getCount() > 0) {
+                dt.moveToFirst();
+                kilo2 = dt.getDouble(0);
+            }
+
+            if(dt!=null) dt.close();
+
+            if (kilo2>kilo1) odo=(int) kilo2;else odo=(int) kilo1;
+        } catch (Exception e) {
+            addlog(new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage(), sql);
+            toast("¡Kilometraje anterior incorrecto!");odo=0;
+        }
+
+        lbl2.setText(""+odo);
+
     }
 
     //endregion

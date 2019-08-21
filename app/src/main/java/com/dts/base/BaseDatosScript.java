@@ -267,6 +267,13 @@ public class BaseDatosScript {
 					");";
 			db.execSQL(sql);
 
+			sql = "CREATE TABLE [Movodo] (" +
+					"VehID INTEGER NOT NULL," +
+					"Odo INTEGER NOT NULL," +
+					"PRIMARY KEY ([VehID],[odo])" +
+					");";
+			db.execSQL(sql);
+
 			// *********************************
 
 			sql = "CREATE TABLE [Params] (" +

@@ -34,9 +34,10 @@ public class BusquedaV extends PBase {
 
         setHandlers();
 
-        listItems();
-
+        gl.vehOrder="";
         gl.exitapp=false;
+
+        listItems();
 
         txtSearch.requestFocus();
     }
@@ -91,15 +92,15 @@ public class BusquedaV extends PBase {
             if(vF.isEmpty()){
 
                 if(gl.vehOrder.isEmpty()){
-                    equipo.fill();
+                    equipo.fill("ORDER BY Placa");
                 }else if(!gl.vehOrder.isEmpty()){
-                    equipo.fill(" WHERE Placa LIKE '%" + gl.vehOrder + "%' COLLATE NOCASE");
+                    equipo.fill(" WHERE Placa LIKE '%" + gl.vehOrder + "%' ORDER BY Placa COLLATE NOCASE");
                 }
 
                 adapter=new LA_BusquedaV(this,this, equipo.items);
                 listView.setAdapter(adapter);
             } else {
-                equipo.fill("WHERE Placa LIKE '%" + vF + "%'");
+                equipo.fill("WHERE Placa LIKE '%" + vF + "%' ORDER BY Placa COLLATE NOCASE");
 
                 adapter=new LA_BusquedaV(this,this, equipo.items);
                 listView.setAdapter(adapter);
