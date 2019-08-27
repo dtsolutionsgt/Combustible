@@ -472,6 +472,8 @@ public class EntregaVeh extends PBase {
 
             vKilo = (int) vval;
 
+            //msgbox("Kilometraje ingresado "+vKilo);
+
             sql = "SELECT MAX(Kilometraje) FROM Mov WHERE EquID=" + vEqu;
             dt = Con.OpenDT(sql);
             if (dt.getCount() > 0) {
@@ -490,9 +492,15 @@ public class EntregaVeh extends PBase {
 
             if (kilo2>kilo1) klim=kilo2;else klim=kilo1;
 
+            //msgbox("Kilometraje historico "+klim);
+            String sr;
+            if (vKilo<klim) sr="Resultado : menor"; else sr="Resultado : Correcto";
+           // msgbox("Comparacion : "+vKilo+"   > "+klim+" \n"+sr);
+
             if (vKilo < klim) {
                 //msgbox("Kilometraje menor que anterior") Else msgbox("Valor de horas menor que anterior")
-                msgbox("Kilometraje menor que anterior");return false;
+                toastlong("Kilometraje menor que anterior");
+                //return false;
             }
 
             return true;

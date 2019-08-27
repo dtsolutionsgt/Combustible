@@ -41,7 +41,7 @@ public class MainActivity extends PBase {
 
     private Bundle instanceState;
 
-    private String ver="2.1.17",verf="21/08/2019";
+    private String ver="2.1.19",verf="27/08/2019";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

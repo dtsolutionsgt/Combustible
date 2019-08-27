@@ -214,7 +214,8 @@ public class Lectura extends PBase {
 
     private void lecturaAnterior() {
 
-        if (gl.rolid != 3) return;
+
+        //if (gl.rolid != 3) return;
 
         try {
             sql=" WHERE (DepID="+gl.pipa+") AND " +
