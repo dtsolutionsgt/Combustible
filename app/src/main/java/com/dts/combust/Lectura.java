@@ -231,7 +231,7 @@ public class Lectura extends PBase {
 
             resFinO = (item.rfin % 1) * 8;FinOctavos = (int) resFinO;
             resFinP = item.rfin - (item.rfin % 1);FinPulgadas = (int) resFinP;
-            LFinal = (int) item.tfin;
+            LFinal = item.tfin;
 
             Inicial.setText(""+LFinal);
             IPulgadas.setText(""+FinPulgadas);
