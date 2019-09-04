@@ -49,7 +49,6 @@ public class Reimpresion extends PBase {
 
         prn=new printer(this,printclose);
 
-
         listItems();
     }
 
@@ -79,18 +78,36 @@ public class Reimpresion extends PBase {
     //region Main
 
     private void listItems() {
+        long ff=du.getActDate();
+
         clsViewObj vwObj=new clsViewObj(this,Con,db);
 
         try {
-            MovObj.fill("ORDER BY TransHH DESC");
+            MovObj.fill("WHERE (Fecha>"+ff+") ORDER BY TransHH DESC");
 
             sql="SELECT Mov.TransID, Equipo.Placa,'','','', '','','','' " +
-                "FROM Mov INNER JOIN Equipo ON Mov.EquID=Equipo.VehID ORDER BY Mov.TransHH DESC";
+                "FROM Mov INNER JOIN Equipo ON Mov.EquID=Equipo.VehID WHERE (Mov.Fecha>"+ff+") ORDER BY Mov.TransHH DESC";
             vwObj.fillSelect(sql);
 
+            /*
             for (int i = 0; i <MovObj.count; i++) {
                 MovObj.items.get(i).cant=-MovObj.items.get(i).cant;
-                MovObj.items.get(i).nota="Placa : "+vwObj.items.get(i).f1;
+                try {
+                    MovObj.items.get(i).nota="Placa : "+vwObj.items.get(i).f1;
+                } catch (Exception e) {
+                    MovObj.items.get(i).nota="Placa : "+vwObj.items.get(i).f1;
+                }
+            }
+            */
+
+            for (int i = MovObj.count-1; i>=0; i--) {
+
+                try {
+                    MovObj.items.get(i).cant=-MovObj.items.get(i).cant;
+                    MovObj.items.get(i).nota="Placa : "+vwObj.items.get(i).f1;
+                } catch (Exception e) {
+                    MovObj.items.remove(1);
+                }
             }
 
             adapter=new LA_Mov(this,this,MovObj.items);
